@@ -1,3 +1,6 @@
+
+BGH: Imported from ZoL does not currently do anything.
+
 This is (supposed to be) the ZFS Test Suite, with support for all platforms
 that ZFS from Sun Solaris have been ported to.
 
