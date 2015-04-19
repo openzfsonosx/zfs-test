@@ -1,6 +1,9 @@
 
 BGH: Imported from ZoL does not currently do anything.
 
+WARNING: You should never run these tests on a production system. They are 
+probably dangerous for existing data.
+
 This is (supposed to be) the ZFS Test Suite, with support for all platforms
 that ZFS from Sun Solaris have been ported to.
 
