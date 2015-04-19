@@ -24,27 +24,26 @@
  * CDDL HEADER END
  */
 
-AC_INIT
+AC_INIT([zfs-test], [0.9])
 AC_LANG(C)
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config])
 AC_CANONICAL_SYSTEM
 AM_MAINTAINER_MODE
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-AM_INIT_AUTOMAKE([zfs-test], [0.9])
+AM_INIT_AUTOMAKE
 
-AC_PROG_INSTALL
 AC_PROG_CC
+AC_PROG_INSTALL
 AM_PROG_AS
 
-PREFIX=`/bin/pwd`/test
-AC_SUBST(PREFIX)
+#PREFIX=`/bin/pwd`/test
+#AC_SUBST(PREFIX)
 
 m4_include(config/system.m4)
-
-m4_include(config/commands-linux.m4)
-m4_include(config/commands-bsd.m4)
-m4_include(config/commands-common.m4)
+#m4_include(config/commands-common.m4)
+#m4_include(config/commands-linux.m4)
+#m4_include(config/commands-bsd.m4)
 
 ZFS_AC_SYSTEM
 
