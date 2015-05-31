@@ -31,7 +31,9 @@
 #include <errno.h>
 #include <pwd.h>
 
-#ifdef _LINUX
+#if defined(_LINUX)
+#define	EXECSHELL	"/bin/sh"
+#elif defined(_OSX)
 #define	EXECSHELL	"/bin/sh"
 #else
 #define	EXECSHELL	"/usr/xpg4/bin/sh"

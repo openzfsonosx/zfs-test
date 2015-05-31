@@ -47,6 +47,8 @@
 
 #ifdef _LINUX
 #include <time.h>
+#elif defined(_OSX)
+#include <time.h>
 #endif
 
 int
@@ -86,6 +88,8 @@ main(int argc, char **argv)
 	if (bytes != size) {
 #ifdef _LINUX
 		(void) printf("short write: %d != %lu\n", bytes, size);
+#elif defined(_OSX)
+		(void) printf("short write: %d != %lu\n", bytes, size);
 #else
 		(void) printf("short write: %d != %ud\n", bytes, size);
 #endif
@@ -121,6 +125,8 @@ main(int argc, char **argv)
 	if (bytes != size) {
 #ifdef _LINUX
 		(void) printf("short read: %d != %lu\n", bytes, size);
+#elif defined(_OSX)
+		(void) printf("short read: %d != %lu\n", bytes, size);
 #else
 		(void) printf("short read: %d != %ud\n", bytes, size);
 #endif
@@ -132,6 +138,8 @@ main(int argc, char **argv)
 		(void) printf(
 #ifdef _LINUX
 		    "bad data from read!  got buf[%lu]=%d, expected 1\n",
+#elif defined(_OSX)
+		    "bad data from read!  got buf[%lu]=%d, expected 1\n",
 #else
 		    "bad data from read!  got buf[%ud]=%d, expected 1\n",
 #endif
@@ -141,6 +149,8 @@ main(int argc, char **argv)
 	}
 
 #ifdef _LINUX
+	(void) printf("good data from read: buf[%lu]=1\n", idx);
+#elif defined(_OSX)
 	(void) printf("good data from read: buf[%lu]=1\n", idx);
 #else
 	(void) printf("good data from read: buf[%ud]=1\n", idx);

@@ -188,10 +188,18 @@ do_write(int fd)
 	}
 
 	roffset = random() % fsize;
+
+#ifdef _OSX
+	if (lseek(fd, (offset + roffset), SEEK_SET) < 0) {
+		perror("lseek");
+		exit(5);
+	}
+#else
 	if (lseek64(fd, (offset + roffset), SEEK_SET) < 0) {
 		perror("lseek");
 		exit(5);
 	}
+#endif
 
 	buf = "ZFS Test Suite Truncation Test";
 	if (write(fd, buf, bsize) < bsize) {
@@ -200,10 +208,17 @@ do_write(int fd)
 	}
 
 	if (rflag) {
+#ifdef _OSX
+		if (lseek(fd, (offset + roffset), SEEK_SET) < 0) {
+			perror("lseek");
+			exit(7);
+		}
+#else
 		if (lseek64(fd, (offset + roffset), SEEK_SET) < 0) {
 			perror("lseek");
 			exit(7);
 		}
+#endif
 
 		if (read(fd, rbuf, bsize) < bsize) {
 			perror("read");
@@ -219,6 +234,8 @@ do_write(int fd)
 		(void) fprintf(stderr,
 #ifdef _LINUX
 		    "Wrote to offset %" PRId64 "\n", (offset + roffset));
+#elif defined(_OSX)
+		    "Wrote to offset %lld\n", (offset + roffset));
 #else
 		    "Wrote to offset %lld\n", (offset + roffset));
 #endif
@@ -226,6 +243,8 @@ do_write(int fd)
 			(void) fprintf(stderr,
 #ifdef _LINUX
 			    "Read back from offset %" PRId64 "\n", (offset + roffset));
+#elif defined(_OSX)
+			    "Read back from offset %lld\n", (offset + roffset));
 #else
 			    "Read back from offset %lld\n", (offset + roffset));
 #endif
@@ -233,6 +252,8 @@ do_write(int fd)
 	}
 
 #ifndef _LINUX
+	(void) free(buf);
+#elif defined(_OSX)
 	(void) free(buf);
 #endif
 	(void) free(rbuf);
@@ -244,15 +265,24 @@ do_trunc(int fd)
 	off_t   roffset = 0;
 
 	roffset = random() % fsize;
+#ifdef _OSX
+	if (ftruncate(fd, (offset + roffset))  < 0) {
+		perror("truncate");
+		exit(7);
+	}
+#else
 	if (ftruncate64(fd, (offset + roffset))  < 0) {
 		perror("truncate");
 		exit(7);
 	}
+#endif
 
 	if (vflag) {
 		(void) fprintf(stderr,
 #ifdef _LINUX
 		    "Truncated at offset %" PRId64 "\n",
+#elif defined(_OSX)
+		    "Truncated at offset %lld\n",
 #else
 		    "Truncated at offset %lld\n",
 #endif

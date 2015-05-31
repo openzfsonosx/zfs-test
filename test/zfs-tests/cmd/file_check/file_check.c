@@ -28,6 +28,8 @@
 
 #ifdef _LINUX
 typedef unsigned char   uchar_t;
+#elif defined(_OSX)
+typedef unsigned char   uchar_t;
 #endif
 
 static unsigned char bigbuffer[BIGBUFFERSIZE];
