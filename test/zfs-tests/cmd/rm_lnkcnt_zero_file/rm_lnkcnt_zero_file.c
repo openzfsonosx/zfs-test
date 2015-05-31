@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <pthread.h>
-#ifdef _LINUX
+#if defined(_LINUX) || defined (_OSX)
 #include <string.h>
 #include <libspl/thread.h>
 #else
@@ -52,7 +52,7 @@
 #include <unistd.h>
 #include <strings.h>
 
-#ifdef _LINUX
+#if defined(_OSX) || defined(_LINUX)
 #ifndef HAVE_THR_SETCONCURRENCY
 #define thr_setconcurrency(A) pthread_setconcurrency(A)
 #endif

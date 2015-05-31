@@ -40,6 +40,15 @@ extern const char *getexecname(void);
 typedef unsigned char   uchar_t;
 typedef long long       longlong_t;
 typedef longlong_t      offset_t;
+#elif defined(_OSX)
+#include <string.h>
+#include <inttypes.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+typedef unsigned char   uchar_t;
+typedef long long       longlong_t;
+typedef longlong_t      offset_t;
 #endif
 
 static unsigned char bigbuffer[BIGBUFFERSIZE];
@@ -169,7 +178,11 @@ main(int argc, char **argv)
 	}
 
 	if (rsync) {
+#ifdef _OSX
+		oflag = oflag | O_SYNC;
+#else
 		oflag = oflag | O_RSYNC;
+#endif
 	}
 
 	if (wsync) {
@@ -187,6 +200,8 @@ main(int argc, char **argv)
 	}
 #ifdef _LINUX
 	noffset = lseek64(bigfd, offset, SEEK_SET);
+#elif defined(_OSX)
+	noffset = lseek(bigfd, offset, SEEK_SET);
 #else
 	noffset = llseek(bigfd, offset, SEEK_SET);
 #endif
@@ -238,8 +253,11 @@ main(int argc, char **argv)
 static void
 usage(void)
 {
+#if defined(_OSX)
 	char *base = (char *)"file_write";
-#ifndef _LINUX
+#elif defined(_LINUX)
+	char *base = (char *)"file_write";
+#else
 	char *exec = (char *)getexecname();
 
 	if (exec != NULL)
@@ -254,7 +272,9 @@ usage(void)
 	    "\twhere [data] equal to zero causes chars "
 	    "0->%d to be repeated throughout\n", base, DATA_RANGE);
 
-#ifndef _LINUX
+#if defined(_OSX)
+#elif defined(_LINUX)
+#else
 	if (exec) {
 		free(exec);
 	}

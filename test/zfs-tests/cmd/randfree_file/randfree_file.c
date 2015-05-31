@@ -33,6 +33,8 @@
 #ifdef _LINUX
 /* Defined in <spl_repo>/spl/include/sys/{vnode,fcntl}.h */
 #define F_FREESP        11	/* Free file space */
+#elif defined(_OSX)
+#define F_FREESP        11	/* Free file space */
 #endif
 
 /*

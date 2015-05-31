@@ -178,7 +178,9 @@ crtfile(char *pname)
 		exit(errno);
 	}
 
-#ifndef _LINUX
+#if defined(_OSX)
+#elif defined(_LINUX)
+#else
 	if ((afd = openat(fd, "xattr", O_CREAT | O_RDWR | O_XATTR, 0777)) < 0) {
 		(void) fprintf(stderr, "openat failed.\n[%d]: %s.\n",
 		    errno, strerror(errno));
