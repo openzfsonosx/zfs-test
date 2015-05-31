@@ -41,7 +41,7 @@ AM_PROG_AS
 #AC_SUBST(PREFIX)
 
 m4_include(config/system.m4)
-#m4_include(config/commands-common.m4)
+m4_include(config/commands-common.m4)
 #m4_include(config/commands-linux.m4)
 #m4_include(config/commands-bsd.m4)
 
