@@ -138,7 +138,7 @@ do_write(const char *pfile)
 	}
 	if (write(fd, buf, strlen(buf)) == -1) {
 		(void) fprintf(stderr, "write(%d, buf, %d) failed with errno "
-#ifdef _LINUX
+#if defined(_LINUX) || defined (_OSX)
 		    "%d\n", fd, (int)strlen(buf), errno);
 #else
 		    "%d\n", fd, strlen(buf), errno);

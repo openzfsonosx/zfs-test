@@ -33,7 +33,7 @@
 #include <signal.h>
 #include <stdio.h>
 
-#ifdef _LINUX
+#if defined(_LINUX) || defined(_OSX)
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -88,6 +88,8 @@ main(int argc, char **argv)
 
 #ifdef _LINUX
 	llseek_ret = lseek64(fd, offset, SEEK_SET);
+#elif defined(_OSX)
+	llseek_ret = lseek(fd, offset, SEEK_SET);
 #else
 	llseek_ret = llseek(fd, offset, SEEK_SET);
 #endif
@@ -107,6 +109,8 @@ main(int argc, char **argv)
 	offset = 0;
 #ifdef _LINUX
 	llseek_ret = lseek64(fd, offset, SEEK_CUR);
+#elif defined(_OSX)
+	llseek_ret = lseek(fd, offset, SEEK_CUR);
 #else
 	llseek_ret = llseek(fd, offset, SEEK_CUR);
 #endif

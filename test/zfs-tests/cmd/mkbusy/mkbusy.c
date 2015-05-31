@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#ifdef _LINUX
+#if defined(_LINUX) || defined(_OSX)
 #include <string.h>
 
 typedef enum boolean { B_FALSE, B_TRUE } boolean_t;
