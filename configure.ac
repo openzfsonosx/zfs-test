@@ -63,7 +63,7 @@ AC_CONFIG_FILES([
 	test/zfs-tests/tests/functional/exec/Makefile
 	test/zfs-tests/tests/functional/ctime/Makefile
 	test/zfs-tests/include/commands.cfg
-	test/zfs-tests/runfiles/linux.run
+	test/zfs-tests/runfiles/osx.run
 	test/zfs-tests/include/default.cfg
 ])
 

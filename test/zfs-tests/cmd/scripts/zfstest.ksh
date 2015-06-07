@@ -69,6 +69,8 @@ function find_runfile
 		distro=omnios
 	elif [[ -n "$LINUX" ]]; then
 		distro=linux
+	elif [[ -n "$OSX" ]]; then
+		distro=osx
 	fi
 
 	[[ -n $distro && -f "$STF_SUITE/runfiles/$distro.run" ]] && \

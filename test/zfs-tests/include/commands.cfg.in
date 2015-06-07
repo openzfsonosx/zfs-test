@@ -149,4 +149,6 @@ export ZONECFG="@ZONECFG@"
 export ZONENAME="@ZONENAME@"
 export ZPOOL="@ZPOOL@"
 
-export LINUX="@LINUX@"
+#export LINUX="@LINUX@"
+export OSX="OSX"
+
