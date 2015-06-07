@@ -50,7 +50,7 @@ function find_disks_zfstest
 
 function find_rpool
 {
-	if [[ -n "$LINUX" ]]; then
+	if [[ -n "$LINUX" || -n "$OSX" ]]; then
 		typeset ds=$($MOUNT | $AWK '/ \/ / {print $1}')
 	else
 		typeset ds=$($MOUNT | $AWK '/^\/ / {print $3}')
@@ -84,7 +84,7 @@ function verify_id
 	sudo -n id >/dev/null 2>&1
 	[[ $? -eq 0 ]] || fail "User must be able to sudo without a password."
 
-	if [[ -z "$LINUX" ]]; then
+	if [[ -z "$LINUX" || -z "$OSX" ]]; then
 	    typeset -i priv_cnt=$($PPRIV $$ | $EGREP -v \
 		": basic$|	L:| <none>|$$:" | wc -l)
 	    [[ $priv_cnt -ne 0 ]] && fail "User must only have basic privileges."
@@ -93,7 +93,7 @@ function verify_id
 
 function verify_disks
 {
-	[[ -n "$LINUX" ]] && return 0
+	[[ -n "$LINUX" || -n "$OSX" ]] && return 0
 
 	typeset disk
 	for disk in $DISKS; do
