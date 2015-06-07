@@ -37,8 +37,8 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_AS
 
-#PREFIX=`/bin/pwd`/test
-#AC_SUBST(PREFIX)
+PREFIX=`/bin/pwd`/test
+AC_SUBST(PREFIX)
 
 m4_include(config/system.m4)
 m4_include(config/commands-common.m4)
