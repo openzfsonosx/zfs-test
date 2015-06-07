@@ -1,5 +1,8 @@
 
-BGH: Imported from ZoL does not currently do anything.
+BGH: Some progress has been made, all test programs now compile. The tests attempt to run
+but generally fail. The test scripts need to be augmented for conditional behavior
+where the is a $LINUX logical branch in the script, and equivalent $OSX branch needs
+to be added.
 
 WARNING: You should never run these tests on a production system. They are 
 probably dangerous for existing data.
@@ -14,23 +17,23 @@ To setup the test suite, run
 
 This will create the configure file. Run this to setup the makefiles etc.
 
-   ./configure
+   ./configure CC=clang CXX=clang++ 
 
 Then, to run the test suite, just issue the command:
 
-   make test
+   sudo make test
 
 It will require that your environment is setup in a certain way, but
 the Makefile will make sure to check this. Most of it any way...
 
 To run specific gest group(s), make a copy of the
 
-   cp test/zfs-tests/runfiles/linux.run test/zfs-tests/runfiles/linux.run.tmp
+   cp test/zfs-tests/runfiles/osx.run test/zfs-tests/runfiles/osx.run.tmp
 
 file, edit it (uncomment or delete all that shouldn't be run) and set
 the RUNFILE variable:
 
-     export RUNFILE="-c test/zfs-tests/runfiles/linux.run.tmp"
+     export RUNFILE="-c test/zfs-tests/runfiles/osx.run.tmp"
 
 
                              CAVEATS
@@ -38,12 +41,9 @@ the RUNFILE variable:
 * The user zfs-test needs to be able to run sudo without issuing a
   password.
 
-* To run the Test Suite, it is also required that you have a built ZoL
+* To run the Test Suite, it is also required that you have a built O3X
   zfs repository in:
 
-	/var/lib/dkms/zfs/${VERSION}/build
-	/usr/src/zfs-${VERSION}/${LINUX_VERSION}
-	/usr/src/zfs-${VERSION}
 	../zfs
 
 * You will need quite a lot of free space on /var/tmp (which needs
