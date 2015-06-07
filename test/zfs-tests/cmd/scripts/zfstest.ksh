@@ -84,7 +84,7 @@ function verify_id
 	sudo -n id >/dev/null 2>&1
 	[[ $? -eq 0 ]] || fail "User must be able to sudo without a password."
 
-	if [[ -z "$LINUX" || -z "$OSX" ]]; then
+	if [[ -z "$LINUX" && -z "$OSX" ]]; then
 	    typeset -i priv_cnt=$($PPRIV $$ | $EGREP -v \
 		": basic$|	L:| <none>|$$:" | wc -l)
 	    [[ $priv_cnt -ne 0 ]] && fail "User must only have basic privileges."
