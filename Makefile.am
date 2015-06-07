@@ -12,7 +12,7 @@ SUBDIRS += test/zfs-tests/cmd/mmapwrite
 SUBDIRS += test/zfs-tests/cmd/file_trunc
 SUBDIRS += test/zfs-tests/cmd/file_check
 
-abs_top_srcdir = /usr/src/zfs-test
+abs_top_srcdir = @abs_top_srcdir@
 SHELL = /bin/bash
 
 AUTOMAKE_OPTIONS = foreign
