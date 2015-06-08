@@ -1720,7 +1720,7 @@ function rsh_status
 		rsh_str="$RSH -n -l $ruser"
 	fi
 
-	$rsh_str $rhost /usr/bin/ksh -c "'$cmd_str; \
+	$rsh_str $rhost /bin/ksh -c "'$cmd_str; \
 		print -u 2 \"status=\$?\"'" \
 		>/dev/null 2>$err_file
 	ret=$?
