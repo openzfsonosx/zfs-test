@@ -60,8 +60,9 @@ outputdir = /var/tmp/test_results
 #    'zfs_acl_tar_001_pos', 'zfs_acl_tar_002_neg',
 #    'zfs_acl_aclmode_restricted_001_pos']
 
-[@PREFIX@/zfs-tests/tests/functional/acl/posix]
-tests = ['posix_001_pos', 'posix_002_pos']
+# DISABLED: OSX doesnt have aclmode etc
+#[@PREFIX@/zfs-tests/tests/functional/acl/posix]
+#tests = ['posix_001_pos', 'posix_002_pos']
 
 [@PREFIX@/zfs-tests/tests/functional/atime]
 tests = ['atime_001_pos', 'atime_002_neg']
