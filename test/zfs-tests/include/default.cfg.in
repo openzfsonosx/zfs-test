@@ -131,7 +131,7 @@ export MAX_FINDDISKSNUM=6
 export ISCSITGTFILE=/tmp/iscsitgt_file
 export ISCSITGT_FMRI=svc:/system/iscsitgt:default
 
-[[ -z "$LINUX" ]] && \
+[[ -z "$LINUX" && -z "$OSX" ]] && \
 export AUTO_SNAP=$($SVCS -a | $GREP auto-snapshot | $GREP online | $AWK \
     '{print $3}')
 
