@@ -58,7 +58,7 @@ log_assert "Verify '-o' will set filesystem property temporarily, " \
 	"without affecting the property that is stored on disk."
 log_onexit cleanup
 
-if [[ -n "$LINUX" ]]; then
+if [[ -n "$LINUX" || -n "$OSX" ]]; then
 	set -A properties "atime" "dev" "exec" "ro" "suid"
 else
 	set -A properties "atime" "devices" "exec" "readonly" "setuid"
@@ -76,7 +76,7 @@ function get_reverse_option
 	typeset prop=$2
 
 	# Define property value: "reverse if value=on" "reverse if value=off"
-	if [[ -n "$LINUX" ]]; then
+	if [[ -n "$LINUX" || -n "$OSX" ]]; then
 		set -A values "noatime"   "atime" \
 			      "nodev"     "dev" \
 			      "noexec"    "exec" \

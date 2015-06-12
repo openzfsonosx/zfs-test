@@ -131,7 +131,7 @@ for fs in "$POOL" "$POOL/pclone" "$POOL/$FS" "$POOL/$FS/fs1" \
 	"$POOL/$FS/fs1/fs2" "$POOL/$FS/fs1/fclone" ; do
 	rand_set_prop $fs aclinherit "discard" "noallow" "secure" "passthrough"
 	rand_set_prop $fs checksum "on" "off" "fletcher2" "fletcher4" "sha256"
-	[[ -z "$LINUX" ]] && rand_set_prop $fs aclmode "discard" "groupmask" "passthrough"
+	[[ ( -z "$LINUX" && -z "$OSX" ]] && rand_set_prop $fs aclmode "discard" "groupmask" "passthrough"
 	rand_set_prop $fs atime "on" "off"
 	rand_set_prop $fs checksum "on" "off" "fletcher2" "fletcher4" "sha256"
 	rand_set_prop $fs compression "on" "off" "lzjb" "gzip" \

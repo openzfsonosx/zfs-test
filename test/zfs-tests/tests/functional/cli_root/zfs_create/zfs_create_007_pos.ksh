@@ -62,7 +62,7 @@ typeset -i i=0
 typeset opts=""
 
 while (( $i < ${#RW_VOL_PROP[*]} )); do
-	if [[ -n "$LINUX" && ${RW_FS_PROP[$i]} == *"aclmode"* ]]; then
+	if [[ ( -n "$LINUX" || -n "$OSX" ) && ${RW_FS_PROP[$i]} == *"aclmode"* ]]; then
 		((i += 1))
 		continue
 	fi

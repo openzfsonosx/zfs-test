@@ -81,6 +81,13 @@ snap=$fs@$TESTSNAP
 clone=$ctr/$TESTCLONE
 streamf=$corepath/s.$$
 
+#
+# This test needs updating. The abort feature does work, the output
+# is in ~/Library/Logs/DiagnosticReports/
+#
+# zfs_2015-06-13-091154_fatmac-2.crash is an example
+#
+
 typeset cmds=("create $fs" "list $fs" "snapshot $snap" "set snapdir=hidden $fs" \
     "get snapdir $fs" "rollback $snap" "inherit snapdir $fs" \
     "rename $fs $fs-new" "rename $fs-new $fs" "unmount $fs" \

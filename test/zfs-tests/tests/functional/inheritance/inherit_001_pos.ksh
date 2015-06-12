@@ -384,7 +384,7 @@ set -A prop "checksum" "" \
 	"aclinherit" "" \
 	"readonly" "rdonly"
 
-[[ -z "$LINUX" ]] && prop+=("aclmode" "")
+[[ -z "$LINUX" && -z "$OSX" ]] && prop+=("aclmode" "")
 
 #
 # Note except for the mountpoint default value (which is handled in

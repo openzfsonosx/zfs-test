@@ -34,7 +34,7 @@
 
 verify_runnable "global"
 
-if [[ -z "$LINUX" ]] && ! $(is_physical_device $DISKS) ; then
+if [[ ( -z "$LINUX" && -z "$OSX" ) ]] && ! $(is_physical_device $DISKS) ; then
 	log_unsupported "This directory cannot be run on raw files."
 fi
 

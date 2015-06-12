@@ -54,7 +54,7 @@ for user in root $ZFS_ACL_STAFF1; do
 	log_must usr_exec $MKTREE -b $INI_DIR -l 6 -d 2 -f 2
 
 	typeset acl_opt
-	[[ -z "$LINUX" ]] && acl_opt="-@"
+	[[ -z "$LINUX" && -z "$OSX" ]] && acl_opt="-@"
 
 	#
 	# Enter into initial directory and record all directory information,

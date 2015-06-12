@@ -45,7 +45,7 @@
 verify_runnable "both"
 
 typeset devopt
-[[ -n "$LINUX" ]] && devopt="-d $TEST_BASE_DIR"
+[[ -n "$LINUX" || -n "$OSX" ]] && devopt="-d $TEST_BASE_DIR"
 
 function cleanup
 {

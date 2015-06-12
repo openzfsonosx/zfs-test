@@ -61,7 +61,7 @@ log_must $ZFS snapshot $SNAPFS
 
 typeset -i i=0
 while (( $i < ${#RW_FS_PROP[*]} )); do
-	if [[ -n "$LINUX" && ${RW_FS_PROP[$i]} == *"aclmode"* ]]; then
+	if [[ ( -n "$LINUX" || -n "$OSX" ) && ${RW_FS_PROP[$i]} == *"aclmode"* ]]; then
 		((i += 1))
 		continue
 	fi

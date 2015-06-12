@@ -62,7 +62,7 @@ for user in root $ZFS_ACL_STAFF1; do
 	paxout=$TMP_DIR/files.pax
 
 	typeset acl_opt
-	[[ -z "$LINUX" ]] && acl_opt="-@"
+	[[ -z "$LINUX" && -z "$OSX" ]] && acl_opt="-@"
 
 	cd $INI_DIR
 	log_must eval "record_cksum $INI_DIR $initout > /dev/null 2>&1"

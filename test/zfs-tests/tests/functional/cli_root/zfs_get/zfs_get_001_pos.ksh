@@ -116,7 +116,7 @@ typeset -i j=0
 while ((i < ${#dataset[@]})); do
 	for opt in "${options[@]}"; do
 		while (( $j < ${#all_props[*]} )); do
-			if [[ -n "$LINUX" && ${all_props[$j]} == "aclmode" ]]; then
+			if [[ ( -n "$LINUX" || -n "$OSX" ) && ${all_props[$j]} == "aclmode" ]]; then
 				((j += 1))
 				continue
 			fi

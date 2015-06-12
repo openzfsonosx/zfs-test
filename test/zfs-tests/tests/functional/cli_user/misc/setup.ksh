@@ -87,7 +87,7 @@ while [[ $i -lt ${#props[*]} ]]
 do
 	prop_name=${props[$i]}
 	prop_val=${prop_vals[$i]}
-	if [[ -n "$LINUX" && $prop_name == "aclmode" ]]; then
+	if [[ ( -n "$LINUX" || -n "$OSX" ) && $prop_name == "aclmode" ]]; then
 		((i += 1))
 		continue
 	fi
