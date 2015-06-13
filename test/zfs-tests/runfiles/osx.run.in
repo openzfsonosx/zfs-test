@@ -309,11 +309,11 @@ post =
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zpool_status]
 tests = ['zpool_status_001_pos', 'zpool_status_002_pos']
 
-[@PREFIX@/zfs-tests/tests/functional/cli_root/zpool_upgrade]
-tests = ['zpool_upgrade_001_pos', 'zpool_upgrade_002_pos',
-    'zpool_upgrade_003_pos', 'zpool_upgrade_004_pos', 'zpool_upgrade_005_neg',
-    'zpool_upgrade_006_neg', 'zpool_upgrade_007_pos', 'zpool_upgrade_008_pos',
-    'zpool_upgrade_009_neg']
+#[@PREFIX@/zfs-tests/tests/functional/cli_root/zpool_upgrade]
+#tests = ['zpool_upgrade_001_pos', 'zpool_upgrade_002_pos',
+#    'zpool_upgrade_003_pos', 'zpool_upgrade_004_pos', 'zpool_upgrade_005_neg',
+#    'zpool_upgrade_006_neg', 'zpool_upgrade_007_pos', 'zpool_upgrade_008_pos',
+#    'zpool_upgrade_009_neg']
 
 # NOTE: When disabling 'user' line, then most of these run. If not, I get
 #       a python error:
