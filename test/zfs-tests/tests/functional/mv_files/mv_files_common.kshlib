@@ -37,7 +37,7 @@
 #
 function check_bg_procs_limit_num
 {
-$ECHO "#!/usr/bin/ksh" > /var/tmp/exitsZero.ksh
+$ECHO "#!/usr/bin/env ksh" > /var/tmp/exitsZero.ksh
 $ECHO  "exit 0" >> /var/tmp/exitsZero.ksh
 $CHMOD 777 /var/tmp/exitsZero.ksh
 
