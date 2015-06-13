@@ -206,10 +206,14 @@ tests = ['zfs_unmount_001_pos', 'zfs_unmount_002_pos', 'zfs_unmount_003_pos',
 tests = ['zfs_unshare_001_pos', 'zfs_unshare_002_pos', 'zfs_unshare_003_pos',
     'zfs_unshare_004_neg', 'zfs_unshare_005_neg']
 
-[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_upgrade]
-tests = ['zfs_upgrade_001_pos', 'zfs_upgrade_002_pos', 'zfs_upgrade_003_pos',
-    'zfs_upgrade_004_pos', 'zfs_upgrade_005_pos', 'zfs_upgrade_006_neg',
-    'zfs_upgrade_007_neg']
+#
+# DISABLED: causing panics on OSX
+#
+#[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_upgrade]
+#tests = ['zfs_upgrade_001_pos', 'zfs_upgrade_002_pos', 'zfs_upgrade_003_pos',
+#    'zfs_upgrade_004_pos', 'zfs_upgrade_005_pos', 'zfs_upgrade_006_neg',
+#    'zfs_upgrade_007_neg']
+#
 
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zpool]
 tests = ['zpool_001_neg', 'zpool_002_pos', 'zpool_003_pos']
