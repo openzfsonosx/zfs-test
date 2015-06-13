@@ -76,9 +76,9 @@ done
 log_note "verify multiple snapshot transaction group"
 txg_group=$($ZDB -Pd $TESTPOOL | $GREP snap | $AWK '{print $7}')
 for i in 1 2 3; do
-	txg_tag=$($ECHO "$txg_group" | $NAWK -v j=$i 'FNR == j {print}')
+	txg_tag=$($ECHO "$txg_group" | $AWK -v j=$i 'FNR == j {print}')
 	[[ $txg_tag != $($ECHO "$txg_group" | \
-	    $NAWK -v j=$i 'FNR == j {print}') ]] \
+	    $AWK -v j=$i 'FNR == j {print}') ]] \
 	    && log_fail "snapshots belong to differnt transaction groups"
 done
 log_note "verify snapshot contents"

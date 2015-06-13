@@ -687,7 +687,7 @@ function get_endslice #<disk> <slice>
 		fi
 
 		typeset -i endcyl=$($PRTVTOC -h $DEV_RDSKDIR/${disk}s2 |
-			$NAWK -v token="$slice" '{if ($1==token) print $6}')
+			$AWK -v token="$slice" '{if ($1==token) print $6}')
 
 		((endcyl = (endcyl + 1) / ratio))
 	fi
@@ -1438,7 +1438,7 @@ function get_disklist # pool
 {
 	typeset disklist=""
 
-	disklist=$($ZPOOL iostat -v $1 | $NAWK '(NR >4) {print $1}' | \
+	disklist=$($ZPOOL iostat -v $1 | $AWK '(NR >4) {print $1}' | \
 	    $GREP -v "\-\-\-\-\-" | \
 	    $EGREP -v -e "^(mirror|raidz1|raidz2|spare|log|cache)$")
 
@@ -1560,7 +1560,7 @@ function check_pool_status # pool token keyword
 	typeset token=$2
 	typeset keyword=$3
 
-	$ZPOOL status -v "$pool" 2>/dev/null | $NAWK -v token="$token:" '
+	$ZPOOL status -v "$pool" 2>/dev/null | $AWK -v token="$token:" '
 		($1==token) {print $0}' \
 	| $GREP -i "$keyword" > /dev/null 2>&1
 
@@ -1803,7 +1803,7 @@ function find_disks_bsd
 # we're creating the awk script.
 # -------------------
 	$CAT > /tmp/find_disks.awk <<EOF
-#!/bin/nawk -f
+#!/usr/local/bin/awk -f
 	BEGIN { FS="."; }
 
 	/^Specify disk/{
@@ -2442,7 +2442,7 @@ function get_device_state #pool disk field("", "spares","logs")
 	typeset field=${3:-$pool}
 
 	state=$($ZPOOL status -v "$pool" 2>/dev/null | \
-		$NAWK -v device=$disk -v pool=$pool -v field=$field \
+		$AWK -v device=$disk -v pool=$pool -v field=$field \
 		'BEGIN {startconfig=0; startfield=0; }
 		/config:/ {startconfig=1}
 		(startconfig==1) && ($1==field) {startfield=1; next;}
@@ -2584,7 +2584,7 @@ function get_substr #src_str pos offset
 	typeset pos offset
 
 	$ECHO $1 | \
-		$NAWK -v pos=$2 -v offset=$3 '{print substr($0, pos, offset)}'
+		$AWK -v pos=$2 -v offset=$3 '{print substr($0, pos, offset)}'
 }
 
 #

@@ -77,10 +77,10 @@ function verify_size_estimates
 	typeset file_size=$2
 	typeset refer_diff=$($ECHO "$refer_size - $estimate_size" | bc)
 	refer_diff=$($ECHO "$refer_diff / 1" | bc)
-	refer_diff=$($ECHO "$refer_diff" | $NAWK '{print ($1 < 0) ? ($1 * -1): $1'})
+	refer_diff=$($ECHO "$refer_diff" | $AWK '{print ($1 < 0) ? ($1 * -1): $1'})
 	typeset file_diff=$($ECHO "$file_size - $estimate_size" | bc)
 	file_diff=$($ECHO "$file_diff / 1" | bc)
-	file_diff=$($ECHO "$file_diff" | $NAWK '{print ($1 < 0) ? ($1 * -1):$1'})
+	file_diff=$($ECHO "$file_diff" | $AWK '{print ($1 < 0) ? ($1 * -1):$1'})
 	typeset expected_diff=$(cal_percentage $refer_size)
 
 	[[ -z $refer_diff && -z $file_diff && -z $expected_diff ]] && \

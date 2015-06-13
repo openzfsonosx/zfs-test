@@ -97,7 +97,7 @@ function verify_slog_device
 	#
 	# mirror:/disks/d ONLINE mirror:/disks/e ONLINE stripe:/disks/f ONLINE
 	#
-	set -A dev_stat_tab $($ZPOOL status -v $pool | $NAWK 'BEGIN {start=0} \
+	set -A dev_stat_tab $($ZPOOL status -v $pool | $AWK 'BEGIN {start=0} \
 				/\tlogs/ {start=1}
 				/\tmirror/ || /\tspares/ || /^$/ {start=0}
 				(start==1) && /\t  (\/|[a-zA-Z])/ \

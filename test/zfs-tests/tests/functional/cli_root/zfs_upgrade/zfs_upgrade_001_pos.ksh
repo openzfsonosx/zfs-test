@@ -68,7 +68,7 @@ typeset expect_str2="All filesystems are formatted with the current version"
 typeset expect_str3="The following filesystems are out of date, and can be upgraded"
 typeset -i COUNT OLDCOUNT
 
-$ZFS upgrade | $NAWK '$1 ~ "^[0-9]+$" {print $2}'> $oldoutput
+$ZFS upgrade | $AWK '$1 ~ "^[0-9]+$" {print $2}'> $oldoutput
 OLDCOUNT=$( $WC -l $oldoutput | $AWK '{print $1}' )
 
 old_datasets=""
@@ -96,7 +96,7 @@ log_must eval '$ZFS upgrade > $output 2>&1'
 # we also check that the usage message contains at least a description
 # of the current ZFS version.
 log_must eval '$GREP "${expect_str1} $ZFS_VERSION" $output > /dev/null 2>&1'
-$ZFS upgrade | $NAWK '$1 ~ "^[0-9]+$" {print $2}'> $output
+$ZFS upgrade | $AWK '$1 ~ "^[0-9]+$" {print $2}'> $output
 COUNT=$( $WC -l $output | $AWK '{print $1}' )
 
 typeset -i i=0
@@ -121,7 +121,7 @@ if (( OLDCOUNT == 0 )); then
 else
 	log_must eval '$GREP "${expect_str3}" $output > /dev/null 2>&1'
 fi
-$ZFS upgrade | $NAWK '$1 ~ "^[0-9]+$" {print $2}'> $output
+$ZFS upgrade | $AWK '$1 ~ "^[0-9]+$" {print $2}'> $output
 COUNT=$( $WC -l $output | $AWK '{print $1}' )
 
 if (( COUNT != OLDCOUNT )); then
