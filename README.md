@@ -26,7 +26,7 @@ Then, to run the test suite, just issue the command:
 It will require that your environment is setup in a certain way, but
 the Makefile will make sure to check this. Most of it any way...
 
-To run specific gest group(s), make a copy of the
+To run specific test group(s), make a copy of the
 
    cp test/zfs-tests/runfiles/osx.run test/zfs-tests/runfiles/osx.run.tmp
 
@@ -39,7 +39,13 @@ the RUNFILE variable:
                              CAVEATS
 ========================================================================
 * The user zfs-test needs to be able to run sudo without issuing a
-  password.
+password. Add the following to sudoers:
+
+    zfs-tests   ALL=(ALL) NOPASSWD: ALL
+
+* The sudo root environment must be configured to pass certain enviroment variables from zfs-test through to the root environment. Add the following to sudoers:
+
+    Defaults env_keep += "__ZFS_MAIN_MOUNTPOINT_DIR"
 
 * To run the Test Suite, it is also required that you have a built O3X
   zfs repository in:
