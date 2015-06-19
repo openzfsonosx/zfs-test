@@ -33,6 +33,18 @@
 ZFS=${ZFS:-/usr/sbin/zfs}
 ZPOOL=${ZPOOL:-/usr/sbin/zpool}
 
+#
+# OSX Default mountpoint is /Volumes to meet users platform expectations.
+#
+# This can be overidden by setting the env var __ZFS_MAIN_MOUNTPOINT_DIR to
+# the desired location. Note that arrangements have to be made to propagate
+# this into the root environment via sudoers file changes.
+#
+# These tests assume the default ZFS behavior of mounting to /, so we will
+# configure O3X to comply.
+#
+export __ZFS_MAIN_MOUNTPOINT_DIR=/
+
 # Determine whether a dataset is mounted
 #
 # $1 dataset name
