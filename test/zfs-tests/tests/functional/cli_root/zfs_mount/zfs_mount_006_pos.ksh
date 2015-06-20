@@ -51,9 +51,10 @@ function cleanup
 
 	destroy_dataset $TESTPOOL/$TESTFS1
 
-	[[ -d $TESTDIR ]] && \
-		log_must $RM -rf $TESTDIR
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+#[[ -d $TESTDIR ]] && \
+#		log_must $RM -rf $TESTDIR
+
+    log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 	log_must force_unmount $TESTPOOL/$TESTFS
 
 	return 0
