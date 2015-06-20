@@ -57,7 +57,12 @@ log_onexit cleanup
 
 typeset VDEV=$TESTDIR/bootfs_001_pos_a.$$.dat
 
-log_must $MKFILE -s 400m $VDEV
+if [[ -n "$OSX" ]]; then
+    log_must $MKFILE 400m $VDEV
+else
+    log_must $MKFILE -s 400m $VDEV
+fi
+
 create_pool "$TESTPOOL" "$VDEV"
 log_must $ZFS create $TESTPOOL/$TESTFS
 

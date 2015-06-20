@@ -58,7 +58,7 @@ typeset COMP_FS=$TESTPOOL/COMP_FS
 log_onexit cleanup
 log_assert $assert_msg
 
-log_must $MKFILE -s 300m $VDEV
+log_must $MKFILE 300m $VDEV
 log_must $ZPOOL create $TESTPOOL $VDEV
 log_must $ZFS create $COMP_FS
 

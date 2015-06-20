@@ -70,9 +70,11 @@ do
 done
 pools[${#pools[@]}]="$bigname"
 
-
-
-$MKFILE -s 64m $TESTDIR/bootfs_004.$$.dat
+if [[ -n "$OSX" ]]; then
+    $MKFILE 64m $TESTDIR/bootfs_003.$$.dat
+else
+    $MKFILE -s 64m $TESTDIR/bootfs_004.$$.dat
+fi
 
 typeset -i i=0;
 

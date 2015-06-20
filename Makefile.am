@@ -31,7 +31,7 @@ test: test_verify test/zfs-tests/cmd
 	 STF_SUITE=$(abs_top_srcdir)/test/zfs-tests \
 	 DISKS="$(shell for i in {1..3}; do \
 	    rm -f /var/tmp/zfs_test-$$i; \
-	    $(abs_top_srcdir)/scripts/mkfile -s 25000m /var/tmp/zfs_test-$$i; \
+	    $(abs_top_srcdir)/scripts/mkfile 25000m /var/tmp/zfs_test-$$i; \
 	    echo "/var/tmp/zfs_test-$$i "; \
 	   done)" \
 	 su zfs-tests -c "ksh $(abs_top_srcdir)/test/zfs-tests/cmd/scripts/zfstest.ksh $$RUNFILE"

@@ -49,7 +49,7 @@ function cleanup
 	destroy_pool -f $TESTPOOL1
 
 	log_must $RM $VDEV0
-	log_must $MKFILE -s $FILE_SIZE $VDEV0
+	log_must $MKFILE $FILE_SIZE $VDEV0
 }
 
 log_assert "Pool with active unsupported features cannot be imported."

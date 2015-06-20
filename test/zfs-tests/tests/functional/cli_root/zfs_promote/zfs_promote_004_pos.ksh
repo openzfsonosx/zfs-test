@@ -90,7 +90,7 @@ set -A c1snapfile "${c1snapdir}/$TESTSNAP3/$CLONEFILE" \
 # setup for promote testing
 typeset -i i=0
 while (( i < 4 )); do
-	log_must $MKFILE -s $FILESIZE ${file[i]}
+	log_must $MKFILE $FILESIZE ${file[i]}
 	(( i>0 )) && log_must $RM -f ${file[((i-1))]}
 	log_must $ZFS snapshot ${snap[i]}
 
@@ -101,7 +101,7 @@ log_must $ZFS clone ${snap[2]} $clone
 log_must $RM -f /$clone/$TESTFILE2
 i=0
 while (( i < 3 )); do
-	log_must $MKFILE -s $FILESIZE ${cfile[i]}
+	log_must $MKFILE $FILESIZE ${cfile[i]}
 	(( i>0 )) && log_must $RM -f ${cfile[(( i-1 ))]}
 	log_must $ZFS snapshot ${csnap[i]}
 
@@ -109,7 +109,7 @@ while (( i < 3 )); do
 done
 
 log_must $ZFS clone ${csnap[1]} $clone1
-log_must $MKFILE -s $FILESIZE /$clone1/$CLONEFILE2
+log_must $MKFILE $FILESIZE /$clone1/$CLONEFILE2
 log_must $RM -f /$clone1/$CLONEFILE1
 log_must $ZFS snapshot ${c1snap[2]}
 

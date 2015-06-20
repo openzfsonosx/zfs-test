@@ -126,7 +126,7 @@ function replace_test
 specials_list=""
 i=0
 while [[ $i != 2 ]]; do
-        $MKFILE -s 100m $TESTDIR/$TESTFILE1.$i
+        $MKFILE 100m $TESTDIR/$TESTFILE1.$i
         specials_list="$specials_list $TESTDIR/$TESTFILE1.$i"
 
         ((i = i + 1))
@@ -135,7 +135,7 @@ done
 #
 # Create a replacement disk special file.
 #
-$MKFILE -s 100m $TESTDIR/$REPLACEFILE
+$MKFILE 100m $TESTDIR/$REPLACEFILE
 
 for type in "" "raidz" "raidz1" "mirror"; do
 	for op in "" "-f"; do

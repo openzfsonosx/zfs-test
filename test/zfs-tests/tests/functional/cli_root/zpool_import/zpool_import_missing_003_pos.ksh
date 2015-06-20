@@ -124,7 +124,7 @@ function cleanup_all
 		if  [[ -e $file ]]; then
 			log_must $RM $file
 		fi
-		log_must $MKFILE -s $FILE_SIZE $file
+		log_must $MKFILE $FILE_SIZE $file
 		((i += 1))
 	done
 

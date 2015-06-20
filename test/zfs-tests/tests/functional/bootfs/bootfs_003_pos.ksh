@@ -57,7 +57,12 @@ fi
 log_onexit cleanup
 
 log_assert "Valid pool names are accepted by zpool set bootfs"
-$MKFILE -s 64m $TESTDIR/bootfs_003.$$.dat
+
+if [[ -n "$OSX" ]]; then
+    $MKFILE 64m $TESTDIR/bootfs_003.$$.dat
+else
+    $MKFILE -s 64m $TESTDIR/bootfs_003.$$.dat
+fi
 
 typeset -i i=0;
 
