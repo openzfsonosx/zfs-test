@@ -47,6 +47,10 @@ password. Add the following to sudoers:
 
     Defaults env_keep += "__ZFS_MAIN_MOUNTPOINT_DIR"
 
+also
+
+    assign __ZFS_MAIN_MOUNTPOINT_DIR to / in somewhere central, I'm using /etc/bashrc at the moment, having trouble getting to work via the test framework.
+'
 * To run the Test Suite, it is also required that you have a built O3X
   zfs repository in:
 
