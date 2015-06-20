@@ -181,11 +181,15 @@ tests = ['cache_001_pos', 'cache_002_neg', 'canmount_001_pos',
     'user_property_004_pos', 'version_001_neg', 'zfs_set_001_neg',
     'zfs_set_002_neg', 'zfs_set_003_neg']
 
-[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_share]
-tests = ['zfs_share_001_pos', 'zfs_share_002_pos', 'zfs_share_003_pos',
-    'zfs_share_004_pos', 'zfs_share_005_pos', 'zfs_share_006_pos',
-    'zfs_share_007_neg', 'zfs_share_008_neg', 'zfs_share_009_neg',
-    'zfs_share_010_neg', 'zfs_share_011_pos']
+#
+# O3X does not implement sharing
+#
+#[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_share]
+#tests = ['zfs_share_001_pos', 'zfs_share_002_pos', 'zfs_share_003_pos',
+#    'zfs_share_004_pos', 'zfs_share_005_pos', 'zfs_share_006_pos',
+#    'zfs_share_007_neg', 'zfs_share_008_neg', 'zfs_share_009_neg',
+#    'zfs_share_010_neg', 'zfs_share_011_pos']
+#
 
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_snapshot]
 tests = ['zfs_snapshot_001_neg', 'zfs_snapshot_002_neg',
@@ -199,9 +203,13 @@ tests = ['zfs_unmount_001_pos', 'zfs_unmount_002_pos', 'zfs_unmount_003_pos',
     'zfs_unmount_007_neg', 'zfs_unmount_008_neg', 'zfs_unmount_009_pos',
     'zfs_unmount_all_001_pos']
 
-[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_unshare]
-tests = ['zfs_unshare_001_pos', 'zfs_unshare_002_pos', 'zfs_unshare_003_pos',
-    'zfs_unshare_004_neg', 'zfs_unshare_005_neg']
+#
+# O3X does not implement sharing
+#
+#[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_unshare]
+#tests = ['zfs_unshare_001_pos', 'zfs_unshare_002_pos', 'zfs_unshare_003_pos',
+#    'zfs_unshare_004_neg', 'zfs_unshare_005_neg']
+#
 
 #
 # DISABLED: causing panics on OSX
