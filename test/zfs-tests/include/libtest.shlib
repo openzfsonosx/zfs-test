@@ -2709,7 +2709,9 @@ function is_mp
 {
 	if [[ -n "$LINUX" ]]; then
 		(($($GREP ^processor /proc/cpuinfo | $WC -l) - 1))
-	else
+    elif [[ -n "$OSX" ]];
+        (( $(sysctl -n hw.ncpu) != 1 ))
+    else
 		(($(psrinfo -p) > 1))
 	fi
 }
