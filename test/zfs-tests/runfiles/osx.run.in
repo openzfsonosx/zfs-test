@@ -599,7 +599,9 @@ tests = ['zvol_cli_001_pos', 'zvol_cli_002_pos', 'zvol_cli_003_neg']
 #tests = ['zvol_misc_001_neg', 'zvol_misc_002_pos', 'zvol_misc_003_neg',
 #    'zvol_misc_004_pos', 'zvol_misc_005_neg', 'zvol_misc_006_pos']
 
+#
+# DISABLED: OSX cannot swap to zvol.
 # DISABLED: 'zvol_swap_005_pos' - swapon/swapoff is to simple (don't allow size etc)
 # DISABLED: 'zvol_swap_003_pos', 'zvol_swap_004_pos', 'zvol_swap_006_pos' - no kstat or swapadd.
-[@PREFIX@/zfs-tests/tests/functional/zvol/zvol_swap]
-tests = ['zvol_swap_001_pos', 'zvol_swap_002_pos']
+#[@PREFIX@/zfs-tests/tests/functional/zvol/zvol_swap]
+#tests = ['zvol_swap_001_pos', 'zvol_swap_002_pos']
