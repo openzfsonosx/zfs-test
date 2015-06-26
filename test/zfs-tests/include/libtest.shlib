@@ -1893,12 +1893,35 @@ function add_user #<group_name> <user_name> <basedir>
 	typeset gname=$1
 	typeset uname=$2
 	typeset basedir=${3:-"/var/tmp"}
+	typeset password="password"
 
 	if ((${#gname} == 0 || ${#uname} == 0)); then
 		log_fail "group name or user name are not defined."
 	fi
 
-	log_must $USERADD -g $gname -d $basedir/$uname -m $uname
+    if [[ -n "$OSX" ]]; then
+
+        # Find out the next available user ID
+        typeset -i maxid=$(dscl . -list /Users UniqueID | awk '{print $2}' | sort -ug | tail -1)
+        typeset -i userid=$((maxid+1))
+
+        # Create the user account by running dscl.
+        dscl . -create /Users/$uname
+        dscl . -create /Users/$uname UserShell /bin/bash
+        dscl . -create /Users/$uname RealName "$uname"
+        dscl . -create /Users/$uname UniqueID "$userid"
+        dscl . -create /Users/$uname PrimaryGroupID 20
+        dscl . -create /Users/$uname NFSHomeDirectory $basedir/$uname
+        dscl . -passwd /Users/$uname $password
+
+        add_group $gname
+        dseditgroup -o edit -t user -a $uname $gname
+
+        # Create the home directory
+        createhomedir -l -u $uname 2>&1 | grep -v "shell-init"
+    else
+        log_must $USERADD -g $gname -d $basedir/$uname -m $uname
+    fi
 
 	return 0
 }
@@ -1919,7 +1942,11 @@ function del_user #<logname> <basedir>
 	fi
 
 	if $ID $user > /dev/null 2>&1; then
-		log_must $USERDEL $user
+        if [[ -n "$OSX" ]]; then
+            dscl . -delete /Users/$user
+        else
+            log_must $USERDEL $user
+        fi
 	fi
 
 	[[ -d $basedir/$user ]] && $RM -fr $basedir/$user
@@ -1940,22 +1967,26 @@ function add_group #<group_name>
 		log_fail "group name is necessary."
 	fi
 
-	# Assign 100 as the base gid
-	typeset -i gid=100
-	[[ -n "$LINUX" ]] && gid=1000
-	while true; do
-		$GROUPADD -g $gid $group > /dev/null 2>&1
-		typeset -i ret=$?
-		if [[ -n "$LINUX" ]] && [[ $ret -eq 9 ]]; then
-			ret=4
-		fi
-		case $ret in
-			0) return 0 ;;
-			# The gid is not  unique
-			4) ((gid += 1)) ;;
-			*) return 1 ;;
-		esac
-	done
+    if [[ -n "$OSX" ]]; then
+        /usr/sbin/dseditgroup -o create $grp
+    else
+        # Assign 100 as the base gid
+        typeset -i gid=100
+        [[ -n "$LINUX" ]] && gid=1000
+        while true; do
+            $GROUPADD -g $gid $group > /dev/null 2>&1
+            typeset -i ret=$?
+            if [[ -n "$LINUX" ]] && [[ $ret -eq 9 ]]; then
+                ret=4
+            fi
+            case $ret in
+                0) return 0 ;;
+                # The gid is not  unique
+                4) ((gid += 1)) ;;
+                *) return 1 ;;
+            esac
+        done
+    fi
 }
 
 #
@@ -1970,15 +2001,19 @@ function del_group #<group_name>
 		log_fail "group name is necessary."
 	fi
 
-	$GETENT group $grp > /dev/null 2>&1
-	typeset -i ret=$?
-	case $ret in
-		# Group does not exist.
-		2) return 0 ;;
-		# Name already exists as a group name
-		0) log_must $GROUPDEL $grp ;;
-		*) return 1 ;;
-	esac
+    if [[ -n "$OSX" ]]; then
+        /usr/sbin/dseditgroup -o delete $grp
+    else
+        $GETENT group $grp > /dev/null 2>&1
+        typeset -i ret=$?
+        case $ret in
+            # Group does not exist.
+            2) return 0 ;;
+            # Name already exists as a group name
+            0) log_must $GROUPDEL $grp ;;
+            *) return 1 ;;
+        esac
+    fi
 
 	return 0
 }
