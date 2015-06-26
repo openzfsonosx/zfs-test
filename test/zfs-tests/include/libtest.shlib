@@ -1914,7 +1914,6 @@ function add_user #<group_name> <user_name> <basedir>
         dscl . -create /Users/$uname NFSHomeDirectory $basedir/$uname
         dscl . -passwd /Users/$uname $password
 
-        add_group $gname
         dseditgroup -o edit -t user -a $uname $gname
 
         # Create the home directory
