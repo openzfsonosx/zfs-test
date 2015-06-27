@@ -1906,18 +1906,18 @@ function add_user #<group_name> <user_name> <basedir>
         typeset -i userid=$((maxid+1))
 
         # Create the user account by running dscl.
-        dscl . -create /Users/$uname
-        dscl . -create /Users/$uname UserShell /bin/bash
-        dscl . -create /Users/$uname RealName "$uname"
-        dscl . -create /Users/$uname UniqueID "$userid"
-        dscl . -create /Users/$uname PrimaryGroupID 20
-        dscl . -create /Users/$uname NFSHomeDirectory $basedir/$uname
-        dscl . -passwd /Users/$uname $password
+        log_must dscl . -create /Users/$uname
+        log_must dscl . -create /Users/$uname UserShell /bin/bash
+        log_must dscl . -create /Users/$uname RealName "$uname"
+        log_must dscl . -create /Users/$uname UniqueID "$userid"
+        log_must dscl . -create /Users/$uname PrimaryGroupID 20
+        log_must dscl . -create /Users/$uname NFSHomeDirectory $basedir/$uname
+        log_must dscl . -passwd /Users/$uname $password
 
-        dseditgroup -o edit -t user -a $uname $gname
+        log_must dseditgroup -o edit -t user -a $uname $gname
 
         # Create the home directory
-        createhomedir -l -u $uname 2>&1 | grep -v "shell-init"
+        log_must createhomedir -l -u $uname 2>&1 | grep -v "shell-init"
     else
         log_must $USERADD -g $gname -d $basedir/$uname -m $uname
     fi
@@ -1942,7 +1942,7 @@ function del_user #<logname> <basedir>
 
 	if $ID $user > /dev/null 2>&1; then
         if [[ -n "$OSX" ]]; then
-            dscl . -delete /Users/$user
+            log_must dscl . -delete /Users/$user
         else
             log_must $USERDEL $user
         fi
@@ -1967,7 +1967,8 @@ function add_group #<group_name>
 	fi
 
     if [[ -n "$OSX" ]]; then
-        /usr/sbin/dseditgroup -o create $grp
+        log_must /usr/sbin/dseditgroup -o create $group
+        return 0
     else
         # Assign 100 as the base gid
         typeset -i gid=100
@@ -2001,7 +2002,8 @@ function del_group #<group_name>
 	fi
 
     if [[ -n "$OSX" ]]; then
-        /usr/sbin/dseditgroup -o delete $grp
+        log_must /usr/sbin/dseditgroup -o delete $grp
+        return 0
     else
         $GETENT group $grp > /dev/null 2>&1
         typeset -i ret=$?
