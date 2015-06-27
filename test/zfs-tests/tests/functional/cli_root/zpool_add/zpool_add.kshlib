@@ -42,32 +42,38 @@
 #
 function iscontained
 {
-	typeset pool=$1
-	typeset vdev
+    typeset pool=$1
+    typeset vdev
 
-        if [[ -z $pool ]]; then
-                log_note "Missing pool name."
-                return 2
+    if [[ -z $pool ]]; then
+        log_note "Missing pool name."
+        return 2
+    fi
+
+    shift
+
+    for vdev in $@; do
+
+        # remove /dev/dsk in vdev if there is
+        $ECHO $vdev | $GREP "^/dev/dsk" >/dev/null 2>&1
+        if (( $? == 0 )) || [[ -n "$LINUX" ]]; then
+            vdev=${vdev##*/}
         fi
 
-	shift
+        # OSX - remove /dev in vdev if there is
+        $ECHO $vdev | $GREP "^/dev" >/dev/null 2>&1
+        if (( $? == 0 )) || [[ -n "$OSX" ]]; then
+            vdev=${vdev##*/}
+        fi
 
-	for vdev in $@; do
+        $ZPOOL status "$pool" | $AWK -v vdevname=$vdev '$1 == vdevname {exit 1}' \
+        >/dev/null 2>&1
+        (( $? != 1 )) && \
+        return 1
 
-# remove /dev/dsk in vdev if there is
-		$ECHO $vdev | $GREP "^/dev/dsk" >/dev/null 2>&1
-		if (( $? == 0 )) || [[ -n "$LINUX" ]]; then
-			vdev=${vdev##*/}
-		fi
+    done
 
-		$ZPOOL status "$pool" | $AWK '$1 == vdevname {exit 1}' \
-			vdevname=$vdev >/dev/null 2>&1
-		(( $? != 1 )) && \
-			return 1
-	done
-
-	return 0;
-
+    return 0;
 }
 
 #
