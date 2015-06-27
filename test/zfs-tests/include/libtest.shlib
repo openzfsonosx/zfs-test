@@ -1967,7 +1967,7 @@ function add_group #<group_name>
 	fi
 
     if [[ -n "$OSX" ]]; then
-        log_must /usr/sbin/dseditgroup -o create $group
+        /usr/sbin/dseditgroup -o create $group
         return 0
     else
         # Assign 100 as the base gid
