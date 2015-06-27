@@ -1814,7 +1814,9 @@ function find_disks
 {
 	if [[ -n "$LINUX" ]]; then
 		$ECHO $(find_disks_linux "$@")
-	else
+    elif [[ -n "$OSX" ]]; then
+        $ECHO $(find_disks_osx "$@")
+    else
 		$ECHO $(find_disks_bsd "$@")
 	fi
 }
@@ -1828,6 +1830,19 @@ function find_disks_linux
 {
 	$ECHO "$@"
 }
+
+#/**
+# Simply return the $DISKS we've specified in
+# the shell environment. These are sparse files
+# so use them at will...
+#
+# FIXME: This can likely be improved
+#*/
+function find_disks_osx
+{
+$ECHO "$@"
+}
+
 
 #/**
 # A function to find and locate free disks on a system or from given
