@@ -2640,20 +2640,23 @@ function get_substr #src_str pos offset
 #
 function is_physical_device #device
 {
-	typeset ret=0
-	if [[ -n "$LINUX" ]]; then
-		device=$(get_physical_device $1)
-		$ECHO $device | $EGREP "^[sh]d+[a-z]+[0-9]+$" > /dev/null 2>&1
-		ret=$?
-	else
-		typeset device=${1#$DEV_DSKDIR/}
-		device=${device#$DEV_RDSKDIR/}
+    typeset ret=0
+    if [[ -n "$LINUX" ]]; then
+        device=$(get_physical_device $1)
+        $ECHO $device | $EGREP "^[sh]d+[a-z]+[0-9]+$" > /dev/null 2>&1
+        ret=$?
+    elif [[ -n "$OSX" ]]; then
+        device=$(get_physical_device $1)
+        $ECHO $device | $EGREP "^disk[0-9]+(s[0-9]+)*$" > /dev/null 2>&1
+        ret=$?
+    else
+        typeset device=${1#$DEV_DSKDIR/}
+        device=${device#$DEV_RDSKDIR/}
+        $ECHO $device | $EGREP "^c[0-F]+([td][0-F]+)+$" > /dev/null 2>&1
+        ret=$?
+    fi
 
-		$ECHO $device | $EGREP "^c[0-F]+([td][0-F]+)+$" > /dev/null 2>&1
-		ret=$?
-	fi
-
-	return $ret
+    return $ret
 }
 
 #
