@@ -587,9 +587,9 @@ function zero_partitions #<whole_disk_name>
 	typeset diskname=$1
 	typeset i
 
-	if [[ -n "$LINUX" ]]; then
+	if [[ -n "$LINUX" || -n "$OSX" ]]; then
 		set_partition 0 "" 0mb $diskname
-	else
+    else
 		for i in 0 1 3 4 5 6 7
 		do
 			set_partition $i "" 0mb $diskname
@@ -612,7 +612,40 @@ function set_partition #<slice_num> <slice_start> <size_plus_units>  <whole_disk
 	[[ -z $slicenum || -z $size || -z $disk ]] && \
 	    log_fail "The slice, size or disk name is unspecified."
 
-	if [[ -n "$LINUX" ]]; then
+    if [[ -n "$OSX" ]]; then
+
+        if [[ $slicenum == 0 ]]; then
+            log_must gpt destroy $disk
+            log_must gpt create $disk
+        fi
+
+        log_note diskutil info $disk | grep "Block Size:"
+
+        typeset -i sector_size=$(diskutil info $disk | grep "Block Size:" | awk '{print $4}')
+
+        if [[ $slicenum == 0 ]]; then
+            gpt destroy $disk
+            gpt create $disk
+        fi
+
+        # Parse out the size indicator
+        typeset bytes=${size%%[mMgG]}
+        bytes=${bytes%%[mMgG][bB]}
+
+        # Get total number of bytes in partition
+        [[ $size == +([0-9])+([gG])*([bB]) ]] && bytes=$(( $bytes * 1024 * 1024 * 1024 ))
+        [[ $size == +([0-9])+([mM])*([bB]) ]] && bytes=$(( $bytes * 1024 * 1024 ))
+
+        # Convert to a sector count
+        typeset sectors=$(( $bytes / $sector_size ))
+
+        log_note "size->" $size "bytes->" $bytes "sector_size->" $sector_size "sectors->" $sectors
+
+        log_must gpt add -s $sectors $disk
+
+        return 0
+
+    elif [[ -n "$LINUX" ]]; then
 		typeset end=${size%%[mMgG]}
 		end=${end%%[mMgG][bB]}
 		[[ ${size:1:1} == 'g' ]] && ((end = end * 1024))
@@ -721,16 +754,25 @@ function partition_disk	#<slice_size> <whole_disk_name>	<total_slices>
 	typeset total_slices=$3
 	typeset cyl
 
-	zero_partitions $disk_name
-	while ((i < $total_slices)); do
-		if [[ -z "$LINUX" ]] && ((i == 2)); then
-			((i = i + 1))
-			continue
-		fi
-		set_partition $i "$cyl" $slice_size $disk_name
-		cyl=$(get_endslice $disk_name $i)
-		((i = i+1))
-	done
+
+    if [[ -n "$OSX" ]]; then
+        #OSX we ignore the start cylinder and just let gpt add a new partition
+        while ((i < $total_slices)); do
+            set_partition $i "" $slice_size $disk_name
+            ((i = i+1))
+        done
+    else
+        zero_partitions $disk_name
+        while ((i < $total_slices)); do
+            if [[ -z "$LINUX" ]] && ((i == 2)); then
+                ((i = i + 1))
+                continue
+            fi
+            set_partition $i "$cyl" $slice_size $disk_name
+            cyl=$(get_endslice $disk_name $i)
+            ((i = i+1))
+        done
+    fi
 }
 
 #
