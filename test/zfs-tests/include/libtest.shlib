@@ -2731,7 +2731,11 @@ function get_device_dir #device
 		fi
 		$ECHO $device
 	else
-		$ECHO "/dev/dsk"
+        if [[ -n "$OSX" ]]; then
+            $ECHO "/dev"
+        else
+            $ECHO "/dev/dsk"
+        fi
 	fi
 }
 
