@@ -2002,7 +2002,7 @@ function del_group #<group_name>
 	fi
 
     if [[ -n "$OSX" ]]; then
-        log_must /usr/sbin/dseditgroup -o delete $grp
+        /usr/sbin/dseditgroup -o delete $grp
         return 0
     else
         $GETENT group $grp > /dev/null 2>&1
