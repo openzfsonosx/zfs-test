@@ -60,8 +60,8 @@ fi
 if [[ -n "$OSX" && -n "$start_disks" ]]; then
     disk="" ; typeset -i i=0
     for dsk in $start_disks; do
-    eval 'export DISK${i}="$dsk"'
-    eval 'export DISK${i}b="$dsk"'
+    eval 'export DISK${i}="${dsk##*/}"'
+    eval 'export DISK${i}b="${dsk##*/}"'
     [[ -z "$disk" ]] && disk=$dsk
     ((i += 1))
     done
