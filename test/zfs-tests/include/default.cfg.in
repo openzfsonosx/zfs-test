@@ -162,6 +162,19 @@ if [[ -n "$LINUX" ]]; then
 	DEV_RDSKDIR="/dev"
 
 	NEWFS_DEFAULT_FS="ext2"
+elif [[ -n "$OSX" ]]; then
+    unpack_opts="xv"
+    pack_opts="cf"
+    verbose="v"
+    unpack_preserve="xpf"
+    pack_preserve="cpf"
+
+    ZVOL_DEVDIR="/dev"
+    ZVOL_RDEVDIR="/dev"
+    DEV_DSKDIR="/dev"
+    DEV_RDSKDIR="/dev"
+
+    NEWFS_DEFAULT_FS="hfs+"
 else
 	unpack_opts="xv"
 	pack_opts="cf"
