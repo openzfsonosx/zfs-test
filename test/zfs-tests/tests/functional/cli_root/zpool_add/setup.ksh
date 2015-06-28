@@ -54,7 +54,28 @@ else
 		partition_disk $SIZE $disk 7
 	done
 
-	[[ -n "$LINUX" ]] && start_disks="$DISKSARRAY"
+	 [[ -n "$LINUX" || -n "$OSX" ]] && start_disks="$DISK"
+fi
+
+if [[ -n "$OSX" && -n "$start_disks" ]]; then
+    disk="" ; typeset -i i=0
+    for dsk in $start_disks; do
+    eval 'export DISK${i}="$dsk"'
+    eval 'export DISK${i}b="$dsk"'
+    [[ -z "$disk" ]] && disk=$dsk
+    ((i += 1))
+    done
+
+cat <<EOF > $TMPFILE
+export disk=$disk
+export DISK0=$DISK0
+export DISK0b=$DISK0b
+export DISK1=$DISK1
+export DISK1b=$DISK1b
+export DISK2=$DISK2
+export DISK2b=$DISK2b
+export DEV_DSKDIR=""
+EOF
 fi
 
 if [[ -n "$LINUX" && -n "$start_disks" ]]; then
