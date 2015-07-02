@@ -641,7 +641,8 @@ function set_partition #<slice_num> <slice_start> <size_plus_units>  <whole_disk
 
         log_note "size->" $size "bytes->" $bytes "sector_size->" $sector_size "sectors->" $sectors
 
-        log_must gpt add -s $sectors $disk
+        # Add partition as "ZFS" - hopefully prevent DiskArbitrator popup.
+        log_must gpt add -s $sectors -t "6A898CC3-1DD2-11B2-99A6-080020736631" $disk
 
         return 0
 

@@ -26,7 +26,7 @@
 #
 . $STF_SUITE/include/libtest.shlib
 . $STF_SUITE/tests/functional/cli_root/zpool_add/zpool_add.kshlib
-#. $TMPFILE
+. $TMPFILE
 
 #
 # DESCRIPTION:
@@ -90,7 +90,7 @@ while (( $i < ${#keywords[*]} )); do
         case ${keywords[i]} in
         ""|spare)
 		for vdev in "${poolarray[@]}"; do
-			[[ -n "$LINUX" ]] && vdev=${vdev##/dev/}
+			[[ -n "$LINUX" || -n "$OSX" ]] && vdev=${vdev##/dev/}
 			create_pool "$TESTPOOL" "${disk}${slice_part}${SLICE6}"
 			log_must poolexists "$TESTPOOL"
 			log_must $ZPOOL add -f "$TESTPOOL" ${keywords[i]} $vdev
@@ -101,7 +101,7 @@ while (( $i < ${#keywords[*]} )); do
 		;;
         mirror)
 		for vdev in "${mirrorarray[@]}"; do
-			[[ -n "$LINUX" ]] && vdev=${vdev##/dev/}
+			[[ -n "$LINUX" || -n "$OSX" ]] && vdev=${vdev##/dev/}
 			create_pool "$TESTPOOL" "${keywords[i]}" \
 				"${disk}${slice_part}${SLICE4}" "${disk}${slice_part}${SLICE5}"
 			log_must poolexists "$TESTPOOL"
@@ -113,7 +113,7 @@ while (( $i < ${#keywords[*]} )); do
 		;;
         raidz|raidz1)
 		for vdev in "${raidzarray[@]}"; do
-			[[ -n "$LINUX" ]] && vdev=${vdev##/dev/}
+			[[ -n "$LINUX" || -n "$OSX" ]] && vdev=${vdev##/dev/}
 			create_pool "$TESTPOOL" "${keywords[i]}" \
 				"${disk}${slice_part}${SLICE4}" "${disk}${slice_part}${SLICE5}"
 			log_must poolexists "$TESTPOOL"
