@@ -1675,7 +1675,8 @@ function cleanup_devices #vdevs
 	create_pool $pool $@
 	destroy_pool $pool
 
-    sleep 5
+#BGH is this really needed? Its worth 30 mins of execution time
+#sleep 5
 
 	return 0
 }
