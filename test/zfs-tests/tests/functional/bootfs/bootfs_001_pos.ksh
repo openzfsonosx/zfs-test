@@ -58,7 +58,7 @@ log_onexit cleanup
 typeset VDEV=$TESTDIR/bootfs_001_pos_a.$$.dat
 
 if [[ -n "$OSX" ]]; then
-    log_must $MKFILE 400m $VDEV
+    log_must $MKFILE $MKFILE_SPARSE 400m $VDEV
 else
     log_must $MKFILE -s 400m $VDEV
 fi

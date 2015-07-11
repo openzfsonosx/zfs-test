@@ -116,7 +116,7 @@ function setup_test_env
 
 	destroy_pool -f $pool
 
-	log_must $MKFILE $DEV_SIZE $vdevs
+	log_must $MKFILE $MKFILE_SPARSE $DEV_SIZE $vdevs
 
 	log_must $ZPOOL create -m $TESTDIR $pool $keyword $vdevs
 
@@ -249,7 +249,7 @@ function replace_missing_devs
 
 	typeset vdev
 	for vdev in $@; do
-		log_must $MKFILE $DEV_SIZE $vdev
+		log_must $MKFILE $MKFILE_SPARSE $DEV_SIZE $vdev
 		log_must $ZPOOL replace -f $pool $vdev $vdev
 		while true; do
 			if ! is_pool_resilvered $pool ; then
@@ -287,7 +287,7 @@ function damage_devs
 				count=$bs_count conv=notrunc >/dev/null 2>&1
 		done
 	else
-		log_must $MKFILE $DEV_SIZE $vdevs
+		log_must $MKFILE $MKFILE_SPARSE $DEV_SIZE $vdevs
 	fi
 
 	sync_pool $pool

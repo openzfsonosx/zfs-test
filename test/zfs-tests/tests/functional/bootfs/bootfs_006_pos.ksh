@@ -93,7 +93,7 @@ log_assert "Pools of correct vdev types accept boot property"
 
 
 log_onexit cleanup
-log_must $MKFILE 64m $VDEV1 $VDEV2 $VDEV3 $VDEV4
+log_must $MKFILE $MKFILE_SPARSE 64m $VDEV1 $VDEV2 $VDEV3 $VDEV4
 
 
 ## the following configurations are supported bootable pools

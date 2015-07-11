@@ -143,16 +143,16 @@ SAVED_DIR=$PWD
 # ./dir1/dir2/file6
 
 cd $TESTDIR
-$MKFILE 10m file1
-$MKFILE 20m file2
+$MKFILE $MKFILE_SPARSE 10m file1
+$MKFILE $MKFILE_SPARSE 20m file2
 $MKDIR dir1
 cd dir1
-$MKFILE 10m file3
-$MKFILE 20m file4
+$MKFILE $MKFILE_SPARSE 10m file3
+$MKFILE $MKFILE_SPARSE 20m file4
 $MKDIR dir2
 cd dir2
-$MKFILE 10m file5
-$MKFILE 20m file6
+$MKFILE $MKFILE_SPARSE 10m file5
+$MKFILE $MKFILE_SPARSE 20m file6
 
 # Now walk the directory structure verifying it
 cd $TESTDIR

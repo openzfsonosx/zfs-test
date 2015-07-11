@@ -123,7 +123,7 @@ function detach_test
 specials_list=""
 i=0
 while [[ $i != 2 ]]; do
-	$MKFILE 100m $TESTDIR/$TESTFILE1.$i
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/$TESTFILE1.$i
 	specials_list="$specials_list $TESTDIR/$TESTFILE1.$i"
 
 	((i = i + 1))

@@ -71,7 +71,7 @@ done
 pools[${#pools[@]}]="$bigname"
 
 if [[ -n "$OSX" ]]; then
-    $MKFILE 64m $TESTDIR/bootfs_003.$$.dat
+    $MKFILE $MKFILE_SPARSE 64m $TESTDIR/bootfs_003.$$.dat
 else
     $MKFILE -s 64m $TESTDIR/bootfs_004.$$.dat
 fi
