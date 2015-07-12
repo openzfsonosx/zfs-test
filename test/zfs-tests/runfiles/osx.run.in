@@ -548,9 +548,12 @@ tests = ['clone_001_pos', 'rollback_001_pos', 'rollback_002_pos',
     'snapshot_012_pos', 'snapshot_013_pos', 'snapshot_014_pos',
     'snapshot_015_pos', 'snapshot_016_pos', 'snapshot_017_pos']
 
-[@PREFIX@/zfs-tests/tests/functional/snapused]
-tests = ['snapused_001_pos', 'snapused_002_pos', 'snapused_003_pos',
-    'snapused_004_pos', 'snapused_005_pos']
+# Disabed, these these appear to get stuck due to interactive
+# password need from disk arbitrationd
+#[@PREFIX@/zfs-tests/tests/functional/snapused]
+#tests = ['snapused_001_pos', 'snapused_002_pos', 'snapused_003_pos',
+#    'snapused_004_pos', 'snapused_005_pos']
+#
 
 [@PREFIX@/zfs-tests/tests/functional/sparse]
 tests = ['sparse_001_pos']
