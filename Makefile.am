@@ -43,6 +43,13 @@ test_existing: test_verify test/zfs-tests/cmd
 	 DISKS="/var/tmp/zfs_test-1 /var/tmp/zfs_test-2 /var/tmp/zfs_test-3" \
 	 su zfs-tests -c "ksh $(abs_top_srcdir)/test/zfs-tests/cmd/scripts/zfstest.ksh $$RUNFILE"
 
+test_hw: test_verify test/zfs-tests/cmd
+    @KEEP="`zpool list -H -oname`" \
+    STF_TOOLS=$(abs_top_srcdir)/test/test-runner/stf \
+    STF_SUITE=$(abs_top_srcdir)/test/zfs-tests \
+    DISKS="/dev/disk0s4 /dev/disk0s5 /dev/disk0s6" \
+    su zfs-tests -c "ksh $(abs_top_srcdir)/test/zfs-tests/cmd/scripts/zfstest.ksh $$RUNFILE"
+
 test_verify:
 	@# -------------------------------------------------------------------
 	@# adduser --home /var/tmp/test_results --shell /usr/bin/ksh --gecos "ZFS Test Suite" --disabled-password zfs-tests
