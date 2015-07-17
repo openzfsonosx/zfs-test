@@ -103,11 +103,11 @@ if is_global_zone
 then
 	# create a filesystem we can share
 	log_must $ZFS create $TESTPOOL/$TESTFS/unshared
-	log_must $ZFS set sharenfs=off $TESTPOOL/$TESTFS/unshared
+#	log_must $ZFS set sharenfs=off $TESTPOOL/$TESTFS/unshared
 
 	# create a filesystem that we can unshare
 	log_must $ZFS create $TESTPOOL/$TESTFS/shared
-	log_must $ZFS set sharenfs=on $TESTPOOL/$TESTFS/shared
+#	log_must $ZFS set sharenfs=on $TESTPOOL/$TESTFS/shared
 fi
 
 
