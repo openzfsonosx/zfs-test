@@ -88,9 +88,9 @@ function setup_snap_env
 		# Make sure the ufs|ext2 filesystem hasn't been mounted,
 		# then mount the new ufs filesystem.
 		if [[ -n "$LINUX" ]]; then
-			$DF -lhTt $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
+			$DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE}t $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
 		else
-			$DF -lhF $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
+			$DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE} $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
 		fi
 		if (( $? != 0 )); then
 			log_must $MOUNT \
@@ -169,9 +169,9 @@ function cleanup_env
 	$PKILL ${DD##*/}
 
 	if [[ -n "$LINUX" ]]; then
-		$DF -lhTt $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
+		$DF -${DF_LOCAL_FS_ONLY}hTt $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
 	else
-		$DF -lhF $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
+		$DF -${DF_LOCAL_FS_ONLY}hF $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
 	fi
 	if (( $? == 0 )); then
 		log_must $UMOUNT -f $TESTDIR1

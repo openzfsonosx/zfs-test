@@ -66,6 +66,8 @@ function create_blockfile
 	typeset disk=$3
 	typeset dir=`$DIRNAME $file`
 
+    log_note "!!!!" $size $file $disk $dir
+
 	if [[ -d $dir ]]; then
 		ismounted $dir $NEWFS_DEFAULT_FS
 		(( $? == 0 )) && \
@@ -75,19 +77,34 @@ function create_blockfile
 	fi
 
 	if [[ $disk == "/"* ]]; then
-		$ECHO "y" | $NEWFS $disk >/dev/null 2>&1
-	else
+        log_note "!!! path 1"
+
+        if [[ -n "$OSX" ]]; then
+            typeset dirfile=`$BASENAME $file`
+            typeset volname=${dirfile}_diskvol
+            log_must sudo diskutil eraseVolume hfs+ $volname $disk
+            log_must sudo diskutil unmount $disk
+        else
+            $ECHO "y" | $NEWFS $disk >/dev/null 2>&1
+        fi
+    else
+        log_note "!!! path 2"
 		$ECHO "y" | $NEWFS $DEV_RDSKDIR/$disk >/dev/null 2>&1
 	fi
-	(( $? != 0 )) &&
-		log_fail "Create $NEWFS_DEFAULT_FS file system fail."
+
+#	(( $? != 0 )) &&
+#		log_fail "Create $NEWFS_DEFAULT_FS file system fail."
 
 	if [[ $disk == "/"* ]]; then
+        if [[ -n "OSX" ]]; then
+            log_must sudo diskutil mount -mountpoint $dir $disk
+        else
 	        log_must $MOUNT $disk $dir
+        fi
 	else
 	        log_must $MOUNT $DEV_RDSKDIR/$disk $dir
 	fi
-        log_must $MKFILE -s $size $file
+        log_must $MKFILE $MKFILE_SPARSE $size $file
 }
 
 #
@@ -101,18 +118,28 @@ function clean_blockfile
 	for dir in $dirs; do
 		if [[ -d $dir ]]; then
 			if ismounted $dir $NEWFS_DEFAULT_FS; then
-				if [[ -n "$LINUX" ]]; then
-					typeset dev=$($DF -lhTt $NEWFS_DEFAULT_FS 2> /dev/null | \
+                if [[ -n "$LINUX" ]]; then
+					typeset dev=$($DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE}t $NEWFS_DEFAULT_FS 2> /dev/null | \
 						$GREP -v '^Filesystem' | \
 						$GREP "$dir" | \
 						$AWK '{print $1}')
-				else
-					typeset dev=$($DF -lhF $NEWFS_DEFAULT_FS | \
+                elif [[ -n "$OSX" ]]; then
+                    typeset dev=$($DF -h${DF_FS_TYPE} $NEWFS_DEFAULT_FS 2> /dev/null | \
+                        $SED -e /^Filesystem/d | \
+                        $GREP "$dir" | \
+                        $AWK '{print $1}')
+                else
+					typeset dev=$($DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE} $NEWFS_DEFAULT_FS | \
 						$GREP "$dir" | \
 						$AWK '{print $1}')
+                fi
+
+                if [[ -n "$OSX" ]]; then
+                    sudo diskutil unmount $dir
+                else
+                    log_must $UMOUNT -f $dir
 				fi
-				log_must $UMOUNT -f $dir
-				create_pool ${TESTPOOL}.tmp $dev
+                create_pool ${TESTPOOL}.tmp $dev
 				destroy_pool -f ${TESTPOOL}.tmp
 			fi
 			log_must $RM -rf $dir

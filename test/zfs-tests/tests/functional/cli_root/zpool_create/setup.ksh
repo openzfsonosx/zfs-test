@@ -34,6 +34,8 @@
 
 verify_runnable "global"
 
+log_note $TMPFILE $DISK $DISKSARRAY
+
 if [[ -z "$LINUX" ]] && ! $(is_physical_device $DISKS) ; then
 	log_unsupported "This directory cannot be run on raw files."
 fi
@@ -44,18 +46,16 @@ if [[ -n $DISK ]]; then
         # in the given disk to avoid slice overlapping.
         #
 	cleanup_devices $DISK
+    partition_disk $SIZE $DISK 7
 
-        partition_disk $SIZE $DISK 7
-
-	[[ -n "$LINUX" ]] && start_disks="$DISK"
+	[[ -n "$LINUX" || -n "$OSX" ]] && start_disks="$DISK"
 else
 	for disk in `$ECHO $DISKSARRAY`; do
 		cleanup_devices $disk
-
 		partition_disk $SIZE $disk 7
 	done
 
-	[[ -n "$LINUX" ]] && start_disks="$disk"
+	[[ -n "$LINUX" || -n "$OSX" ]] && start_disks="$disk"
 fi
 
 if [[ -n "$LINUX" && -n "$start_disks" ]]; then
@@ -80,6 +80,31 @@ export DISK_ARRAY_NUM=1
 export DEV_DSKDIR=""
 export DEV_RDSKDIR=""
 EOF
+fi
+
+if [[ -n "$OSX" && -n "$start_disks" ]]; then
+    disk="" ; typeset -i i=0
+    for dsk in $start_disks; do
+        log_note "disk=>"$dsk
+        eval 'export DISK${i}="$dsk"'
+        eval 'export DISK${i}_orig="$dsk"'
+        [[ -z "$disk" ]] && disk=$dsk
+        ((i += 1))
+    done
+
+cat <<EOF > $TMPFILE
+export disk=$disk
+export DISK0=$DISK0
+export DISK1=$DISK1
+export DISK2=$DISK2
+export DISK0_orig=$DISK0_orig
+export DISK1_orig=$DISK1_orig
+export DISK2_orig=$DISK2_orig
+export DISK_ARRAY_NUM=1
+export DEV_DSKDIR=""
+export DEV_RDSKDIR=""
+EOF
+cp $TMPFILE $TMPFILE.keep
 fi
 
 log_pass

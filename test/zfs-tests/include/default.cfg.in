@@ -174,7 +174,7 @@ elif [[ -n "$OSX" ]]; then
     DEV_DSKDIR="/dev"
     DEV_RDSKDIR="/dev"
 
-    NEWFS_DEFAULT_FS="hfs+"
+    NEWFS_DEFAULT_FS="hfs"
 else
 	unpack_opts="xv"
 	pack_opts="cf"

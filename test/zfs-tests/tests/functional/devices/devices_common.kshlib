@@ -68,7 +68,7 @@ function create_dev_file
 			# Get the existing block device file in current system.
 			# And bring out the first one.
 			#
-					devstr=$($DF -lhF ufs | \
+                    devstr=$($DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE} ufs | \
 						$GREP "^/dev/dsk" | \
 						$AWK '{print $1}')
 					devstr=$($ECHO "$devstr" | \

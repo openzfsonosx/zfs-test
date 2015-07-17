@@ -71,9 +71,9 @@ function test_n_check #opt num_snap_clone num_rollback
 	destroy_dataset -Rf $FS
 	if datasetexists $VOL; then
 		if [[ -n "$LINUX" ]]; then
-			$DF -lhTt $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
+			$DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE}t $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
 		else
-			$DF -lhF $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
+			$DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE} $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
 		fi
 		(( $? == 0 )) && log_must $UMOUNT -f $TESTDIR1
 

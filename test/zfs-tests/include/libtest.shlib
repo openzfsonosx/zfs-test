@@ -56,6 +56,9 @@ function ismounted
 {
 	typeset fstype=$2
 	[[ -z $fstype ]] && fstype=zfs
+
+    log_note "ismounted" $1 $2
+
 	typeset out dir name ret
 
 	case $fstype in
@@ -71,8 +74,8 @@ function ismounted
 			fi
 		;;
 		ufs|nfs)
-			out=$($DF -F $fstype $1 2>/dev/null)
-			ret=$?
+            out=$($DF -${DF_FS_TYPE} $fstype $1 2>/dev/null)
+            ret=$?
 			(($ret != 0)) && return $ret
 
 			dir=${out%%\(*}
@@ -84,7 +87,7 @@ function ismounted
 			[[ "$1" == "$dir" || "$1" == "$name" ]] && return 0
 		;;
 		ext2)
-			out=$($DF -F $fstype $1 2>/dev/null)
+            out=$($DF -${DF_FS_TYPE} $fstype $1 2>/dev/null)
 			ret=$?
 			(($ret != 0)) && return $ret
 
@@ -94,6 +97,16 @@ function ismounted
 
 			[[ "$1" == "$dir" || "$1" == "$name" ]] && return 0
 		;;
+        hfs)
+            out=$($DF -${DF_FS_TYPE} $fstype $1 | sed -e /^Filesystem/d 2>/dev/null)
+            ret=$?
+            (($ret != 0)) && return $ret
+
+            dir=$(echo $out | awk '{print $9}')
+            name=$(echo $out | awk '{print $1}')
+
+            [[ "$1" == "$dir" || "/private${1}" == "$dir" || "$1" == "$name" ]] && return 0
+        ;;
 		zvol)
 			if [[ -L "$ZVOL_DEVDIR/$1" ]]; then
 				link=$(readlink -f $ZVOL_DEVDIR/$1)
@@ -614,19 +627,19 @@ function set_partition #<slice_num> <slice_start> <size_plus_units>  <whole_disk
 
     if [[ -n "$OSX" ]]; then
 
+        log_note diskutil info $disk | grep "Block Size:"
+        typeset -i sector_size=$(diskutil info $disk | grep "Block Size:" | awk '{print $4}')
+
+        # To create slice "0" erase this gpt, recreate, and add EFI partition.
+
         if [[ $slicenum == 0 ]]; then
             log_must gpt destroy $disk
             log_must gpt create $disk
+
+            typeset -i efi_part_sectors=$(( 200 * 1024 * 1024 / $sector_size ))
+            log_must gpt add -s $efi_part_sectors -t "C12A7328-F81F-11D2-BA4B-00A0C93EC93B" $disk
         fi
 
-        log_note diskutil info $disk | grep "Block Size:"
-
-        typeset -i sector_size=$(diskutil info $disk | grep "Block Size:" | awk '{print $4}')
-
-        if [[ $slicenum == 0 ]]; then
-            gpt destroy $disk
-            gpt create $disk
-        fi
 
         # Parse out the size indicator
         typeset bytes=${size%%[mMgG]}

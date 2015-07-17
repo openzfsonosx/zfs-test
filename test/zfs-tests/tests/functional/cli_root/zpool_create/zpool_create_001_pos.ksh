@@ -86,8 +86,12 @@ case $DISK_ARRAY_NUM in
 	else
 		disk=$DISK0
 	fi
+
+log_note *** create 1
 	create_blockfile $FILESIZE $TESTDIR0/$FILEDISK0 ${disk}${slice_part}${SLICE5}
-        create_blockfile $FILESIZE $TESTDIR1/$FILEDISK1 ${disk}${slice_part}${SLICE6}
+log_note *** create 2
+    create_blockfile $FILESIZE $TESTDIR1/$FILEDISK1 ${disk}${slice_part}${SLICE6}
+log_note *** create 3
 
 	pooldevs="${disk}${slice_part}${SLICE0} \
                   $DEV_DSKDIR/${disk}${slice_part}${SLICE0} \
@@ -131,5 +135,7 @@ while (( $i < ${#keywords[*]} )); do
 	esac
 	(( i = i+1 ))
 done
+log_note *** create 1111
+
 
 log_pass "'zpool create <pool> <vspec> ...' success."
