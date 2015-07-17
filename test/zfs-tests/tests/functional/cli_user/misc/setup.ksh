@@ -113,21 +113,28 @@ fi
 
 log_must $ZFS create -o version=1 $TESTPOOL/$TESTFS/version1
 log_must $ZFS create -o version=1 $TESTPOOL/$TESTFS/allowed
-log_must $ZFS allow everyone create $TESTPOOL/$TESTFS/allowed
+#log_must $ZFS allow everyone create $TESTPOOL/$TESTFS/allowed
 
 if is_global_zone
 then
 
+    #O3X - need permissions
+    sudo chmod -R 77 $TESTDIR
+
 	# Now create several virtual disks to test zpool with
 
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk1.dat
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk2.dat
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk3.dat
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk-additional.dat
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk-export.dat
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk-offline.dat
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk-spare1.dat
-	$MKFILE $MKFILE_SPARSE 100m /$TESTDIR/disk-spare2.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk1.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk2.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk3.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk-additional.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk-export.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk-offline.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk-spare1.dat
+	$MKFILE $MKFILE_SPARSE 100m $TESTDIR/disk-spare2.dat
+
+exit
+
+log_note `ls $TESTDIR/disk1.dat`
 
 	# and create a pool we can perform attach remove replace,
 	# etc. operations with
