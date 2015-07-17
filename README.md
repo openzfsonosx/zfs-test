@@ -51,7 +51,22 @@ to be required.
 
    sudo make test
 
-It will require that your environment is setup in a certain way, but
+* Alternate (recommended?) configuration is to provide your test environment
+  with 3 x 25 GB HDD in addition to the boot drive. There are certain tests
+  that cannot operate in a file based environemnt, this will allow those
+  tests to execute.
+
+  The three drives will be erased, please ensure they contain no valuable data!
+
+  Ensure that the DISKS environment variable the in test_hw target in 
+  the makefile contains the /dev/diskX /dev/diskY and /dev/diskZ
+  entries for your 25 GB test drives. Then:
+
+    sudo make test_hw
+
+   NOTE: every time you restart OSX the drives can move and must be checked.
+
+* It will require that your environment is setup in a certain way, but
 the Makefile will make sure to check this. Most of it any way...
 
 To run specific test group(s), make a copy of the
