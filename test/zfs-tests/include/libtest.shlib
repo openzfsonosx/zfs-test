@@ -731,7 +731,10 @@ function get_endslice #<disk> <slice>
 			$GREP "^ $slice" | \
 			$AWK '{print $3}' | \
 			$SED 's,MB,,')
-	else
+    elif [[ -n "$OSX" ]]; then
+# OSX we just append partitions, so return rubbish
+        endcyl=0;
+    else
 		disk=${disk#$DEV_DSKDIR/}
 		disk=${disk#$DEV_RDSKDIR/}
 		disk=${disk%s[0-9]*}

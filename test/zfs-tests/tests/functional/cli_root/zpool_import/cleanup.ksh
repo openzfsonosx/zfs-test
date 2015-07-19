@@ -41,6 +41,8 @@ done
 
 typeset FS="ufs"
 [[ -n "$LINUX" ]] && FS="ext2"
+[[ -n "$OSX" ]] && FS="hfs"
+
 ismounted $DEVICE_DIR $FS
 (( $? == 0 )) && log_must $UMOUNT -f $DEVICE_DIR
 

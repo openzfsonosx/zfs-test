@@ -52,6 +52,8 @@ while (( i <= $GROUP_NUM )); do
 	(( i = i + 1 ))
 done
 
+log_must set_partition 0 "0" 1g $ZFS_DISK2
+
 if [[ -n "$LINUX" ]]; then
 	# Setup partition mappings with kpartx
 	set -- $($KPARTX -asfv $ZFS_DISK1 | head -n1)
@@ -75,17 +77,29 @@ fi
 log_must $ZFS create $TESTPOOL/$TESTFS
 log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 
+log_note "d1" $ZFSSIDE_DISK1 "d2" $ZFSSIDE_DISK2
 typeset FS="UFS"
 [[ -n "$LINUX" ]] && FS="EXT2"
-$ECHO "y" | $NEWFS -v $rdsk$ZFSSIDE_DISK2 >/dev/null 2>&1
-(( $? != 0 )) &&
-	log_untested "Unable to setup a $FS file system"
+[[ -n "$OSX" ]] && fs="hfs"
 
-[[ ! -d $DEVICE_DIR ]] && \
-	log_must $MKDIR -p $DEVICE_DIR
+[[ ! -d $DEVICE_DIR ]] && log_must $MKDIR -p $DEVICE_DIR
 
-log_must $MOUNT $dsk$ZFSSIDE_DISK2 $DEVICE_DIR
+if [[ -n "$OSX" ]]; then
+    typeset volname="zpool_import_vol1"
+    typeset disk=$ZFSSIDE_DISK2
 
+    log_must sudo diskutil eraseVolume hfs+ $volname $disk
+    log_must sudo diskutil unmount $disk
+    log_must sudo diskutil mount -mountpoint $DEVICE_DIR $disk
+else
+    $ECHO "y" | $NEWFS -v $rdsk$ZFSSIDE_DISK2 >/dev/null 2>&1
+    (( $? != 0 )) &&
+        log_untested "Unable to setup a $FS file system"
+
+    log_must $MOUNT $dsk$ZFSSIDE_DISK2 $DEVICE_DIR
+fi
+
+log_note "***** max_num" $MAX_NUM
 i=0
 while (( i < $MAX_NUM )); do
 	log_must $MKFILE $FILE_SIZE ${DEVICE_DIR}/${DEVICE_FILE}$i
