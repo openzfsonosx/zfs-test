@@ -55,7 +55,7 @@ function cleanup
 log_assert "Migrating test file from ZFS fs to ZFS fs using tar"
 
 log_onexit cleanup
-
+log_note "$TAR $pack_opts $TESTDIR/tar$$.tar $BNAME"
 prepare $DNAME "$TAR $pack_opts $TESTDIR/tar$$.tar $BNAME"
 (( $? != 0 )) && log_fail "Unable to create src archive"
 

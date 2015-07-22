@@ -46,8 +46,16 @@ case $DISK_COUNT in
 	;;
 esac
 
-set_partition ${ZFSSIDE_DISK##*[sp]} "" $FS_SIZE $ZFS_DISK
-set_partition ${NONZFSSIDE_DISK##*[sp]} "" $FS_SIZE $NONZFS_DISK
+#log_must cleanup_devices $ZFS_DISK
+#log_must cleanup_devices $NONZFS_DISK
+
+if [[ -n "$OSX" ]]; then
+    set_partition 0 "" $FS_SIZE $ZFS_DISK
+    set_partition 0 "" $FS_SIZE $NONZFS_DISK
+else
+    set_partition ${ZFSSIDE_DISK##*[sp]} "" $FS_SIZE $ZFS_DISK
+    set_partition ${NONZFSSIDE_DISK##*[sp]} "" $FS_SIZE $NONZFS_DISK
+fi
 
 if [[ -n "$LINUX" ]]; then
 	typeset -i i=0
@@ -76,14 +84,24 @@ $MKDIR -p $NONZFS_TESTDIR || log_unresolved Could not create $NONZFS_TESTDIR
 
 if [[ -n "$LINUX" ]]; then
 	$NEWFS $NONZFSSIDE_DISK >/dev/null 2>&1
+    (( $? != 0 )) &&
+        log_untested "Unable to setup a $NEWFS_DEFAULT_FS file system"
+elif [[ -n "$OSX" ]]; then
+    typeset volname="zpool_migration_vol1"
+    typeset disk=$NONZFSSIDE_DISK
+
+    log_must sudo diskutil eraseVolume hfs+ $volname $disk
+    log_must sudo diskutil unmount $disk
 else
 	$ECHO "y" | $NEWFS -v $DEV_RDSKDIR/$NONZFSSIDE_DISK
+    (( $? != 0 )) &&
+        log_untested "Unable to setup a $NEWFS_DEFAULT_FS file system"
 fi
-(( $? != 0 )) &&
-	log_untested "Unable to setup a $NEWFS_DEFAULT_FS file system"
 
 if [[ -n "$LINUX" ]]; then
 	log_must $MOUNT $NONZFSSIDE_DISK $NONZFS_TESTDIR
+elif [[ -n "$OSX" ]]; then
+    log_must sudo diskutil mount -mountpoint $NONZFS_TESTDIR $disk
 else
 	log_must $MOUNT $DEV_DSKDIR/$NONZFSSIDE_DISK $NONZFS_TESTDIR
 fi

@@ -92,12 +92,17 @@ function migrate #destdir oldsuma oldsumb cmd
 	typeset cmd=$4
 	typeset -i retval=0
 
+echo "migrate1"
+
 	cwd=$PWD
 	cd $destdir
 	(( $? != 0 )) && return 1
 
+echo "migrate2" $cmd
 	$cmd
 	(( $? != 0 )) && return 1
+
+echo "migrate3"
 
 	sumy=`$SUM ./$BNAME`
 	suma=`$ECHO $sumy | $AWK '{print $1}'`
