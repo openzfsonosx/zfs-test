@@ -43,8 +43,14 @@ if [[ -n $SINGLE_DISK ]]; then
 else
 	log_note "Partitioning disks ($MIRROR_PRIMARY $MIRROR_SECONDARY)"
 fi
-log_must set_partition ${SIDE_PRIMARY##*s} "" $MIRROR_SIZE $MIRROR_PRIMARY
-log_must set_partition ${SIDE_SECONDARY##*s} "" $MIRROR_SIZE $MIRROR_SECONDARY
+
+if [[ -n "$OSX" ]]; then
+    log_must set_partition 0 "" $MIRROR_SIZE $MIRROR_PRIMARY
+    log_must set_partition 0 "" $MIRROR_SIZE $MIRROR_SECONDARY
+else
+    log_must set_partition ${SIDE_PRIMARY##*s} "" $MIRROR_SIZE $MIRROR_PRIMARY
+    log_must set_partition ${SIDE_SECONDARY##*s} "" $MIRROR_SIZE $MIRROR_SECONDARY
+fi
 
 if [[ -n "$LINUX" ]]; then
 	set -- $($KPARTX -asfv $MIRROR_PRIMARY | head -n1)
@@ -54,6 +60,12 @@ if [[ -n "$LINUX" ]]; then
 	SIDE_SECONDARY=/dev/mapper/${8##*/}p1
 
 	cat <<EOF > $TMPFILE
+export SIDE_PRIMARY=$SIDE_PRIMARY
+export SIDE_SECONDARY=$SIDE_SECONDARY
+export DEV_DSKDIR=""
+EOF
+elif [[ -n "$OSX" ]]; then
+    cat <<EOF > $TMPFILE
 export SIDE_PRIMARY=$SIDE_PRIMARY
 export SIDE_SECONDARY=$SIDE_SECONDARY
 export DEV_DSKDIR=""

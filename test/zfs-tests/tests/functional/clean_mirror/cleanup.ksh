@@ -34,6 +34,9 @@
 
 verify_runnable "global"
 
+#log_note $DF -${DF_FS_TYPE} zfs -h | $GREP "$TESTFS "
+#log_note `$DF -${DF_FS_TYPE} zfs -h | $GREP "$TESTFS "`
+
 $DF -${DF_FS_TYPE} zfs -h | $GREP "$TESTFS " >/dev/null
 [[ $? == 0 ]] && log_must $ZFS umount -f $TESTDIR
 destroy_pool -f $TESTPOOL
