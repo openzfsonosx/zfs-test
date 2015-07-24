@@ -44,24 +44,23 @@ if [[ -n $DISK ]]; then
         # in the given disk to avoid slice overlapping.
         #
 	cleanup_devices $DISK
+    partition_disk $SIZE $DISK 7
 
-        partition_disk $SIZE $DISK 7
-
-	[[ -n "$LINUX" ]] && start_disks="$DISK"
+	[[ -n "$LINUX" || -n "$OSX" ]] && start_disks="$DISK"
 else
 	for disk in `$ECHO $DISKSARRAY`; do
 		cleanup_devices $disk
 		partition_disk $SIZE $disk 7
 	done
 
-	 [[ -n "$LINUX" || -n "$OSX" ]] && start_disks="$DISK"
+	 [[ -n "$LINUX" || -n "$OSX" ]] && start_disks="$disk"
 fi
 
 if [[ -n "$OSX" && -n "$start_disks" ]]; then
     disk="" ; typeset -i i=0
     for dsk in $start_disks; do
-    eval 'export DISK${i}="${dsk##*/}"'
-    eval 'export DISK${i}b="${dsk##*/}"'
+    eval 'export DISK${i}="$dsk"
+    eval 'export DISK${i}b="$dsk"
     [[ -z "$disk" ]] && disk=$dsk
     ((i += 1))
     done
@@ -76,6 +75,7 @@ export DISK2=$DISK2
 export DISK2b=$DISK2b
 export DEV_DSKDIR=""
 EOF
+cp $TMPFILE $TMPFILE.keep
 fi
 
 if [[ -n "$LINUX" && -n "$start_disks" ]]; then
