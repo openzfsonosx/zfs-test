@@ -2872,3 +2872,35 @@ function update_lo_mappings
 	$KPARTX -d $disk
 	$KPARTX -asf$verbose $disk
 }
+
+# Locate the device for a given ZVOL. On OSX
+# when a ZVOL is created it is assigned a
+# /dev/diskX entry. The only way to determine
+# which /dev/disk* entry was assigned is to
+# use "disktutil info" do identify the
+# from "Device / Media Name".
+function find_zvol # $1 dataset/zvol name
+{
+    typeset zvol_to_find=$1
+    typeset the_dev=""
+
+    if [[ -n "$OSX" ]]; then
+        typeset all_disks=`diskutil list | grep dev | awk '{print $1}'`
+
+        for disk in $all_disks; do
+            typeset kind=`diskutil info $disk | grep $zvol_to_find | awk '{print $5}'`
+            typeset location=`diskutil info $disk | grep $zvol_to_find | awk '{print $6}'`
+
+            if [[ $kind == "ZVOL" && $location == $zvol_to_find ]]; then
+                the_dev=$disk
+                break
+            fi
+        done
+    elif [[ -n "$LINUX" ]]; then
+        the_dev="$ZVOL_DEVDIR/${zvol_to_find}"
+    else
+        the_dev="FIX_SOME_OTHER_OS"
+    fi
+
+    echo $the_dev
+}

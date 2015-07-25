@@ -68,8 +68,10 @@ log_must poolexists "$TESTPOOL1"
 log_must $ZFS create -V $VOLSIZE $TESTPOOL1/$TESTVOL
 [[ -n "$LINUX" ]] && sleep 1
 
-log_must $ZPOOL add "$TESTPOOL" $ZVOL_DEVDIR/$TESTPOOL1/$TESTVOL
+typeset zvol_dev=$(find_zvol "$TESTPOOL1/$TESTVOL")
 
-log_must iscontained "$TESTPOOL" "$ZVOL_DEVDIR/$TESTPOOL1/$TESTVOL"
+log_must $ZPOOL add "$TESTPOOL" $zvol_dev
+
+log_must iscontained "$TESTPOOL" $zvol_dev
 
 log_pass "'zpool add <pool> <vdev> ...' adds zfs volume to the pool successfully"

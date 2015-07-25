@@ -57,7 +57,7 @@ function cleanup
 
 	# Don't want to repartition the disk(s) on Linux.
 	# We do that in setup.ksh in a very special way.
-	[[ -z "$LINUX" ]] && partition_cleanup
+	[[ -z "$LINUX" && -z "$OSX" ]] && partition_cleanup
 }
 
 
@@ -104,7 +104,9 @@ function setup_vdevs #<disk>
 		if [[ -n "$LINUX" ]]; then
 			set -- $(update_lo_mappings $disk y | head -n1)
 			vdev=/dev/mapper/${8##*/}p1
-		else
+        elif [[ -n "$OSX" ]]; then
+            vdev=${disk}s2
+        else
 			vdev=${disk}s0
 		fi
         fi
