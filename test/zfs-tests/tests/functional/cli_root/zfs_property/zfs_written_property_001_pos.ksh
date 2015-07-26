@@ -73,9 +73,15 @@ log_note "verify written property statistics for dataset"
 log_must $ZFS create -p $TESTPOOL/$TESTFS1/$TESTFS2/$TESTFS3
 for i in 1 2 3; do
 	log_must $ZFS snapshot $TESTPOOL/$TESTFS1@snap$i
-	log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/testfile.$i bs=1M \
+
+    if [[ -n "$OSX" ]]; then
+        log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/testfile.$i bs=1m \
 	    count=$blocks
-	log_must $SYNC
+	else
+        log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/testfile.$i bs=1M \
+        count=$blocks
+    fi
+    log_must $SYNC
 	written=$(get_prop written $TESTPOOL/$TESTFS1)
 	((expected_written=blocks * mb_block))
 	within_percent $written $expected_written 99.5 || \
@@ -136,8 +142,13 @@ within_percent $writtenat $expected_writtenat 99.5 || \
 
 log_note "write data"
 blocks=20
-log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/testfile.3 bs=1M \
-    count=$blocks
+if [[ -n "$OSX" ]]; then
+    log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/testfile.3 bs=1m \
+        count=$blocks
+else
+    log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/testfile.3 bs=1M \
+        count=$blocks
+fi
 log_must $SYNC
 written=$(get_prop written $TESTPOOL/$TESTFS1)
 writtenat1=$(get_prop written@snap1 $TESTPOOL/$TESTFS1)
@@ -161,8 +172,15 @@ within_percent $writtenat1 $expected_writtenat 99.5 || \
 log_note "write data to a clone"
 before_clone=$(get_prop written $TESTPOOL/$TESTFS1)
 log_must $ZFS clone $TESTPOOL/$TESTFS1@snap1 $TESTPOOL/$TESTFS1/snap1.clone
-log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/snap1.clone/testfile bs=1M \
-    count=40
+
+if [[ -n "$OSX" ]]; then
+    log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/snap1.clone/testfile bs=1m \
+        count=40
+else
+    log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/snap1.clone/testfile bs=1M \
+        count=40
+fi
+
 after_clone=$(get_prop written $TESTPOOL/$TESTFS1)
 [[ $before_clone -eq $after_clone ]] || \
     log_fail "unexpected written for clone $before_clone $after_clone"
@@ -199,8 +217,14 @@ for ds in $datasets; do
 	writtenat=$(get_prop written@now $ds)
 	[[ $writtenat -ne 0 ]] && \
 	    log_fail "Unexpected written@ value"
-	log_must $DD if=/dev/urandom of=/$ds/testfile bs=1M count=$blocks
-	log_must $SYNC
+
+
+    if [[ -n "$OSX" ]]; then
+        log_must $DD if=/dev/urandom of=/$ds/testfile bs=1m count=$blocks
+	else
+        log_must $DD if=/dev/urandom of=/$ds/testfile bs=1M count=$blocks
+    fi
+    log_must $SYNC
 	writtenat=$(get_prop written@now $ds)
 	((expected_writtenat = blocks * mb_block))
 	within_percent $writtenat $expected_writtenat 0.1 || \
@@ -212,9 +236,15 @@ log_note "verify written@ output for recursive datasets"
 blocks=20
 for ds in $datasets; do
 	log_must $ZFS snapshot $ds@current
-	log_must $DD if=/dev/urandom of=/$ds/testfile bs=1M \
-	    count=$blocks
-	log_must $SYNC
+
+    if [[ -n "$OSX" ]]; then
+        log_must $DD if=/dev/urandom of=/$ds/testfile bs=1m \
+            count=$blocks
+	else
+        log_must $DD if=/dev/urandom of=/$ds/testfile bs=1M \
+            count=$blocks
+    fi
+    log_must $SYNC
 done
 recursive_output=$($ZFS get -r written@current $TESTPOOL | \
     $GREP -v $TESTFS1@ | $GREP -v $TESTFS2@ | $GREP -v $TESTFS3@ | \

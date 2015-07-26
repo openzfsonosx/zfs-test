@@ -139,7 +139,12 @@ log_must snapexists $TESTPOOL/$TESTFS1@snap3
 
 log_note "zfs destroy for snapshots from different pools"
 VIRTUAL_DISK=/var/tmp/disk
-log_must $DD if=/dev/urandom of=$VIRTUAL_DISK bs=1M count=64
+
+if [[ -n "$OSX" ]]; then
+    log_must $DD if=/dev/urandom of=$VIRTUAL_DISK bs=1m count=64
+else
+    log_must $DD if=/dev/urandom of=$VIRTUAL_DISK bs=1M count=64
+fi
 log_must $ZPOOL create $TESTPOOL2 $VIRTUAL_DISK
 log_must poolexists $TESTPOOL2
 

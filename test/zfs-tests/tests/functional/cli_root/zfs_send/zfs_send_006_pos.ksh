@@ -103,9 +103,14 @@ log_must $ZFS create $TESTPOOL/$TESTFS1
 
 # create multiple snapshot for the dataset with data
 for block_size in 64 128 256; do
-	log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/file$block_size \
-	    bs=1M count=$block_size
-	log_must $ZFS snapshot $TESTPOOL/$TESTFS1@snap$block_size
+    if [[ -n "$OSX" ]]; then
+        log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/file$block_size \
+            bs=1m count=$block_size
+	else
+        log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/file$block_size \
+            bs=1M count=$block_size
+    fi
+    log_must $ZFS snapshot $TESTPOOL/$TESTFS1@snap$block_size
 done
 
 full_snapshot="$TESTPOOL/$TESTFS1@snap64"
@@ -168,8 +173,13 @@ for ds in $datasets; do
         datasetexists $ds || log_fail "Create $ds dataset fail."
 done
 for ds in $datasets; do
-	log_must $DD if=/dev/urandom of=/$ds/file64 \
-	    bs=1M count=64
+    if [[ -n "$OSX" ]]; then
+        log_must $DD if=/dev/urandom of=/$ds/file64 \
+            bs=1m count=64
+    else
+        log_must $DD if=/dev/urandom of=/$ds/file64 \
+            bs=1M count=64
+    fi
 done
 
 # create recursive nested snapshot
