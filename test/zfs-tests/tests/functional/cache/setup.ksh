@@ -42,4 +42,10 @@ log_must $RM -rf $VDIR $VDIR2
 log_must $MKDIR -p $VDIR $VDIR2
 log_must $MKFILE $MKFILE_SPARSE $SIZE $VDEV $VDEV2
 
+if [[ -n "$OSX" ]]; then
+    log_must set_partition 0 "0" 50m $LDEV
+    log_must set_partition 0 "0" 50m $LDEV2
+#    log_must sudo gpt destroy $LDEV
+#    log_must sudo gpt destroy $LDEV2
+fi
 log_pass

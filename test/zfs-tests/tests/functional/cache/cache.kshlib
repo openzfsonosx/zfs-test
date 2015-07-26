@@ -79,6 +79,9 @@ function verify_cache_device
 	typeset status=$3
 	typeset type=$4
 
+# O3X does not report /dev/whatever as the cache device, rather just <whatever>
+    [[ -n "$OSX" ]] && device=$(basename ${device})
+
 	if [[ -z $pool || -z $device || -z $status ]]; then
 		log_fail "Usage: verify_cache_device <pool> <device> " \
 			"<status> [type]"

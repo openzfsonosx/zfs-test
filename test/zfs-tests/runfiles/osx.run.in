@@ -75,11 +75,10 @@ tests = ['atime_001_pos', 'atime_002_neg']
 #pre =
 #post =
 
-# DISABLED: "Only physical disk could be cache device"
-#[@PREFIX@/zfs-tests/tests/functional/cache]
-#tests = ['cache_001_pos', 'cache_002_pos', 'cache_003_pos', 'cache_004_neg',
-#    'cache_005_neg', 'cache_006_pos', 'cache_007_neg', 'cache_008_neg',
-#    'cache_009_pos', 'cache_010_neg', 'cache_011_pos']
+[@PREFIX@/zfs-tests/tests/functional/cache]
+tests = ['cache_001_pos', 'cache_002_pos', 'cache_003_pos', 'cache_004_neg',
+    'cache_005_neg', 'cache_006_pos', 'cache_007_neg', 'cache_008_neg',
+    'cache_009_pos', 'cache_010_neg', 'cache_011_pos']
 
 [@PREFIX@/zfs-tests/tests/functional/cachefile]
 tests = ['cachefile_001_pos', 'cachefile_002_pos', 'cachefile_003_pos',

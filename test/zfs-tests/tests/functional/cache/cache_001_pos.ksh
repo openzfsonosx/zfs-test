@@ -54,7 +54,8 @@ do
 	log_must display_status $TESTPOOL
 
 	ldev=$(random_get $LDEV)
-	log_must verify_cache_device $TESTPOOL $ldev 'ONLINE'
+
+    log_must verify_cache_device $TESTPOOL $ldev 'ONLINE'
 
 	log_must $ZPOOL remove $TESTPOOL $ldev
 	log_must check_vdev_state $TESTPOOL $ldev ""
