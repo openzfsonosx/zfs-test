@@ -1691,8 +1691,8 @@ function cleanup_devices #vdevs
 	create_pool $pool $@
 	destroy_pool $pool
 
-#BGH is this really needed? Its worth 30 mins of execution time
-#sleep 5
+#O3X - still not sure if this is needed seems to help test setup - FIXME
+    sleep 1
 
 	return 0
 }
