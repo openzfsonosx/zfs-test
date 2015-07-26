@@ -66,11 +66,15 @@ log_assert "With ZFS_ABORT set, all zfs commands can abort and generate a " \
 log_onexit cleanup
 
 #preparation work for testing
-corepath=$TESTDIR/core
-if [[ -d $corepath ]]; then
-	$RM -rf $corepath
+if [[ -n "$OSX" ]]; then
+    corepath=~/Library/Logs/DiagnosticReports
+else
+    corepath=$TESTDIR/core
+    if [[ -d $corepath ]]; then
+        $RM -rf $corepath
+    fi
+    log_must $MKDIR $corepath
 fi
-log_must $MKDIR $corepath
 
 ctr=$TESTPOOL/$TESTCTR
 log_must $ZFS create $ctr
@@ -107,20 +111,38 @@ if [[ -n "$LINUX" && -f "/proc/sys/kernel/core_pattern" ]]; then
 	typeset ulimit=$(ulimit -c)
 	echo "${corepath}/core.%e" > /proc/sys/kernel/core_pattern
 	ulimit -c unlimited
+elif [[ -n "$OSX" ]]; then
+    log_note "no core path control on OSX"
 else
 	log_must $COREADM -p ${corepath}/core.%f
 fi
 log_must export ZFS_ABORT=yes
 
-for subcmd in "${cmds[@]}" "${badparams[@]}"; do
-	$ZFS $subcmd >/dev/null 2>&1 && log_fail "$subcmd passed incorrectly."
-	corefile=${corepath}/core.zfs
-	if [[ ! -e $corefile ]]; then
-		log_fail "$ZFS $subcmd cannot generate core file with " \
-		    "ZFS_ABORT set."
-	fi
-	log_must $RM -f $corefile
-done
+if [[ -n "$OSX" ]]; then
+    for subcmd in "${cmds[@]}" "${badparams[@]}"; do
+
+        typeset -i num_cores_before=`ls -l ${corepath} | grep $ZFS | wc -l`
+
+        $ZFS $subcmd >/dev/null 2>&1 && log_fail "$subcmd passed incorrectly."
+
+        typeset -i num_cores_after=`ls -l ${corepath} | grep $ZFS | wc -l`
+
+        if [[ num_cores_before == num_cores_after ]]; then
+            log_fail "$ZFS $subcmd cannot generate core file with " \
+            "ZFS_ABORT set."
+        fi
+    done
+else
+    for subcmd in "${cmds[@]}" "${badparams[@]}"; do
+        $ZFS $subcmd >/dev/null 2>&1 && log_fail "$subcmd passed incorrectly."
+        corefile=${corepath}/core.zfs
+        if [[ ! -e $corefile ]]; then
+            log_fail "$ZFS $subcmd cannot generate core file with " \
+                "ZFS_ABORT set."
+        fi
+        log_must $RM -f $corefile
+    done
+fi
 
 log_pass "With ZFS_ABORT set, zfs command can abort and generate core file " \
     "as expected."

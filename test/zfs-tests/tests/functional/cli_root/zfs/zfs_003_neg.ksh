@@ -45,7 +45,10 @@ log_assert "zfs fails with unexpected scenarios."
 #verify zfs failed if ZFS_DEV cannot be opened
 ZFS_DEV=/dev/zfs
 
-for file in $ZFS_DEV $MNTTAB; do
+files="$ZFS_DEV $MNTTAB"
+[[ -n "$OSX" ]] && files="$ZFS_DEV"
+
+for file in $files; do
 	if [[ -e $file ]]; then
 		$MV $file ${file}.bak
 	fi
