@@ -88,7 +88,7 @@ typeset TMP_FILE=$mntp/tmpfile.$$
 
 create_pool $TESTPOOL $pool_dev
 log_must $ZFS create -V 100m $vol_name
-[[ -n "$LINUX" ]] && sleep 1
+[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
 log_must $ECHO "y" | $NEWFS $ZVOL_DEVDIR/$vol_name > /dev/null 2>&1
 log_must $MOUNT $ZVOL_DEVDIR/$vol_name $mntp
 

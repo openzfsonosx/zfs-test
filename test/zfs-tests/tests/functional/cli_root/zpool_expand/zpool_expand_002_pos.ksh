@@ -64,7 +64,7 @@ log_assert "zpool can expand after zpool online -e zvol vdevs on LUN expansion"
 for i in 1 2 3; do
 	log_must $ZFS create -V $org_size $VFS/vol$i
 done
-[[ -n "$LINUX" ]] && sleep 1
+[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
 
 for type in " " mirror raidz raidz2; do
 	log_must $ZPOOL create $TESTPOOL1 $type $ZVOL_DEVDIR/$VFS/vol1 \

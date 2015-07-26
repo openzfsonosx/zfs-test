@@ -47,7 +47,7 @@ function default_zvol_setup # disk_device volume_size
         create_pool $TESTPOOL "$disk"
 
         log_must $ZFS create -V $size $TESTPOOL/$TESTVOL
-	[[ -n "$LINUX" || -n "$OSX" "]] && sleep 1
+	[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
 
 	set_dumpsize $TESTPOOL/$TESTVOL
 }

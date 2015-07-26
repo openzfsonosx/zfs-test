@@ -200,7 +200,7 @@ function cleanup_env
 	if datasetnonexists $VOL ; then
 		if is_global_zone ; then
 			log_must $ZFS create -V $VOLSIZE $VOL
-			[[ -n "$LINUX" ]] && sleep 1
+			[[ -n "$LINUX" || -n "$OSX"  ]] && sleep 1
 		else
 			log_must $ZFS create $VOL
 		fi
