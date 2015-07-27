@@ -589,7 +589,7 @@ tests = ['groupspace_001_pos', 'groupspace_002_pos', 'userquota_001_pos',
 [@PREFIX@/zfs-tests/tests/functional/write_dirs]
 tests = ['write_dirs_001_pos', 'write_dirs_002_pos']
 
-# DISABLED: Doesn't make sense in Linux - no 'runat' command.
+# DISABLED: Doesn't make sense in Linux && OSX - no 'runat' command.
 #[@PREFIX@/zfs-tests/tests/functional/xattr]
 #tests = ['xattr_001_pos', 'xattr_002_neg', 'xattr_003_neg', 'xattr_004_pos',
 #    'xattr_005_pos', 'xattr_006_pos', 'xattr_007_neg', 'xattr_008_pos',

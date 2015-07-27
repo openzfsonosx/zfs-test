@@ -88,6 +88,8 @@ done
 typeset du_opt
 if [[ -n "$LINUX" ]]; then
 	df_opt="-t zfs"
+elif [[ -n "$OSX" ]]; then
+    df_opt="-T zfs"
 else
 	df_opt="-F zfs"
 fi
