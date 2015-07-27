@@ -421,11 +421,11 @@ pre =
 #[@PREFIX@/zfs-tests/tests/functional/interop]
 #tests = ['interop_001_pos']
 
-# DISABLED: inuse_001_pos, inuse_007_pos - no dumpadm command
+# DISABLED: inuse_001_pos, inuse_007_pos, inuse_006_pos - no dumpadm command
 # DISABLED: inuse_002_pos - no metadb command
 [@PREFIX@/zfs-tests/tests/functional/inuse]
 tests = ['inuse_004_pos',
-    'inuse_005_pos', 'inuse_006_pos', 'inuse_008_pos',
+    'inuse_005_pos', 'inuse_008_pos',
     'inuse_009_pos']
 post =
 

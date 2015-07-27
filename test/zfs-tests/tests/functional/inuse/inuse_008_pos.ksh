@@ -54,7 +54,8 @@ function cleanup
 	#
 	# Tidy up the disks we used.
 	#
-	cleanup_devices $vdisks $sdisks
+	cleanup_devices $vdisks
+    cleanup_devices $sdisks
 
 	if [[ -n "$LINUX" ]]; then
 		for i in {0..2}; do
@@ -69,11 +70,21 @@ function verify_assertion #slices
 	typeset targets=$1
 
 	for t in $targets; do
-		$ECHO "y" | $NEWFS -v $t #> /dev/null 2>&1
-		(( $? !=0 )) && \
-			log_fail "newfs over exported pool " \
-				"failes unexpected."
-	done
+        if [[ -n "$OSX" ]]; then
+            diskutil eraseVolume hfs+ verify_assertion $t
+            typeset -i retval=$?
+            [[ $retval == 0 ]] && diskutil unmount $t
+
+            (( $retval != 0 )) && \
+                log_fail "diskutil eraseVolume over exported pool " \
+                    "fails unexpected."
+        else
+            $ECHO "y" | $NEWFS -v $t #> /dev/null 2>&1
+            (( $? !=0 )) && \
+                log_fail "newfs over exported pool " \
+                    "failes unexpected."
+        fi
+    done
 
 	return 0
 }
@@ -85,6 +96,12 @@ log_onexit cleanup
 set -A vdevs "" "mirror" "raidz" "raidz1" "raidz2"
 
 typeset -i i=0
+
+if [[ -n "$OSX" ]]; then
+    for d in $DISKS; do
+        zero_partitions $d
+    done
+fi
 
 for num in 0 1 2 3 ; do
 	eval typeset slice=\${FS_SIDE$num}
@@ -134,7 +151,8 @@ while (( i < ${#vdevs[*]} )); do
 	create_pool $TESTPOOL1 ${vdevs[i]} $vslices spare $sslices
 	log_must $ZPOOL export $TESTPOOL1
 	verify_assertion "$rawtargets"
-	cleanup_devices $vslices $sslices
+	cleanup_devices $vslices
+    cleanup_devices $sslices
 
 	if [[ -n "$LINUX" ]]; then
 		for num in {0..2}; do

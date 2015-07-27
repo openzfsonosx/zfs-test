@@ -85,6 +85,10 @@ typeset -i i=0
 
 while (( i < ${#vdevs[*]} )); do
 
+    for d in $DISKS; do
+        zero_partitions $d
+    done
+
 	for num in 0 1 2 3 ; do
 		eval typeset slice=\${FS_SIDE$num}
 		disk=${slice%[sp][0-9]}

@@ -67,22 +67,38 @@ function cleanup
 #
 function mini_format
 {
-        typeset disk=$1
+    typeset disk=$1
 
-	typeset format_file=/var/tmp/format_in.$$.1
-	$ECHO "partition" > $format_file
-	$ECHO "modify" >> $format_file
+    if [[ -n "$OSX" ]]; then
+        diskutil eraseVolume hfs+ mini_format $disk
+        typeset -i retval=$?
 
-	$FORMAT -e -s -d $disk -f $format_file
-	typeset -i retval=$?
-	$RM -rf $format_file
-	return $retval
+        [[ retval == 0 ]] & diskutil unmount $disk
+
+        return $retval
+    else
+        typeset format_file=/var/tmp/format_in.$$.1
+        $ECHO "partition" > $format_file
+        $ECHO "modify" >> $format_file
+
+        $FORMAT -e -s -d $disk -f $format_file
+        typeset -i retval=$?
+        $RM -rf $format_file
+        return $retval
+    fi
 }
 
 log_assert "format will disallow modification of a mounted zfs disk partition"\
  " or a spare device"
 
 log_onexit cleanup
+
+if [[ -n "$OSX" ]]; then
+    for d in $DISKS; do
+        zero_partitions $d
+    done
+fi
+
 log_must default_setup_noexit $FS_DISK0
 log_must $ZPOOL add $TESTPOOL spare $FS_DISK1
 
