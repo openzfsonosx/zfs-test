@@ -108,8 +108,14 @@ function verify_readonly # $1 dataset, $2 on|off
 			fi
 			;;
 		volume)
-			$expect eval "$ECHO 'y' | $NEWFS $ZVOL_DEVDIR/$dataset > /dev/null 2>&1"
-			;;
+            if [[ -n "$OSX" ]]; then
+                typeset zvol_dev=$(find_zvol $dataset)
+                $expect diskutil eraseVolume hfs+ "verify_readonly" $zvol_dev
+                diskutil unmount $zvol_dev
+            else
+                $expect eval "$ECHO 'y' | $NEWFS $ZVOL_DEVDIR/$dataset > /dev/null 2>&1"
+			fi
+            ;;
 		*)
 			;;
 	esac
