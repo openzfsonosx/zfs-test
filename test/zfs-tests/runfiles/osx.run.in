@@ -169,9 +169,10 @@ tests = ['zfs_receive_001_pos', 'zfs_receive_002_pos', 'zfs_receive_003_pos',
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_reservation]
 tests = ['zfs_reservation_001_pos', 'zfs_reservation_002_pos']
 
-[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_rollback]
-tests = ['zfs_rollback_001_pos', 'zfs_rollback_002_pos',
-    'zfs_rollback_003_neg', 'zfs_rollback_004_neg']
+#O3X-requires porting
+#[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_rollback]
+#tests = ['zfs_rollback_001_pos', 'zfs_rollback_002_pos',
+#    'zfs_rollback_003_neg', 'zfs_rollback_004_neg']
 
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_send]
 tests = ['zfs_send_001_pos', 'zfs_send_002_pos', 'zfs_send_003_pos',

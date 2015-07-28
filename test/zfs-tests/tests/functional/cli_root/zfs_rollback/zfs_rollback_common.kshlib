@@ -56,6 +56,7 @@ function setup_snap_env
 {
 	typeset -i cnt=${1:-3}
 	typeset createclone=${2:-"false"}
+    typeset zvol_dev
 
 	if datasetnonexists $FS; then
 		log_must $ZFS create $FS
@@ -78,6 +79,10 @@ function setup_snap_env
 		#
 		if [[ -n "$LINUX" ]]; then
 			log_must $NEWFS -q $ZVOL_DEVDIR/$VOL
+        elif [[ -n "$OSX" ]]; then
+            zvol_dev=$(find_zvol $VOL)
+            log_must diskutil eraseVolume hfs+ zfs_rollback_common $zvol_dev
+            log_must diskutil unmount $zvol_dev
 		else
 			log_must eval "$ECHO "y" | \
 				$NEWFS -v $ZVOL_DEVDIR/$VOL > /dev/null 2>&1"
@@ -93,9 +98,13 @@ function setup_snap_env
 			$DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE} $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
 		fi
 		if (( $? != 0 )); then
-			log_must $MOUNT \
-				$ZVOL_DEVDIR/$TESTPOOL/$TESTVOL $TESTDIR1
-		fi
+            if [[ -n "$OSX" ]]; then
+                log_must diskutil mount -mountpoint $TESTDIR1 $zvol_dev
+            else
+                log_must $MOUNT \
+                    $ZVOL_DEVDIR/$TESTPOOL/$TESTVOL $TESTDIR1
+            fi
+        fi
 	fi
 
 	# Separately Create three snapshots for file system & volume
@@ -131,7 +140,7 @@ function setup_snap_env
 				# before taking a snapshot.
 				#
 				if [[ $dtst == $VOL ]]; then
-					if [[ -n "$LINUX" ]]; then
+					if [[ -n "$LINUX" || -n "$OSX" ]]; then
 						log_mustnot $LOCKFS -t $TESTDIR1 2> /dev/null
 					else
 						log_must $LOCKFS -f $TESTDIR1
