@@ -19,7 +19,7 @@
 #
 # CDDL HEADER END
 #
-# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
 
@@ -32,41 +32,35 @@
 
 #
 # DESCRIPTION:
-# We verify that the special . and .. dirs work as expected for xattrs.
+# Verify that mkdir and various mknods fail inside the xattr namespace
 #
 # STRATEGY:
-#	1. Create a file and an xattr on that file
-#	2. List the . directory, verifying the output
-#	3. Verify we're unable to list the ../ directory
+#	1. Create a file and add an xattr to it (to ensure the namespace exists)
+#       2. Verify that mkdir fails inside the xattr namespace
+#	3. Verify that various mknods fails inside the xattr namespace
+#
 #
 
 function cleanup {
-	typeset file
 
-	for file in /tmp/output.$$ /tmp/expected-output.$$ \
-		$TESTDIR/myfile.$$ ; do
-		log_must $RM -f $file
-	done
+	log_must $RM $TESTDIR/myfile.$$
 }
 
-log_assert "special . and .. dirs work as expected for xattrs"
+log_assert "mkdir, mknod fail"
 log_onexit cleanup
 
 # create a file, and an xattr on it
 log_must $TOUCH $TESTDIR/myfile.$$
 create_xattr $TESTDIR/myfile.$$ passwd /etc/passwd
-create_xattr $TESTDIR/myfile.$$ group /etc/group
 
-# listing the directory .
-#log_must eval "$RUNAT $TESTDIR/myfile.$$ $LS  . > /tmp/output.$$"
-log_must eval "xattr $TESTDIR/myfile.$$ | sort > /tmp/output.$$"
-create_expected_output  /tmp/expected-output.$$  \
-    group  passwd
-hexdump -v /tmp/output.$$ /tmp/expected-output.$$
-log_must $DIFF /tmp/output.$$ /tmp/expected-output.$$
+# Try to create directory in the xattr namespace
+log_mustnot $RUNAT $TESTDIR/myfile.$$ $MKDIR foo
 
-# verify we can't list ../
-#log_mustnot eval "$RUNAT $TESTDIR/myfile.$$ $LS ../ > /dev/null 2>&1"
-log_mustnot eval "xattr -p ../ $TESTDIR/myfile.$$ > /dev/null 2>&1"
+# Try to create a range of different filetypes in the xattr namespace
+log_mustnot $RUNAT $TESTDIR/myfile.$$ $MKNOD block b 888 888
 
-log_pass "special . and .. dirs work as expected for xattrs"
+log_mustnot $RUNAT $TESTDIR/myfile.$$ $MKNOD char c
+
+log_mustnot $RUNAT $TESTDIR/myfile.$$ $MKNOD fifo p
+
+log_pass "mkdir, mknod fail"
