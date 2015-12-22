@@ -19,7 +19,7 @@
 #
 # CDDL HEADER END
 #
-# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
 
@@ -32,41 +32,30 @@
 
 #
 # DESCRIPTION:
-# We verify that the special . and .. dirs work as expected for xattrs.
+# Xattrs present on a file in a snapshot should be visible.
 #
 # STRATEGY:
-#	1. Create a file and an xattr on that file
-#	2. List the . directory, verifying the output
-#	3. Verify we're unable to list the ../ directory
+#	1. Create a file and give it an xattr
+#       2. Take a snapshot of the filesystem
+#	3. Verify that we can take a snapshot of it.
 #
 
 function cleanup {
-	typeset file
-
-	for file in /tmp/output.$$ /tmp/expected-output.$$ \
-		$TESTDIR/myfile.$$ ; do
-		log_must $RM -f $file
-	done
+	destroy_dataset $TESTPOOL/$TESTFS@snap
+	log_must $RM $TESTDIR/myfile.$$
 }
 
-log_assert "special . and .. dirs work as expected for xattrs"
+log_assert "read xattr on a snapshot"
 log_onexit cleanup
 
 # create a file, and an xattr on it
 log_must $TOUCH $TESTDIR/myfile.$$
 create_xattr $TESTDIR/myfile.$$ passwd /etc/passwd
-create_xattr $TESTDIR/myfile.$$ group /etc/group
 
-# listing the directory .
-#log_must eval "$RUNAT $TESTDIR/myfile.$$ $LS  . > /tmp/output.$$"
-log_must eval "xattr $TESTDIR/myfile.$$ | sort > /tmp/output.$$"
-create_expected_output  /tmp/expected-output.$$  \
-    group  passwd
-hexdump -v /tmp/output.$$ /tmp/expected-output.$$
-log_must $DIFF /tmp/output.$$ /tmp/expected-output.$$
+# snapshot the filesystem
+log_must $ZFS snapshot $TESTPOOL/$TESTFS@snap
 
-# verify we can't list ../
-#log_mustnot eval "$RUNAT $TESTDIR/myfile.$$ $LS ../ > /dev/null 2>&1"
-log_mustnot eval "xattr -p ../ $TESTDIR/myfile.$$ > /dev/null 2>&1"
+# check for the xattr on the snapshot
+verify_xattr $TESTDIR/.zfs/snapshot/snap/myfile.$$ passwd /etc/passwd
 
-log_pass "special . and .. dirs work as expected for xattrs"
+log_pass "read xattr on a snapshot"

@@ -40,7 +40,7 @@ test_hw: test_verify test/zfs-tests/cmd
 	@KEEP="`zpool list -H -oname`" \
 	 STF_TOOLS=$(abs_top_srcdir)/test/test-runner/stf \
 	 STF_SUITE=$(abs_top_srcdir)/test/zfs-tests \
-	 DISKS="/dev/disk0 /dev/disk1 /dev/disk2" \
+	 DISKS="/dev/disk1 /dev/disk2 /dev/disk3" \
 	 su zfs-tests -c "ksh $(abs_top_srcdir)/test/zfs-tests/cmd/scripts/zfstest.ksh $$RUNFILE"
 
 test_existing: test_verify test/zfs-tests/cmd

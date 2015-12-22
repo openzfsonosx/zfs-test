@@ -459,7 +459,7 @@ tests = ['migration_001_pos', 'migration_002_pos', 'migration_003_pos',
 [@PREFIX@/zfs-tests/tests/functional/mmap]
 tests = ['mmap_read_001_pos', 'mmap_write_001_pos']
 
-# DISABLED: umountall_001 - Doesn't make sence in Linux - no umountall command.
+# DISABLED: umountall_001 - Doesn't make sense in Linux - no umountall command.
 [@PREFIX@/zfs-tests/tests/functional/mount]
 tests = ['umount_001']
 
@@ -592,12 +592,23 @@ tests = ['groupspace_001_pos', 'groupspace_002_pos', 'userquota_001_pos',
 [@PREFIX@/zfs-tests/tests/functional/write_dirs]
 tests = ['write_dirs_001_pos', 'write_dirs_002_pos']
 
-# DISABLED: Doesn't make sense in Linux && OSX - no 'runat' command.
-#[@PREFIX@/zfs-tests/tests/functional/xattr]
-#tests = ['xattr_001_pos', 'xattr_002_neg', 'xattr_003_neg', 'xattr_004_pos',
-#    'xattr_005_pos', 'xattr_006_pos', 'xattr_007_neg', 'xattr_008_pos',
-#    'xattr_009_neg', 'xattr_010_neg', 'xattr_011_pos', 'xattr_012_pos',
-#    'xattr_013_pos']
+# OSX
+# xattr_004_pos - FAILS uses zvol /dev/zvol/* to mount
+# xattr_006_pos - FAILS uses snapshot /.zfs/snapshot/
+# xattr_007_pos - FAILS uses snapshot /.zfs/snapshot/
+# xattr_012_pos - FAILS creates large 200M file, difficult in OS X
+# OSX
+[@PREFIX@/zfs-tests/tests/functional/xattr]
+tests = ['xattr_001_pos', 'xattr_002_neg', 'xattr_003_neg', 'xattr_004_pos',
+    'xattr_005_pos', 'xattr_006_pos', 'xattr_007_neg', 'xattr_008_pos',
+    'xattr_009_neg', 'xattr_010_neg', 'xattr_011_pos', 'xattr_012_pos',
+    'xattr_013_pos']
+
+[@PREFIX@/zfs-tests/tests/functional/xattr=sa]
+tests = ['xattr_001_pos', 'xattr_002_neg', 'xattr_003_neg', 'xattr_004_pos',
+    'xattr_005_pos', 'xattr_006_pos', 'xattr_007_neg', 'xattr_008_pos',
+    'xattr_009_neg', 'xattr_010_neg', 'xattr_011_pos', 'xattr_012_pos',
+    'xattr_013_pos']
 
 # DISABLED: Doesn't make sense in Linux - no 'dumpadm' command.
 #[@PREFIX@/zfs-tests/tests/functional/zvol/zvol_ENOSPC]

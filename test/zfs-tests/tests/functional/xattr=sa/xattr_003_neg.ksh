@@ -19,7 +19,7 @@
 #
 # CDDL HEADER END
 #
-# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
 
@@ -32,41 +32,31 @@
 
 #
 # DESCRIPTION:
-# We verify that the special . and .. dirs work as expected for xattrs.
+#
+# Attempting to read an xattr on a file for which we have no permissions
+# should fail.
 #
 # STRATEGY:
-#	1. Create a file and an xattr on that file
-#	2. List the . directory, verifying the output
-#	3. Verify we're unable to list the ../ directory
+#	1. Create a file, and set an with an xattr
+#       2. Set the octal file permissions to 000 on the file.
+#	3. Check that we're unable to read the xattr as a non-root user
+#	4. Check that we're unable to write an xattr as a non-root user
 #
 
 function cleanup {
-	typeset file
 
-	for file in /tmp/output.$$ /tmp/expected-output.$$ \
-		$TESTDIR/myfile.$$ ; do
-		log_must $RM -f $file
-	done
+	log_must $RM $TESTDIR/myfile.$$
+
 }
 
-log_assert "special . and .. dirs work as expected for xattrs"
+log_assert "read/write xattr on a file with no permissions fails"
 log_onexit cleanup
 
-# create a file, and an xattr on it
 log_must $TOUCH $TESTDIR/myfile.$$
 create_xattr $TESTDIR/myfile.$$ passwd /etc/passwd
-create_xattr $TESTDIR/myfile.$$ group /etc/group
 
-# listing the directory .
-#log_must eval "$RUNAT $TESTDIR/myfile.$$ $LS  . > /tmp/output.$$"
-log_must eval "xattr $TESTDIR/myfile.$$ | sort > /tmp/output.$$"
-create_expected_output  /tmp/expected-output.$$  \
-    group  passwd
-hexdump -v /tmp/output.$$ /tmp/expected-output.$$
-log_must $DIFF /tmp/output.$$ /tmp/expected-output.$$
+log_must $CHMOD 000 $TESTDIR/myfile.$$
+log_mustnot $SU $ZFS_USER -c "$RUNAT $TESTDIR/myfile.$$ $CAT passwd"
+log_mustnot $SU $ZFS_USER -c "$RUNAT $TESTDIR/myfile.$$ $CP /etc/passwd ."
 
-# verify we can't list ../
-#log_mustnot eval "$RUNAT $TESTDIR/myfile.$$ $LS ../ > /dev/null 2>&1"
-log_mustnot eval "xattr -p ../ $TESTDIR/myfile.$$ > /dev/null 2>&1"
-
-log_pass "special . and .. dirs work as expected for xattrs"
+log_pass "read/write xattr on a file with no permissions fails"
