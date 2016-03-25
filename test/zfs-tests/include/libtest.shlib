@@ -1229,7 +1229,11 @@ function destroy_pool #pool
 	if is_global_zone ; then
 		if poolexists "$pool" ; then
 			mtpt=$(get_prop mountpoint "$pool")
-			log_must $ZPOOL destroy $opts $pool
+			$ZPOOL destroy $opts $pool
+			if [[ $? -ne 0 ]]; then
+				log_must $ZPOOL destroy ${opts}f $pool
+			fi 
+			
 
 			[[ -d $mtpt ]] && \
 				log_must $RM -rf $mtpt
