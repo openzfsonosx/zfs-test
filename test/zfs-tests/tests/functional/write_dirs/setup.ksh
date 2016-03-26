@@ -55,6 +55,9 @@ EOF
 
        slice_part=p
        (( SLICE += 1 ))
+elif [[ -n "$OSX" ]]; then
+    slice_part=s
+    (( SLICE += 2 ))
 fi
 
 default_setup "$DISK"${slice_part}"$SLICE"
