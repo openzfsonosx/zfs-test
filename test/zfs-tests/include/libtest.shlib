@@ -183,7 +183,12 @@ function default_setup_noexit
 	$MKDIR -p $TESTDIR || log_unresolved Could not create $TESTDIR
 
 	log_must $ZFS create $TESTPOOL/$TESTFS
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+
+	if [[ -n "$OSX" ]]; then
+		log_must $ZFS set mountpoint=`realpath $TESTDIR` $TESTPOOL/$TESTFS
+	else
+		log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	fi
 
 	if [[ -n $container ]]; then
 		$RM -rf $TESTDIR1  || \
@@ -194,8 +199,14 @@ function default_setup_noexit
 		log_must $ZFS create $TESTPOOL/$TESTCTR
 		log_must $ZFS set canmount=off $TESTPOOL/$TESTCTR
 		log_must $ZFS create $TESTPOOL/$TESTCTR/$TESTFS1
-		log_must $ZFS set mountpoint=$TESTDIR1 \
-		    $TESTPOOL/$TESTCTR/$TESTFS1
+
+		if [[ -n "$OSX" ]]; then
+			log_must $ZFS set mountpoint=`realpath $TESTDIR1` \
+				$TESTPOOL/$TESTCTR/$TESTFS1
+		else
+			log_must $ZFS set mountpoint=$TESTDIR1 \
+				$TESTPOOL/$TESTCTR/$TESTFS1
+		fi
 	fi
 
 	if [[ -n $volume ]]; then
@@ -996,6 +1007,18 @@ function is_shared
 		if [[ $stat != "nfsd running" ]]; then
 			log_note "Current nfs/server status: $stat"
 		fi
+	elif [[ -n "$OSX" ]]; then
+		for mtpt in `$CAT /etc/exports | $SED 's/\"//g' | $AWK '{ print $1 }'` ; do
+			if [[ $mtpt == $fs ]] ; then
+				log_note "filesystem ==>${fs}<== is shared"
+				return 0
+			fi
+		done
+
+		typeset stat=$(nfsd status)
+		if ! [[ $stat =~ "enabled" ]]; then
+			log_note "Current nfs/server status: $stat"
+		fi
 	else
 		for mtpt in `$SHARE | $AWK '{print $2}'` ; do
 			if [[ $mtpt == $fs ]] ; then
@@ -1049,6 +1072,11 @@ function unshare_fs #fs
 #
 function setup_nfs_server
 {
+	# I'm not sure we need to do any setup at all on OSX
+	if [[ -n "$OSX" ]]; then
+		return
+	fi
+
 	# Cannot share directory in non-global zone.
 	#
 	if ! is_global_zone; then
