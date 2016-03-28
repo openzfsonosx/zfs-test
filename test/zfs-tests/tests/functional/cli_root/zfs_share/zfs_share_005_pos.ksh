@@ -46,6 +46,7 @@ function cleanup
 		log_must unshare_fs $TESTPOOL/$TESTFS
 }
 
+
 set -A shareopts \
     "ro" "ro=machine1" "ro=machine1:machine2" \
     "rw" "rw=machine1" "rw=machine1:machine2" \
@@ -70,10 +71,25 @@ do
 	fi
 
 	typeset share_opt_verbose=""
-	[[ -n "$LINUX" ]] && share_opt_verbose="-v"
-	$SHARE $share_opt_verbose | $GREP $option > /dev/null 2>&1
-	if (( $? != 0 )); then
-		log_fail "The '$option' option was not found in share output."
+
+	if [[ -n "$OSX" ]]; then
+# More work required
+# -ro=machine -> -ro machine
+# -ro=machine:machine1 ->
+#-ro machine
+#-ro machine1
+		option=${option//=/' '}
+
+		$CAT /etc/exports | $GREP "${option}" > /dev/null 2>&1
+		if (( $? != 0 )); then
+			log_fail "The '$option' option was not found in /etc/exports."
+		fi
+	else
+		[[ -n "$LINUX" ]] && share_opt_verbose="-v"
+		$SHARE $share_opt_verbose | $GREP $option > /dev/null 2>&1
+		if (( $? != 0 )); then
+			log_fail "The '$option' option was not found in share output."
+		fi
 	fi
 
 	((i = i + 1))
