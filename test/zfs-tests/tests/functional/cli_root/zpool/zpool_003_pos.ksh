@@ -70,11 +70,13 @@ fi
 log_mustnot $ZPOOL freeze fakepool
 
 # Remove corefile possibly left by previous failing run of this test.
-corepath=$TEST_BASE_DIR/cores
-if [[ -d $corepath ]]; then
-	$RM -rf $corepath
+if [[ -z "$OSX" ]]; then
+    corepath=$TEST_BASE_DIR/cores
+    if [[ -d $corepath ]]; then
+        $RM -rf $corepath
+    fi
+    $MKDIR -p $corepath
 fi
-$MKDIR -p $corepath
 
 if [[ -n "$LINUX" && -f "/proc/sys/kernel/core_pattern" ]]; then
 	# NOTE: This file is only provided if the kernel was built
@@ -84,16 +86,31 @@ if [[ -n "$LINUX" && -f "/proc/sys/kernel/core_pattern" ]]; then
 	typeset ulimit=$(ulimit -c)
 	echo "${corepath}/core.%e" > /proc/sys/kernel/core_pattern
 	ulimit -c unlimited
+elif [[ -n "$OSX" ]]; then
+    log_note "no core path control on OSX"
 else
-	log_must $COREADM -p ${corepath}/core.%f
+    log_must $COREADM -p ${corepath}/core.%f
 fi
 
-ZFS_ABORT=1; export ZFS_ABORT
-$ZPOOL > /dev/null 2>&1
 
-if [[ -f ${corepath}/core.zpool ]]; then
-	log_must rm -f ${corepath}/core.zpool
-	log_pass "Debugging features of zpool succeed."
+ZFS_ABORT=1; export ZFS_ABORT
+
+if [[ -n "$OSX" ]]; then
+    typeset -i num_cores_before=`ls -l ${corepath} | grep $ZPOOL | wc -l`
+    $ZPOOL > /dev/null 2>&1
+    typeset -i num_cores_after=`ls -l ${corepath} | grep $ZPOOL | wc -l`
+
+    if [[ num_cores_before == num_cores_after ]]; then
+        log_fail "$ZFS $subcmd cannot generate core file with " \
+        "ZFS_ABORT set."
+    fi
 else
-	log_fail "$ZPOOL did not dump core by request."
+    $ZPOOL > /dev/null 2>&1
+
+    if [[ -f ${corepath}/core.zpool ]]; then
+        log_must rm -f ${corepath}/core.zpool
+        log_pass "Debugging features of zpool succeed."
+    else
+        log_fail "$ZPOOL did not dump core by request."
+    fi
 fi

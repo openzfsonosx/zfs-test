@@ -58,6 +58,12 @@ export SIDE_PRIMARY=$SIDE_PRIMARY
 export SIDE_SECONDARY=$SIDE_SECONDARY
 export DEV_DSKDIR=""
 EOF
+elif [[ -n "$OSX" ]]; then
+    cat <<EOF > $TMPFILE
+export SIDE_PRIMARY=$SIDE_PRIMARY
+export SIDE_SECONDARY=$SIDE_SECONDARY
+export DEV_DSKDIR=""
+EOF
 fi
 
 default_mirror_setup $SIDE_PRIMARY $SIDE_SECONDARY

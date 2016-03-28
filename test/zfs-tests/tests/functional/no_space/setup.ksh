@@ -34,7 +34,7 @@
 
 verify_runnable "global"
 
-if [[ -z "$LINUX" ]] && ! $(is_physical_device $DISKS) ; then
+if [[ -z "$LINUX" || -z "$OSX" ]] && ! $(is_physical_device $DISKS) ; then
 	log_unsupported "This directory cannot be run on raw files."
 fi
 
@@ -54,6 +54,9 @@ EOF
 
 	slice_part=p
 	slice_nr=1
+elif [[ -n "$OSX" ]]; then
+    slice_part=s
+    slice_nr=2
 fi
 
 default_setup $DISK${slice_part}${slice_nr}

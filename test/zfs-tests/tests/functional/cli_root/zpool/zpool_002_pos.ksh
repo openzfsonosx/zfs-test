@@ -90,18 +90,37 @@ if [[ -n "$LINUX" && -f "/proc/sys/kernel/core_pattern" ]]; then
 	typeset ulimit=$(ulimit -c)
 	echo "${corepath}/core.%e" > /proc/sys/kernel/core_pattern
 	ulimit -c unlimited
+elif [[ -n "$OSX" ]]; then
+    log_note "no core path control on OSX"
 else
 	log_must $COREADM -p ${corepath}/core.%f
 fi
 export ZFS_ABORT=yes
 
-for subcmd in "${cmds[@]}" "${badparams[@]}"; do
-	$ZPOOL $subcmd >/dev/null 2>&1
-	corefile=${corepath}/core.zpool
-	if [[ ! -e $corefile ]]; then
-		log_fail "$ZPOOL $subcmd cannot generate core file  with ZFS_ABORT set."
-	fi
-	$RM -f $corefile
-done
+if [[ -n "$OSX" ]]; then
+    for subcmd in "${cmds[@]}" "${badparams[@]}"; do
+        typeset -i num_cores_before=`ls -l ${corepath} | grep $ZPOOL | wc -l`
+
+        $ZPOOL $subcmd >/dev/null 2>&1 && log_fail "$subcmd passed incorrectly."
+
+        typeset -i num_cores_after=`ls -l ${corepath} | grep $ZPOOL | wc -l`
+
+        if [[ num_cores_before == num_cores_after ]]; then
+            log_fail "$ZFS $subcmd cannot generate core file with " \
+            "ZFS_ABORT set."
+        else
+            log_note $ZPOOL $subcmd aborted as expected
+        fi
+    done
+else
+    for subcmd in "${cmds[@]}" "${badparams[@]}"; do
+        $ZPOOL $subcmd >/dev/null 2>&1
+        corefile=${corepath}/core.zpool
+        if [[ ! -e $corefile ]]; then
+            log_fail "$ZPOOL $subcmd cannot generate core file  with ZFS_ABORT set."
+        fi
+        $RM -f $corefile
+    done
+fi
 
 log_pass "With ZFS_ABORT set, zpool command can abort and generate core file as expected."

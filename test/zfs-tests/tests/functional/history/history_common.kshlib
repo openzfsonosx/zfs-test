@@ -51,7 +51,7 @@ function run_and_verify
 	fullcmd="$1"
 	flags="$2"
 
-	histcmd=$($ECHO $fullcmd | $SED 's/\/usr\/sbin\///g')
+	histcmd=$($ECHO $fullcmd | $SED 's/\/usr\/local\/bin\///g')
 	cmd=$($ECHO $histcmd | $AWK '{print $1}')
 	subcmd=$($ECHO $histcmd | $AWK '{print $2}')
 
