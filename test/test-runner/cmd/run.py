@@ -126,6 +126,35 @@ class Cmd(object):
         return "Pathname: %s\nOutputdir: %s\nTimeout: %s\nUser: %s\n" % (
                 self.pathname, self.outputdir, self.timeout, self.user)
 
+    def kill_cmd_timeout(self, proc):
+        """
+        Kill a running command due to timeout, or ^C from the keyboard. If
+        sudo is required, this user was verified previously.
+        """
+        self.killed = True
+        do_sudo = len(self.user) != 0
+        signal = '-TERM'
+	
+        spindump_cmd = [SUDO, "/usr/sbin/spindump", "-file", self.outputdir + "/spindump_" + str(proc.pid) + ".txt"]
+        if not do_sudo:
+            del spindump_cmd[0]
+
+        try:
+            spindump_kp = Popen(spindump_cmd)
+            spindump_kp.wait()
+        except:
+            pass
+	
+        cmd = [SUDO, KILL, signal, str(proc.pid)]
+        if not do_sudo:
+            del cmd[0]
+
+        try:
+            kp = Popen(cmd)
+            kp.wait()
+        except:
+            pass
+
     def kill_cmd(self, proc):
         """
         Kill a running command due to timeout, or ^C from the keyboard. If
@@ -206,7 +235,7 @@ class Cmd(object):
         try:
             self.result.starttime = time()
             proc = Popen(privcmd, stdout=PIPE, stderr=PIPE)
-            t = Timer(int(self.timeout), self.kill_cmd, [proc])
+            t = Timer(int(self.timeout), self.kill_cmd_timeout, [proc])
             t.start()
             self.result.stdout, self.result.stderr = self.collect_output(proc)
         except KeyboardInterrupt:
