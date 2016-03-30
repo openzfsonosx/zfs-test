@@ -1015,7 +1015,7 @@ function is_shared
 			fi
 		done
 
-		typeset stat=$(nfsd status)
+		typeset stat=$(/sbin/nfsd status)
 		if ! [[ $stat =~ "enabled" ]]; then
 			log_note "Current nfs/server status: $stat"
 		fi
