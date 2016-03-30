@@ -49,7 +49,6 @@ set -A fs \
 
 function cleanup
 {
-	log_note "=====>in cleanup<====="
 	typeset -i i=0
 	while (( i < ${#fs[*]} )); do
 		log_must $ZFS set sharenfs=off ${fs[((i+1))]}
@@ -58,12 +57,9 @@ function cleanup
 		((i = i + 2))
 	done
 
-log_note "=====>in cleanup2<====="
 	if mounted $TESTPOOL/$TESTFS-clone; then
 		log_must $ZFS unmount $TESTDIR2
 	fi
-
-log_note "=====>in cleanup3<====="
 
 	destroy_dataset -f $TESTPOOL/$TESTFS-clone
 	destroy_dataset -f $TESTPOOL/$TESTFS@snapshot

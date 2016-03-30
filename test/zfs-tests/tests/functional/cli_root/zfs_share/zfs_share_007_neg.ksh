@@ -45,6 +45,17 @@ function cleanup {
 	fi
 }
 
+function not_in_exports #mountpoint
+{
+	typeset mtpt=$1
+
+	$CAT /etc/exports | $GREP "${mtpt}" > /dev/null 2>&1
+	if (( $? == 0 )); then
+		log_fail "The '$mtpt' filesystem was found in /etc/exports."
+	fi
+}
+
+
 set -A badopts \
     "r0" "r0=machine1" "r0=machine1:machine2" \
     "-g" "-b" "-c" "-d" "--invalid" \
@@ -53,17 +64,23 @@ set -A badopts \
 log_assert "Verify that invalid share parameters and options are caught."
 log_onexit cleanup
 
+typeset mtpt=$(get_prop mountpoint $TESTPOOL/$TESTFS)
+
 typeset -i i=0
 while (( i < ${#badopts[*]} ))
 do
 	log_note "Setting sharenfs=${badopts[i]} $i "
 	log_mustnot $ZFS set sharenfs="${badopts[i]}" $TESTPOOL/$TESTFS
 
-	typeset share_opt_verbose=""
-	[[ -n "$LINUX" ]] && share_opt_verbose="-v"
-	$SHARE $share_opt_verbose | $GREP $option > /dev/null 2>&1
-	if (( $? == 0 )); then
-		log_fail "An invalid setting '$option' was propagated."
+	if [[ -n "$OSX" ]]; then
+		not_in_exports $mtpt
+	else
+		typeset share_opt_verbose=""
+		[[ -n "$LINUX" ]] && share_opt_verbose="-v"
+		$SHARE $share_opt_verbose | $GREP $option > /dev/null 2>&1
+		if (( $? == 0 )); then
+			log_fail "An invalid setting '$option' was propagated."
+		fi
 	fi
 
 	#
