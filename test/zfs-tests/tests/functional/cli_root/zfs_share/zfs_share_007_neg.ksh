@@ -45,17 +45,6 @@ function cleanup {
 	fi
 }
 
-function not_in_exports #mountpoint
-{
-	typeset mtpt=$1
-
-	$CAT /etc/exports | $GREP "${mtpt}" > /dev/null 2>&1
-	if (( $? == 0 )); then
-		log_fail "The '$mtpt' filesystem was found in /etc/exports."
-	fi
-}
-
-
 set -A badopts \
     "r0" "r0=machine1" "r0=machine1:machine2" \
     "-g" "-b" "-c" "-d" "--invalid" \
@@ -73,7 +62,8 @@ do
 	log_mustnot $ZFS set sharenfs="${badopts[i]}" $TESTPOOL/$TESTFS
 
 	if [[ -n "$OSX" ]]; then
-		not_in_exports $mtpt
+		not_shared $mtpt || \
+			log_fail "File system ${mtpt} is unexpectedly shared."
 	else
 		typeset share_opt_verbose=""
 		[[ -n "$LINUX" ]] && share_opt_verbose="-v"
