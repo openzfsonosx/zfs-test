@@ -161,6 +161,33 @@ function default_setup
 }
 
 #
+# Set the mountpoint for a filesystem.
+#
+# O3X has a bit of a problem that spotlight seems to hold files
+# open on the volume at inopportune times, preventing the unmount.
+# We retry after a small delay to work around this.
+#
+function zfs_set_mountpoint #mtpt fs
+{
+	typeset mtpt=$1
+	typeset fs=$2
+
+	if [[ -n $"OSX" ]]; then
+		typeset real_mtpt=$(realpath $mtpt)
+
+		$ZFS set mountpoint=$real_mtpt $fs
+		if (( $? == 1 )); then
+			sleep 1
+			return $($ZFS set mountpoint=$real_mtpt $fs)
+		fi
+	else
+		return $($ZFS set mountpoint=$mtpt $fs)
+	fi
+
+	return 0
+}
+
+#
 # Given a list of disks, setup storage pools and datasets.
 #
 function default_setup_noexit
@@ -184,11 +211,7 @@ function default_setup_noexit
 
 	log_must $ZFS create $TESTPOOL/$TESTFS
 
-	if [[ -n "$OSX" ]]; then
-		log_must $ZFS set mountpoint=`realpath $TESTDIR` $TESTPOOL/$TESTFS
-	else
-		log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
-	fi
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
 
 	if [[ -n $container ]]; then
 		$RM -rf $TESTDIR1  || \
