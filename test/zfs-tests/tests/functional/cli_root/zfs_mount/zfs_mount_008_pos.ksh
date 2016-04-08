@@ -66,7 +66,8 @@ testfile=$mntpnt/$TESTFILE0; testfile1=$mntpnt1/$TESTFILE1
 log_must $MKFILE 1M $testfile $testfile1
 
 log_must $ZFS unmount $fs1
-log_must $ZFS set mountpoint=$mntpnt $fs1
+log_must zfs_set_mountpoint $mntpnt $fs1
+#log_must $ZFS set mountpoint=$mntpnt $fs1
 log_mustnot $ZFS mount $fs1
 log_must $ZFS mount -O $fs1
 
@@ -79,7 +80,8 @@ log_must $LS $mntpnt/$TESTFILE1 $mntpnt/$TESTFILE2
 
 # Verify $TESTFILE2 was created in $fs1, rather then $fs
 log_must $ZFS unmount $fs1
-log_must $ZFS set mountpoint=$mntpnt1 $fs1
+log_must zfs_set_mountpoint $mntpnt1 $fs1
+#log_must $ZFS set mountpoint=$mntpnt1 $fs1
 log_must $ZFS mount $fs1
 log_must $LS $testfile1 $mntpnt1/$TESTFILE2
 

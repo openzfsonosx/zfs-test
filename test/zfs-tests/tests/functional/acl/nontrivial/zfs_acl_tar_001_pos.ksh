@@ -67,7 +67,8 @@ log_note "Create second zfs file system to restore the tar archive."
 log_must $ZFS create $TESTPOOL/$TESTFS1
 [[ ! -d $TESTDIR1 ]] && \
 	log_must $MKDIR -p $TESTDIR1
-log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL/$TESTFS1
+log_must zfs_set_mountpoint $TESTDIR1 $TESTPOOL/$TESTFS1
+#log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL/$TESTFS1
 
 log_note "Create a file: $file, and directory: $dir, in zfs filesystem. "
 cd $TESTDIR

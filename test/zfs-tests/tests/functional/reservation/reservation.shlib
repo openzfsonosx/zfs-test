@@ -101,7 +101,8 @@ function create_multiple_fs # num_fs base_fs_name base_mnt_name
 
 	while  (($iter < $count)); do
 		log_must $ZFS create ${FS_NAME}$iter
-		log_must $ZFS set mountpoint=${MNT_NAME}$iter ${FS_NAME}$iter
+		log_must zfs_set_mountpoint ${MNT_NAME}$iter ${FS_NAME}$iter
+#		log_must $ZFS set mountpoint=${MNT_NAME}$iter ${FS_NAME}$iter
 		((iter = iter + 1))
 	done
 }

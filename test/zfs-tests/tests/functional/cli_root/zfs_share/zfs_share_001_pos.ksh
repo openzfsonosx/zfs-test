@@ -105,7 +105,8 @@ log_onexit cleanup
 
 log_must $ZFS snapshot $TESTPOOL/$TESTFS@snapshot
 log_must $ZFS clone $TESTPOOL/$TESTFS@snapshot $TESTPOOL/$TESTFS-clone
-log_must $ZFS set mountpoint=`realpath $TESTDIR2` $TESTPOOL/$TESTFS-clone
+log_must zfs_set_mountpoint `realpath $TESTDIR2` $TESTPOOL/$TESTFS-clone
+#log_must $ZFS set mountpoint=`realpath $TESTDIR2` $TESTPOOL/$TESTFS-clone
 
 typeset -i i=0
 while (( i < ${#fs[*]} )); do

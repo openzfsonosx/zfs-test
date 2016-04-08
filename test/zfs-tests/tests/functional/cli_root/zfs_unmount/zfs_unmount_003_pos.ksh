@@ -68,7 +68,8 @@ function do_unmount_multiple #options #expect #mountpoint
 		j=0
 		while (( j < ${#dev[*]} )); do
 			[[ -n $mopt ]] && \
-				log_must $ZFS set mountpoint=$mopt ${dev[0]}
+				log_must zfs_set_mountpoint $mopt ${dev[0]}
+#				log_must $ZFS set mountpoint=$mopt ${dev[0]}
 
 			do_unmount "${cmd[i]}" "$opt" \
 				"${dev[j]}" $expect

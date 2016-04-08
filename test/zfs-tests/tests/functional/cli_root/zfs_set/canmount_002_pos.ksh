@@ -65,7 +65,8 @@ function cleanup
 	while (( i < ${#dataset_pos[*]} )); do
 		ds=${dataset_pos[i]}
 		if datasetexists $ds; then
-			log_must $ZFS set mountpoint=${old_mnt[i]} $ds
+			log_must zfs_set_mountpoint ${old_mnt[i]} $ds
+#			log_must $ZFS set mountpoint=${old_mnt[i]} $ds
 			log_must $ZFS set canmount=${old_canmount[i]} $ds
 		fi
 		(( i = i + 1 ))
@@ -111,7 +112,8 @@ i=0
 while (( i < ${#dataset_pos[*]} )) ; do
 	dataset=${dataset_pos[i]}
 	set_n_check_prop "noauto" "canmount" "$dataset"
-	log_must $ZFS set mountpoint=$tmpmnt $dataset
+	log_must zfs_set_mountpoint $tmpmnt $dataset
+#	log_must $ZFS set mountpoint=$tmpmnt $dataset
 	if  ismounted $dataset; then
 		$ZFS unmount -a > /dev/null 2>&1
 		log_must mounted $dataset
@@ -129,7 +131,8 @@ while (( i < ${#dataset_pos[*]} )) ; do
 	log_must $ZFS mount $dataset
 	log_must mounted $dataset
 	log_must $ZFS set canmount="${old_canmount[i]}" $dataset
-	log_must $ZFS set mountpoint="${old_mnt[i]}" $dataset
+	log_must zfs_set_mountpoint "${old_mnt[i]}" $dataset
+#	log_must $ZFS set mountpoint="${old_mnt[i]}" $dataset
 	(( i = i + 1 ))
 done
 unset __ZFS_POOL_RESTRICT

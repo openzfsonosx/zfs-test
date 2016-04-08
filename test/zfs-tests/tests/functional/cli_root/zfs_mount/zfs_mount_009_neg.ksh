@@ -72,7 +72,8 @@ function cleanup_all
 	typeset fs
 
 	destroy_dataset $TESTPOOL/$TESTFS1
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 
 	[[ -d ${TEST_BASE_DIR%%/}/testroot$$ ]] && \
 		$RM -rf ${TEST_BASE_DIR%%/}/testroot$$

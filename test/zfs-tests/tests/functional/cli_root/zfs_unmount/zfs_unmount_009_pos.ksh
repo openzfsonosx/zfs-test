@@ -60,7 +60,8 @@ function cleanup
 
 	if ! datasetexists $TESTPOOL/$TESTFS; then
 		log_must $ZFS create $TESTPOOL/$TESTFS
-		log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+		log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#		log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 	fi
 }
 
@@ -68,7 +69,8 @@ function restore_dataset
 {
 	if ! datasetexists $TESTPOOL/$TESTFS ; then
 		log_must $ZFS create $TESTPOOL/$TESTFS
-		log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+		log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#		log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 		log_must cd $TESTDIR
 		$ECHO hello > world
 		log_must $ZFS snapshot $TESTPOOL/$TESTFS@$TESTSNAP

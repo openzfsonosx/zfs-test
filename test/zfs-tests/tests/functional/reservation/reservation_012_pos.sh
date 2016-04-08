@@ -65,7 +65,8 @@ function cleanup
 log_onexit cleanup
 
 log_must $ZFS create $TESTPOOL/$TESTFS2
-log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL/$TESTFS2
+log_must zfs_set_mountpoint $TESTDIR2 $TESTPOOL/$TESTFS2
+#log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL/$TESTFS2
 
 space_avail=`get_prop available $TESTPOOL`
 

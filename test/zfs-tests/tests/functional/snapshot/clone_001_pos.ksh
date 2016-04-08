@@ -63,7 +63,8 @@ function setup_all
 {
 	create_pool $TESTPOOL1 $ZVOL_DEVDIR/$TESTPOOL/$TESTVOL
 	log_must $ZFS create $TESTPOOL1/$TESTFS
-	log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL1/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR2 $TESTPOOL1/$TESTFS
+#	log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL1/$TESTFS
 
 	return 0
 }
@@ -129,7 +130,8 @@ while (( i < ${#args[*]} )); do
 	#
 	log_must $ZFS clone ${args[i]} ${args[i+2]}
 	if [[ -n ${args[i+3]} ]] ; then
-		log_must $ZFS set mountpoint=${args[i+3]} ${args[i+2]}
+		log_must zfs_set_mountpoint ${args[i+3]} ${args[i+2]}
+#		log_must $ZFS set mountpoint=${args[i+3]} ${args[i+2]}
 
 		FILE_COUNT=`$LS -Al ${args[i+3]} | $GREP -v "total" \
 		    | $GREP -v "\.zfs" | wc -l`

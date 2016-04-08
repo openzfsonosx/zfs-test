@@ -90,7 +90,8 @@ log_note "Verify 'zfs send' can create full send stream."
 log_must $ZFS create $rst_root
 [[ ! -d $TESTDIR1 ]] && \
 	log_must $MKDIR -p $TESTDIR1
-log_must $ZFS set mountpoint=$TESTDIR1 $rst_root
+	log_must zfs_set_mountpoint $TESTDIR1 $rst_root
+#log_must $ZFS set mountpoint=$TESTDIR1 $rst_root
 
 $FILE_WRITE -o create -f $init_data -b $BLOCK_SIZE -c $WRITE_COUNT
 

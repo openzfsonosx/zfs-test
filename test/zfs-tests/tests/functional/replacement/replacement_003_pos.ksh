@@ -131,7 +131,8 @@ done
 
 create_pool $TESTPOOL1 mirror $specials_list
 log_must $ZFS create $TESTPOOL1/$TESTFS1
-log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL1/$TESTFS1
+log_must zfs_set_mountpoint $TESTDIR1 $TESTPOOL1/$TESTFS1
+#log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL1/$TESTFS1
 
 detach_test $TESTDIR/$TESTFILE1.1
 
@@ -147,7 +148,8 @@ log_note "Verify 'zpool detach' fails with non-mirrors."
 for type in "" "raidz" "raidz1" ; do
 	create_pool $TESTPOOL1 $type $specials_list
 	log_must $ZFS create $TESTPOOL1/$TESTFS1
-	log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL1/$TESTFS1
+	log_must zfs_set_mountpoint $TESTDIR1 $TESTPOOL1/$TESTFS1
+#	log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL1/$TESTFS1
 
 	log_mustnot $ZPOOL detach $TESTDIR/$TESTFILE1.1
 

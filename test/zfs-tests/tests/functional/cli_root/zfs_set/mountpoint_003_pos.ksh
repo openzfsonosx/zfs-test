@@ -45,7 +45,8 @@ function cleanup
 {
 	ismounted $tmpmnt && log_must $UMOUNT $tmpmnt
 	[[ -d $tmpmnt ]] && log_must $RM -rf $tmpmnt
-	[[ -n $oldmpt ]] && log_must $ZFS set mountpoint=$oldmpt $testfs
+	[[ -n $oldmpt ]] && log_must zfs_set_mountpoint $oldmpt $testfs
+#[[ -n $oldmpt ]] && log_must $ZFS set mountpoint=$oldmpt $testfs
 	! ismounted $oldmpt && log_must $ZFS mount $testfs
 }
 
@@ -73,7 +74,8 @@ tmpmnt=/tmpmnt.$$
 testfs=$TESTPOOL/$TESTFS
 log_must $MKDIR $tmpmnt
 oldmpt=$(get_prop mountpoint $testfs)
-log_must $ZFS set mountpoint=legacy $testfs
+log_must zfs_set_mountpoint legacy $testfs
+#log_must $ZFS set mountpoint=legacy $testfs
 
 typeset i=0
 while ((i < ${#args[@]})); do

@@ -43,7 +43,8 @@ if [[ -d $TESTDIR2 ]]; then
 	fi
 fi
 log_must $ZFS create $TESTPOOL/$DATAFS
-log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL/$DATAFS
+log_must zfs_set_mountpoint $TESTDIR2 $TESTPOOL/$DATAFS
+#log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL/$DATAFS
 log_must eval "$DD if=$IF of=$OF bs=$BS count=$CNT >/dev/null 2>&1"
 
 log_pass

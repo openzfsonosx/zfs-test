@@ -105,8 +105,10 @@ for fs in $child_fs $child_fs1; do
 	log_must $ZFS create $fs
 done
 
-log_must $ZFS set mountpoint=$child_fs_mntp $child_fs
-log_must $ZFS set mountpoint=$child_fs1_mntp $child_fs1
+log_must zfs_set_mountpoint $child_fs_mntp $child_fs
+#log_must $ZFS set mountpoint=$child_fs_mntp $child_fs
+log_must zfs_set_mountpoint $child_fs1_mntp $child_fs1
+#log_must $ZFS set mountpoint=$child_fs1_mntp $child_fs1
 
 for snap in $child_fs_snap $child_fs1_snap; do
 	log_must $ZFS snapshot $snap

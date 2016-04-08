@@ -75,7 +75,8 @@ if [[ -d $TESTDIR ]]; then
 fi
 
 log_must $ZFS create $TESTPOOL/$TESTFS
-log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 
 log_note "d1" $ZFSSIDE_DISK1 "d2" $ZFSSIDE_DISK2
 typeset FS="UFS"

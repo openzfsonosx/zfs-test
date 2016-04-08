@@ -94,7 +94,9 @@ done
 log_must $ZFS snapshot $snap
 log_must $ZFS clone $snap $clone
 
+log_must zfs_set_mountpoint $mntp1 $fs1
 log_must $ZFS set mountpoint=$mntp1 $fs1
+log_must zfs_set_mountpoint $mntp2 $clone
 log_must $ZFS set mountpoint=$mntp2 $clone
 
 for arg in "$fs1 $mntp1" "$clone $mntp2"; do

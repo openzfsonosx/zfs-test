@@ -65,8 +65,10 @@ function do_unmount
 
 	if ! datasetexists $TESTPOOL/$TESTFS2 ; then
 		log_must $ZFS create $TESTPOOL/$TESTFS2
-		log_must $ZFS set mountpoint=$TESTDIR2 \
-		    $TESTPOOL/$TESTFS2
+		log_must zfs_set_mountpoint $TESTDIR2 \
+			$TESTPOOL/$TESTFS2
+#		log_must $ZFS set mountpoint=$TESTDIR2 \
+#		    $TESTPOOL/$TESTFS2
 	fi
 
 	unmounted $TESTPOOL/$TESTFS2 && \

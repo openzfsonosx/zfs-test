@@ -116,7 +116,8 @@ function setup_vdevs #<disk>
 		log_must $RM -rf $TESTDIR
         log_must $MKDIR -p $TESTDIR
         log_must $ZFS create $TESTPOOL/$TESTFS
-        log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+		log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#        log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 
 	# Create a pool first using the first file, and make subsequent files
 	# ready as vdevs to add to the pool

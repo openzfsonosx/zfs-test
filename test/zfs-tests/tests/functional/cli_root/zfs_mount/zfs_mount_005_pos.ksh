@@ -47,7 +47,8 @@ verify_runnable "both"
 
 function cleanup
 {
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 	log_must force_unmount $TESTPOOL/$TESTFS
 	return 0
 }
