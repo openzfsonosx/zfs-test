@@ -151,21 +151,19 @@ tests = ['zfs_receive_001_pos', 'zfs_receive_002_pos', 'zfs_receive_003_pos',
     'zfs_receive_005_neg', 'zfs_receive_006_pos',
     'zfs_receive_007_neg', 'zfs_receive_008_pos', 'zfs_receive_009_neg']
 
-# ERROR:
-#[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_rename]
-#tests = ['zfs_rename_001_pos', 'zfs_rename_002_pos', 'zfs_rename_003_pos',
-#    'zfs_rename_004_neg', 'zfs_rename_005_neg', 'zfs_rename_006_pos',
-#    'zfs_rename_007_pos', 'zfs_rename_008_pos', 'zfs_rename_009_neg',
-#    'zfs_rename_010_neg', 'zfs_rename_011_pos', 'zfs_rename_012_neg',
-#    'zfs_rename_013_pos']
+[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_rename]
+tests = ['zfs_rename_001_pos', 'zfs_rename_002_pos', 'zfs_rename_003_pos',
+    'zfs_rename_004_neg', 'zfs_rename_005_neg', 'zfs_rename_006_pos',
+    'zfs_rename_007_pos', 'zfs_rename_008_pos', 'zfs_rename_009_neg',
+    'zfs_rename_010_neg', 'zfs_rename_011_pos', 'zfs_rename_012_neg',
+    'zfs_rename_013_pos']
 
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_reservation]
 tests = ['zfs_reservation_001_pos', 'zfs_reservation_002_pos']
 
-#O3X-requires porting
-#[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_rollback]
-#tests = ['zfs_rollback_001_pos', 'zfs_rollback_002_pos',
-#    'zfs_rollback_003_neg', 'zfs_rollback_004_neg']
+[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_rollback]
+tests = ['zfs_rollback_001_pos', 'zfs_rollback_002_pos',
+    'zfs_rollback_003_neg', 'zfs_rollback_004_neg']
 
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_send]
 tests = ['zfs_send_001_pos', 'zfs_send_002_pos', 'zfs_send_003_pos',
