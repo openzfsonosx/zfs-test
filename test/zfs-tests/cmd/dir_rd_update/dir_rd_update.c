@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #define	TMP_DIR /tmp
+#define O_RSYNC 0
 
 static char dirpath[256];
 
