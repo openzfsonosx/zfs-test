@@ -41,7 +41,8 @@
 #include <pthread.h>
 #if defined(_LINUX) || defined (_OSX)
 #include <string.h>
-#include <libspl/thread.h>
+//#include <libspl/thread.h>
+//#include <thread.h>
 #else
 #include <thread.h>
 #endif
