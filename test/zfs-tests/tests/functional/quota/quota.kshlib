@@ -31,7 +31,12 @@
 . $STF_SUITE/tests/functional/quota/quota.cfg
 
 # BLOCK_SIZE, QUOTA_VALUE and TOLERANCE set in quota.cfg
-readonly EDQUOT=49
+if [[ -n "$OSX" ]]; then
+	readonly EDQUOT=69
+else
+	readonly EDQUOT=49
+fi
+
 
 #
 # Function to fill the quota of a zfs filesystem
