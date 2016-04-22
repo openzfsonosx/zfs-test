@@ -200,8 +200,8 @@ do_write(int fd)
 		exit(5);
 	}
 #endif
-
-	buf = "ZFS Test Suite Truncation Test";
+	
+	(void) strcpy(buf, "ZFS Test Suite Truncation Test");
 	if (write(fd, buf, bsize) < bsize) {
 		perror("write");
 		exit(6);
