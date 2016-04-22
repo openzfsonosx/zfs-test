@@ -66,7 +66,8 @@ function recreate_root
 		log_must $RM -rf $TESTDIR1
 	fi
 	log_must $ZFS create $rst_root
-	log_must $ZFS set mountpoint=$TESTDIR1 $rst_root
+log_must zfs_set_mountpoint $TESTDIR1 $rst_root
+#	log_must $ZFS set mountpoint=$TESTDIR1 $rst_root
 }
 
 log_assert "Verifying 'zfs receive [<filesystem|snapshot>] -d <filesystem>' works."

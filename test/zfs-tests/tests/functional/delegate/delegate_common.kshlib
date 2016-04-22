@@ -886,7 +886,8 @@ function verify_fs_mount
 	fi
 
 	if ! ismounted $fs ; then
-		log_must $ZFS set mountpoint=$newmntpt $fs
+		log_must zfs_set_mountpoint $newmntpt $fs
+#		log_must $ZFS set mountpoint=$newmntpt $fs
 		log_must $RM -rf $newmntpt
 		log_must $MKDIR $newmntpt
 
@@ -903,7 +904,8 @@ function verify_fs_mount
 		fi
 		log_must $ZFS umount $fs
 		log_must $RM -rf $newmntpt
-		log_must $ZFS set mountpoint=$mntpt $fs
+		log_must zfs_set_mountpoint $mntpt $fs
+#		log_must $ZFS set mountpoint=$mntpt $fs
 	fi
 
 	return 0
@@ -1012,7 +1014,8 @@ function verify_fs_mountpoint
 			$(get_prop mountpoint $fs) ]] ; then
 			return 1
 		fi
-		log_must $ZFS set mountpoint=$mntpt $fs
+		log_must zfs_set_mountpoint $mntpt $fs
+#		log_must $ZFS set mountpoint=$mntpt $fs
 	fi
 
 	if ismounted $fs ; then
@@ -1029,7 +1032,8 @@ function verify_fs_mountpoint
 			$(get_prop mountpoint $fs) ]] ; then
 			return 1
 		fi
-		log_must $ZFS set mountpoint=$mntpt $fs
+		log_must zfs_set_mountpoint $mntpt $fs
+#		log_must $ZFS set mountpoint=$mntpt $fs
 	fi
 
 	return 0

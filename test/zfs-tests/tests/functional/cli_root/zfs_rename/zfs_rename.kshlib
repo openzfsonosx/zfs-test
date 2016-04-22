@@ -96,7 +96,8 @@ function cleanup
                                 typeset mntp=$(get_prop mountpoint  $newfs)
 				destroy_dataset -f $newfs
                                 log_must $ZFS create -p $oldfs
-                                log_must $ZFS set mountpoint=$mntp $oldfs
+								log_must zfs_set_mountpoint $mntpt $oldfs
+#                                log_must $ZFS set mountpoint=$mntp $oldfs
                         fi
                 else
 			destroy_dataset -fR ${dataset[i]}-new

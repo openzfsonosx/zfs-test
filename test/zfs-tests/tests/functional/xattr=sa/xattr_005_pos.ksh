@@ -59,7 +59,8 @@ create_xattr $TESTDIR/myfile.$$ passwd /etc/passwd
 # snapshot & clone the filesystem
 log_must $ZFS snapshot $TESTPOOL/$TESTFS@snapshot1
 log_must $ZFS clone $TESTPOOL/$TESTFS@snapshot1 $TESTPOOL/$TESTFS/clone
-log_must $ZFS set mountpoint=$TESTDIR/clone $TESTPOOL/$TESTFS/clone
+log_must zfs_set_mountpoint $TESTDIR/clone $TESTPOOL/$TESTFS/clone
+#log_must $ZFS set mountpoint=$TESTDIR/clone $TESTPOOL/$TESTFS/clone
 
 # check for the xattrs on the clone
 verify_xattr $TESTDIR/clone/myfile.$$ passwd /etc/passwd

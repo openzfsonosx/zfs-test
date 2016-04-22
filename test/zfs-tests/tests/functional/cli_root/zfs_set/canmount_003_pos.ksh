@@ -54,7 +54,8 @@ function cleanup
 	while (( i < ${#dataset_pos[*]} )); do
 		ds=${dataset_pos[i]}
 		if datasetexists $ds; then
-			log_must $ZFS set mountpoint=${old_mnt[i]} $ds
+			log_must zfs_set_mountpoint ${old_mnt[i]} $ds
+#			log_must $ZFS set mountpoint=${old_mnt[i]} $ds
 			log_must $ZFS set canmount=${old_canmount[i]} $ds
 		fi
 		(( i = i + 1 ))

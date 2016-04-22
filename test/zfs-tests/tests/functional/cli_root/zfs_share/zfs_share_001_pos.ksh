@@ -49,7 +49,6 @@ set -A fs \
 
 function cleanup
 {
-	log_note "=====>in cleanup<====="
 	typeset -i i=0
 	while (( i < ${#fs[*]} )); do
 		log_must $ZFS set sharenfs=off ${fs[((i+1))]}
@@ -58,12 +57,9 @@ function cleanup
 		((i = i + 2))
 	done
 
-log_note "=====>in cleanup2<====="
 	if mounted $TESTPOOL/$TESTFS-clone; then
 		log_must $ZFS unmount $TESTDIR2
 	fi
-
-log_note "=====>in cleanup3<====="
 
 	destroy_dataset -f $TESTPOOL/$TESTFS-clone
 	destroy_dataset -f $TESTPOOL/$TESTFS@snapshot
@@ -81,29 +77,25 @@ function test_share # mntp filesystem
 	typeset mntp=$1
 	typeset filesystem=$2
 
-log_note "=====>testshare<====="
 	not_shared $mntp || \
 	    log_fail "File system $filesystem is already shared."
 
-log_note "=====>testshare1<====="
 	log_must $ZFS set sharenfs=on $filesystem
+
 	is_shared $mntp || \
 	    log_fail "File system $filesystem is not shared (set sharenfs)."
 
 	#
 	# Verify 'zfs share' works as well.
 	#
-log_note "=====>testshare2<====="
 	log_must $ZFS unshare $filesystem
 	is_shared $mntp && \
 	    log_fail "File system $filesystem is still shared."
 
-log_note "=====>testshare3<====="
 	log_must $ZFS share $filesystem
 	is_shared $mntp || \
 	    log_fail "file system $filesystem is not shared (zfs share)."
 
-log_note "=====>testshare4<====="
 	log_note "Sharing a shared file system fails."
 	log_mustnot $ZFS share $filesystem
 }
@@ -113,9 +105,8 @@ log_onexit cleanup
 
 log_must $ZFS snapshot $TESTPOOL/$TESTFS@snapshot
 log_must $ZFS clone $TESTPOOL/$TESTFS@snapshot $TESTPOOL/$TESTFS-clone
-log_must $ZFS set mountpoint=`realpath $TESTDIR2` $TESTPOOL/$TESTFS-clone
-
-log_note "=====>before testshare<====="
+log_must zfs_set_mountpoint `realpath $TESTDIR2` $TESTPOOL/$TESTFS-clone
+#log_must $ZFS set mountpoint=`realpath $TESTDIR2` $TESTPOOL/$TESTFS-clone
 
 typeset -i i=0
 while (( i < ${#fs[*]} )); do

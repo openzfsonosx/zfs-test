@@ -124,7 +124,8 @@ for opt in "" "-f"; do
 done
 
 #Testing legacy mounted filesystem
-log_must $ZFS set mountpoint=legacy $fs1
+log_must zfs_set_mountpoint legacy $fs1
+#log_must $ZFS set mountpoint=legacy $fs1
 if [[ -n "$LINUX" ]]; then
 	log_must $MOUNT -t zfs $fs1 /tmp/$dir
 else

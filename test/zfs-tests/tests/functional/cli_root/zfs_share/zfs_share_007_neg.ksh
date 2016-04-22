@@ -53,17 +53,24 @@ set -A badopts \
 log_assert "Verify that invalid share parameters and options are caught."
 log_onexit cleanup
 
+typeset mtpt=$(get_prop mountpoint $TESTPOOL/$TESTFS)
+
 typeset -i i=0
 while (( i < ${#badopts[*]} ))
 do
 	log_note "Setting sharenfs=${badopts[i]} $i "
 	log_mustnot $ZFS set sharenfs="${badopts[i]}" $TESTPOOL/$TESTFS
 
-	typeset share_opt_verbose=""
-	[[ -n "$LINUX" ]] && share_opt_verbose="-v"
-	$SHARE $share_opt_verbose | $GREP $option > /dev/null 2>&1
-	if (( $? == 0 )); then
-		log_fail "An invalid setting '$option' was propagated."
+	if [[ -n "$OSX" ]]; then
+		not_shared $mtpt || \
+			log_fail "File system ${mtpt} is unexpectedly shared."
+	else
+		typeset share_opt_verbose=""
+		[[ -n "$LINUX" ]] && share_opt_verbose="-v"
+		$SHARE $share_opt_verbose | $GREP $option > /dev/null 2>&1
+		if (( $? == 0 )); then
+			log_fail "An invalid setting '$option' was propagated."
+		fi
 	fi
 
 	#

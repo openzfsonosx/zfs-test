@@ -124,7 +124,8 @@ function setup_vdevs #<disk>
 		log_must $RM -rf $TESTDIR
         log_must $MKDIR -p $TESTDIR
         log_must $ZFS create $TESTPOOL/$TESTFS
-        log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+		log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#        log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 
 	typeset -l count=0
 	typeset PIDLIST=""

@@ -75,7 +75,8 @@ set -A rst_snap "${rst_vol}@init_snap" "${rst_vol}@inc_snap"
 log_must $ZFS create $rst_root
 [[ ! -d $TESTDIR1 ]] && \
 	log_must $MKDIR -p $TESTDIR1
-log_must $ZFS set mountpoint=$TESTDIR1 $rst_root
+log_must zfs_set_mountpoint $TESTDIR1 $rst_root
+#log_must $ZFS set mountpoint=$TESTDIR1 $rst_root
 
 typeset -i i=0
 while (( i < ${#orig_snap[*]} )); do

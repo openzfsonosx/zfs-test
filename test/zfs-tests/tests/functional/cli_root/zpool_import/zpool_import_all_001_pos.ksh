@@ -119,7 +119,8 @@ function cleanup_all
 	[[ -n "$LINUX" ]] && ZFS_DISK1=${ZFS_DISK1}p1
 	log_must $ZPOOL create $TESTPOOL "${ZFS_DISK1}"
 	log_must $ZFS create $TESTPOOL/$TESTFS
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 }
 
 function checksum_all #alter_root

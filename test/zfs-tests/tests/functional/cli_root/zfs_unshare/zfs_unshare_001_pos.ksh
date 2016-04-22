@@ -121,7 +121,8 @@ log_onexit cleanup
 log_must $ZFS create $TESTPOOL/$TESTFS2
 log_must $ZFS snapshot $TESTPOOL/$TESTFS2@snapshot
 log_must $ZFS clone $TESTPOOL/$TESTFS2@snapshot $TESTPOOL/$TESTCLONE
-log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL/$TESTCLONE
+log_must zfs_set_mountpoint $TESTDIR2 $TESTPOOL/$TESTCLONE
+#log_must $ZFS set mountpoint=$TESTDIR2 $TESTPOOL/$TESTCLONE
 
 #
 # Invoke 'test_unshare' routine to test 'zfs unshare <filesystem|mountpoint>'.

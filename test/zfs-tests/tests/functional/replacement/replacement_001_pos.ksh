@@ -141,7 +141,8 @@ for type in "" "raidz" "raidz1" "mirror"; do
 	for op in "" "-f"; do
 		create_pool $TESTPOOL1 $type $specials_list
 		log_must $ZFS create $TESTPOOL1/$TESTFS1
-		log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL1/$TESTFS1
+		log_must zfs_set_mountpoint $TESTDIR1 $TESTPOOL1/$TESTFS1
+#		log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL1/$TESTFS1
 
 		replace_test "$opt" $TESTDIR/$TESTFILE1.1 $TESTDIR/$REPLACEFILE
 

@@ -54,7 +54,8 @@ function cleanup
 #[[ -d $TESTDIR ]] && \
 #		log_must $RM -rf $TESTDIR
 
-    log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#    log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 	log_must force_unmount $TESTPOOL/$TESTFS
 
 	return 0
@@ -83,7 +84,8 @@ while (( depth < MAXDEPTH )); do
 	(( depth = depth + 1))
 done
 
-log_must $ZFS set mountpoint=$mtpt $TESTPOOL/$TESTFS
+log_must zfs_set_mountpoint $mtpt $TESTPOOL/$TESTFS
+#log_must $ZFS set mountpoint=$mtpt $TESTPOOL/$TESTFS
 log_must $ZFS $mountcmd $TESTPOOL/$TESTFS
 
 mounted $TESTPOOL/$TESTFS || \
@@ -100,7 +102,8 @@ while [[ -n $mtpt ]] ; do
 		"which mountpoint be the identical of an existing one " \
 		"will fail with return code 1."
 
-	log_must $ZFS set mountpoint=$mtpt $TESTPOOL/$TESTFS1
+	log_must zfs_set_mountpoint $mtpt $TESTPOOL/$TESTFS1
+#	log_must $ZFS set mountpoint=$mtpt $TESTPOOL/$TESTFS1
 	log_mustnot $ZFS $mountcmd $TESTPOOL/$TESTFS1
 
 	unmounted $TESTPOOL/$TESTFS1 || \

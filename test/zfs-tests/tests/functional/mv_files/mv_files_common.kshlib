@@ -97,10 +97,12 @@ function init_setup
         $MKDIR -p $TESTDIR_TGT || log_unresolved Could not create $TESTDIR_TGT
 
         log_must $ZFS create $TESTPOOL/$TESTFS
-        log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+		log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#        log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 
         log_must $ZFS create $TESTPOOL/$TESTFS_TGT
-        log_must $ZFS set mountpoint=$TESTDIR_TGT $TESTPOOL/$TESTFS_TGT
+		log_must zfs_set_mountpoint $TESTDIR_TGT $TESTPOOL/$TESTFS_TGT
+#        log_must $ZFS set mountpoint=$TESTDIR_TGT $TESTPOOL/$TESTFS_TGT
 
         $MKDIR -p $OLDDIR || log_unresolved Could not create $OLDDIR
         $MKDIR -p $NEWDIR_IN_FS || log_unresolved Could not create $NEWDIR_IN_FS

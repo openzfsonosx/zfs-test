@@ -80,9 +80,11 @@ for n in ${sharenfs_prop[@]}; do
 
 		mntpt=$(get_prop mountpoint $CS_FS)
 		if [[ "$mntpt" == "$oldmpt" ]]; then
-			log_must $ZFS set mountpoint="$newmpt" $CS_FS
+			log_must zfs_set_mountpoint "$newmpt" $CS_FS
+#			log_must $ZFS set mountpoint="$newmpt" $CS_FS
 		else
-			log_must $ZFS set mountpoint="$oldmpt" $CS_FS
+			log_must zfs_set_mountpoint "$oldmpt" $CS_FS
+#			log_must $ZFS set mountpoint="$oldmpt" $CS_FS
 		fi
 		assert_unmounted
 	done

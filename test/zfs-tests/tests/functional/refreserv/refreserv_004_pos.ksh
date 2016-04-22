@@ -51,7 +51,8 @@ function cleanup
 	fi
 	destroy_dataset -rf $TESTPOOL/$TESTFS
 	log_must $ZFS create $TESTPOOL/$TESTFS
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 }
 
 log_assert "Verify refreservation is limited by available space."

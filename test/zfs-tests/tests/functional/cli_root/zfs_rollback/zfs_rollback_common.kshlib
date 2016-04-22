@@ -60,7 +60,8 @@ function setup_snap_env
 
 	if datasetnonexists $FS; then
 		log_must $ZFS create $FS
-		log_must $ZFS set mountpoint=$TESTDIR $FS
+		log_must zfs_set_mountpoint $TESTDIR $FS
+#		log_must $ZFS set mountpoint=$TESTDIR $FS
 	fi
 	# Volume can't be created in Local Zone.
 	if datasetnonexists $VOL && is_global_zone; then

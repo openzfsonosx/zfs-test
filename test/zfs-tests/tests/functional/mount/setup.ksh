@@ -40,7 +40,8 @@ for i in 1 2 3; do
 
 	log_must $ZFS create $fs
 	log_must $MKDIR -p $dir
-	log_must $ZFS set mountpoint=$dir $fs
+	log_must zfs_set_mountpoint $dir $fs
+#	log_must $ZFS set mountpoint=$dir $fs
 
 	log_must mounted $fs
 done

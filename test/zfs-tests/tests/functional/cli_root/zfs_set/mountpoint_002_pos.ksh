@@ -54,8 +54,10 @@ set -A values "$TESTDIR2" "$TESTDIR_NOTEXISTING"
 
 function cleanup
 {
-	log_must $ZFS set mountpoint=$old_ctr_mpt $TESTPOOL/$TESTCTR
-	log_must $ZFS set mountpoint=$old_fs_mpt $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $old_ctr_mpt $TESTPOOL/$TESTCTR
+#	log_must $ZFS set mountpoint=$old_ctr_mpt $TESTPOOL/$TESTCTR
+	log_must zfs_set_mountpoint $old_fs_mpt $TESTPOOL/$TESTFS
+#	log_must $ZFS set mountpoint=$old_fs_mpt $TESTPOOL/$TESTFS
 	export __ZFS_POOL_RESTRICT="$TESTPOOL"
 	log_must $ZFS mount -a
 	unset __ZFS_POOL_RESTRICT

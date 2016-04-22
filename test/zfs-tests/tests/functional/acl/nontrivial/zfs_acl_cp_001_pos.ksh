@@ -56,7 +56,8 @@ log_onexit cleanup
 
 log_note "Create the second zfs file system: $TESTPOOL/$TESTFS1."
 log_must $ZFS create $TESTPOOL/$TESTFS1
-log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL/$TESTFS1
+log_must zfs_set_mountpoint $TESTDIR1 $TESTPOOL/$TESTFS1
+#log_must $ZFS set mountpoint=$TESTDIR1 $TESTPOOL/$TESTFS1
 log_must $ZFS set aclmode=passthrough $TESTPOOL/$TESTFS1
 log_must $CHMOD 777 $TESTDIR1
 

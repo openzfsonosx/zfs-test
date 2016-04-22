@@ -83,7 +83,8 @@ function test_ctr_share # mntp ctr
 	#
 	typeset mntp2=$TESTDIR2
 	log_must $ZFS create $ctr/$TESTFS2
-	log_must $ZFS set mountpoint=$mntp2 $ctr/$TESTFS2
+	log_must zfs_set_mountpoint $mntp2 $ctr/$TESTFS2
+#	log_must $ZFS set mountpoint=$mntp2 $ctr/$TESTFS2
 
 	is_shared $mntp2 || \
 	    log_fail "File system $mntp2 was not shared (set sharenfs)."

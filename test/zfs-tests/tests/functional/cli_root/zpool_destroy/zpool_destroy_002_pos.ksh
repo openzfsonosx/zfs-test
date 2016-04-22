@@ -79,7 +79,8 @@ typeset cwd=""
 create_pool "$TESTPOOL" "$DISK"
 log_must $ZFS create $TESTPOOL/$TESTFS
 log_must $MKDIR -p $TESTDIR
-log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 log_must $ZFS create $TESTPOOL/$TESTCTR
 log_must $ZFS create $TESTPOOL/$TESTCTR/$TESTFS1
 log_must $ZFS create -V $VOLSIZE $TESTPOOL/$TESTVOL

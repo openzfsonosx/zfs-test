@@ -46,6 +46,16 @@ function cleanup
 		log_must unshare_fs $TESTPOOL/$TESTFS
 }
 
+function in_exports #mountpoint string
+{
+	typeset mtpt=$1
+	typeset option=$2
+
+	$CAT /etc/exports | $GREP "${mtpt}" | $GREP "${option}" > /dev/null 2>&1
+	if (( $? != 0 )); then
+		log_fail "The '$option' option was not found in /etc/exports."
+	fi
+}
 
 set -A shareopts \
     "ro" "ro=machine1" "ro=machine1:machine2" \
@@ -59,40 +69,82 @@ log_onexit cleanup
 
 cleanup
 
-# TODO: Needs to be translated to Linux - libshare/nfs is a little flaky
-typeset -i i=0
-while (( i < ${#shareopts[*]} ))
-do
-	log_must $ZFS set sharenfs="${shareopts[i]}" $TESTPOOL/$TESTFS
+# Easiest approach on OSX is to hard code these tests
+if [[ -n "$OSX" ]]; then
+	typeset mtpt=$(get_prop mountpoint $TESTPOOL/$TESTFS)
 
-	option=`get_prop sharenfs $TESTPOOL/$TESTFS`
-	if [[ $option != ${shareopts[i]} ]]; then
-		log_fail "get sharenfs failed. ($option != ${shareopts[i]})"
-	fi
+	log_must $ZFS set sharenfs="ro" $TESTPOOL/$TESTFS
+	in_exports $mtpt "\-ro *"
 
-	typeset share_opt_verbose=""
+	log_must $ZFS set sharenfs="ro=machine1" $TESTPOOL/$TESTFS
+	in_exports $mtpt "\-ro machine1"
 
-	if [[ -n "$OSX" ]]; then
-# More work required
-# -ro=machine -> -ro machine
-# -ro=machine:machine1 ->
-#-ro machine
-#-ro machine1
-		option=${option//=/' '}
+	log_must $ZFS set sharenfs="ro=machine1:machine2" $TESTPOOL/$TESTFS
+	in_exports $mtpt "\-ro machine1"
+	in_exports $mtpt "\-ro machine2"
 
-		$CAT /etc/exports | $GREP "${option}" > /dev/null 2>&1
-		if (( $? != 0 )); then
-			log_fail "The '$option' option was not found in /etc/exports."
+	log_must $ZFS set sharenfs="rw" $TESTPOOL/$TESTFS
+	in_exports $mtpt ""
+
+	log_must $ZFS set sharenfs="rw=machine1" $TESTPOOL/$TESTFS
+	in_exports $mtpt "machine1"
+
+	log_must $ZFS set sharenfs="rw=machine1:machine2" $TESTPOOL/$TESTFS
+	in_exports $mtpt "machine1"
+	in_exports $mtpt "machine2"
+
+	log_must $ZFS set sharenfs="ro=machine1:machine2,rw" $TESTPOOL/$TESTFS
+	in_exports $mtpt "\*"
+	in_exports $mtpt "\-ro machine1"
+	in_exports $mtpt "\-ro machine2"
+
+#	log_must $ZFS set sharenfs="anon=0" $TESTPOOL/$TESTFS
+#	in_exports ""
+
+#	log_must $ZFS set sharenfs="anon=0,sec=sys,rw" $TESTPOOL/$TESTFS
+#	in_exports ""
+
+#	log_must $ZFS set sharenfs="nosuid" $TESTPOOL/$TESTFS
+#	in_exports ""
+
+	log_must $ZFS set sharenfs="root=machine1:machine2" $TESTPOOL/$TESTFS
+	in_exports $mtpt "\-maproot=root machine1"
+	in_exports $mtpt "\-maproot=root machine2"
+
+	log_must $ZFS set sharenfs="rw=.mydomain.mycompany.com" $TESTPOOL/$TESTFS
+	in_exports $mtpt ".mydomain.mycompany.com"
+
+	log_must $ZFS set sharenfs="rw=-terra:engineering" $TESTPOOL/$TESTFS
+	in_exports $mtpt "\-terra"
+	in_exports $mtpt "engineering"
+
+#	log_must $ZFS set sharenfs="log" $TESTPOOL/$TESTFS
+#	in_exports "log"
+
+#	log_must $ZFS set sharenfs="public" $TESTPOOL/$TESTFS
+#	in_exports "public"
+else
+	# TODO: Needs to be translated to Linux - libshare/nfs is a little flaky
+	typeset -i i=0
+	while (( i < ${#shareopts[*]} ))
+	do
+		log_must $ZFS set sharenfs="${shareopts[i]}" $TESTPOOL/$TESTFS
+
+		option=`get_prop sharenfs $TESTPOOL/$TESTFS`
+		if [[ $option != ${shareopts[i]} ]]; then
+			log_fail "get sharenfs failed. ($option != ${shareopts[i]})"
 		fi
-	else
+
+		typeset share_opt_verbose=""
+
 		[[ -n "$LINUX" ]] && share_opt_verbose="-v"
 		$SHARE $share_opt_verbose | $GREP $option > /dev/null 2>&1
 		if (( $? != 0 )); then
 			log_fail "The '$option' option was not found in share output."
 		fi
-	fi
 
-	((i = i + 1))
-done
+		((i = i + 1))
+	done
+fi
 
 log_pass "NFS options were propagated correctly."

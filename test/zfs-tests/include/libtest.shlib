@@ -161,6 +161,33 @@ function default_setup
 }
 
 #
+# Set the mountpoint for a filesystem.
+#
+# O3X has a bit of a problem that spotlight seems to hold files
+# open on the volume at inopportune times, preventing the unmount.
+# We retry after a small delay to work around this.
+#
+function zfs_set_mountpoint #mtpt fs
+{
+	typeset mtpt=$1
+	typeset fs=$2
+
+	if [[ -n $"OSX" ]]; then
+		typeset real_mtpt=$(realpath $mtpt)
+
+		$ZFS set mountpoint=$real_mtpt $fs
+		if (( $? == 1 )); then
+			sleep 1
+			return $($ZFS set mountpoint=$real_mtpt $fs)
+		fi
+	else
+		return $($ZFS set mountpoint=$mtpt $fs)
+	fi
+
+	return 0
+}
+
+#
 # Given a list of disks, setup storage pools and datasets.
 #
 function default_setup_noexit
@@ -184,11 +211,7 @@ function default_setup_noexit
 
 	log_must $ZFS create $TESTPOOL/$TESTFS
 
-	if [[ -n "$OSX" ]]; then
-		log_must $ZFS set mountpoint=`realpath $TESTDIR` $TESTPOOL/$TESTFS
-	else
-		log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
-	fi
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
 
 	if [[ -n $container ]]; then
 		$RM -rf $TESTDIR1  || \
@@ -200,13 +223,7 @@ function default_setup_noexit
 		log_must $ZFS set canmount=off $TESTPOOL/$TESTCTR
 		log_must $ZFS create $TESTPOOL/$TESTCTR/$TESTFS1
 
-		if [[ -n "$OSX" ]]; then
-			log_must $ZFS set mountpoint=`realpath $TESTDIR1` \
-				$TESTPOOL/$TESTCTR/$TESTFS1
-		else
-			log_must $ZFS set mountpoint=$TESTDIR1 \
-				$TESTPOOL/$TESTCTR/$TESTFS1
-		fi
+		log_must zfs_set_mountpoint $TESTDIR1 $TESTPOOL/$TESTCTR/$TESTFS1
 	fi
 
 	if [[ -n $volume ]]; then
@@ -320,7 +337,8 @@ function default_mirror_setup_noexit
 	log_must $ZPOOL create -f $TESTPOOL mirror $@
 	log_must $ZFS create $TESTPOOL/$TESTFS
 	[[ -d $TESTDIR ]] && $RM -rf $TESTDIR
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 }
 
 #
@@ -392,7 +410,8 @@ function default_raidz_setup
 	[[ -d /$TESTPOOL ]] && $RM -rf /$TESTPOOL
 	log_must $ZPOOL create -f $TESTPOOL raidz $1 $2 $3
 	log_must $ZFS create $TESTPOOL/$TESTFS
-	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
+	log_must zfs_set_mountpoint $TESTDIR $TESTPOOL/$TESTFS
+#	log_must $ZFS set mountpoint=$TESTDIR $TESTPOOL/$TESTFS
 
 	log_pass
 }
@@ -459,7 +478,8 @@ function default_cleanup_noexit
 			if [[ $fs == $ZONE_POOL/$ZONE_CTR[01234] ]]; then
 				log_must $ZFS set reservation=none $fs
 				log_must $ZFS set recordsize=128K $fs
-				log_must $ZFS set mountpoint=/$fs $fs
+				log_must zfs_set_mountpoint /$fs $fs
+#				log_must $ZFS set mountpoint=/$fs $fs
 				typeset enc=""
 				enc=$(get_prop encryption $fs)
 				if [[ $? -ne 0 ]] || [[ -z "$enc" ]] || \
@@ -1015,7 +1035,7 @@ function is_shared
 			fi
 		done
 
-		typeset stat=$(nfsd status)
+		typeset stat=$(/sbin/nfsd status)
 		if ! [[ $stat =~ "enabled" ]]; then
 			log_note "Current nfs/server status: $stat"
 		fi
