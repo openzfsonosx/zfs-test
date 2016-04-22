@@ -68,7 +68,7 @@ main(int argc, char **argv)
 {
 	int fd;
 	char buf[BUFSIZ];
-#ifdef _LINUX
+#if defined (_LINUX) || defined (__APPLE__)
 	pthread_t tid;
 #endif
 
@@ -84,6 +84,8 @@ main(int argc, char **argv)
 
 #ifdef _LINUX
 	(void) pthread_setconcurrency(2);
+	if (pthread_create(&tid, NULL, mapper, &fd) != 0) {
+#elif __APPLE__
 	if (pthread_create(&tid, NULL, mapper, &fd) != 0) {
 #else
 	if (pthread_create(NULL, NULL, mapper, &fd) != 0) {
