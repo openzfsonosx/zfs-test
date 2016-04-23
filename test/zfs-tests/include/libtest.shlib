@@ -2969,7 +2969,7 @@ function disable_spotlight # pool
 	mdutil -E $mntpnt
 }
 
-function disable_spotlight #pool
+function enable_spotlight #pool
 {
 	typeset pool=$1
 	typeset mntpnt=$(get_prop mountpoint $pool)

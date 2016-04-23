@@ -68,15 +68,21 @@ else
         datasets="$fs"
 fi
 
+disable_spotlight $pool
+disable_spotlight $fs
+disable_spotlight $subfs
+
 for ds in $datasets; do
 	log_must $ZFS set quota=25M $ds
 	log_must $ZFS set refreservation=15M $ds
 
+
 	typeset -i avail
 	avail=$(get_prop avail $subfs)
 	log_must $ZFS set refreservation=$avail $subfs
-	typeset mntpnt
-	mntpnt=$(get_prop mountpoint $subfs)
+
+	typeset mntpnt=$(get_prop mountpoint $subfs)
+
 	log_must $MKFILE $avail $mntpnt/$TESTFILE
 
 	typeset -i exceed
