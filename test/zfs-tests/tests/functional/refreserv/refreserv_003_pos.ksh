@@ -61,6 +61,8 @@ fs=$TESTPOOL/$TESTFS
 log_must $ZFS set quota=25M $fs
 log_must $ZFS set refreservation=10M $fs
 
+disable_spotlight $fs
+
 mntpnt=$(get_prop mountpoint $fs)
 log_must $MKFILE 7M $mntpnt/$TESTFILE
 log_must $ZFS snapshot $fs@snap

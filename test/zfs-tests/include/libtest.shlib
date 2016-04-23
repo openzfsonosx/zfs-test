@@ -2960,3 +2960,19 @@ function find_zvol # $1 dataset/zvol name
 
     echo $the_dev
 }
+
+function disable_spotlight # pool
+{
+	typeset pool=$1
+	typeset mntpnt=$(get_prop mountpoint $pool)
+	mdutil -i off $mntpnt
+	mdutil -E $mntpnt
+}
+
+function disable_spotlight #pool
+{
+	typeset pool=$1
+	typeset mntpnt=$(get_prop mountpoint $pool)
+	mdutil -i on $mntpnt
+	mdutil -E $mntpnt
+}
