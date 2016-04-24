@@ -67,8 +67,23 @@ done
 [[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
 
 for type in " " mirror raidz raidz2; do
-	log_must $ZPOOL create $TESTPOOL1 $type $ZVOL_DEVDIR/$VFS/vol1 \
-	    $ZVOL_DEVDIR/$VFS/vol2 $ZVOL_DEVDIR/$VFS/vol3
+
+	typeset zvol1_dev
+	typeset zvol2_dev
+	typeset zvol3_dev
+
+	if [[ -n "$OSX" ]]; then
+		typeset zvol1_dev=$(find_zvol $VFS/vol1)
+		typeset zvol2_dev=$(find_zvol $VFS/vol2)
+		typeset zvol3_dev=$(find_zvol $VFS/vol3)
+	else
+		typeset zvol1_dev=$ZVOL_DEVDIR/$VFS/vol1
+		typeset zvol2_dev=$ZVOL_DEVDIR/$VFS/vol2
+		typeset zvol3_dev=$ZVOL_DEVDIR/$VFS/vol3
+	fi
+
+	log_must $ZPOOL create $TESTPOOL1 $type \
+		$zvol1_dev $zvol2_dev $zvol3_dev
 
 	typeset autoexp=$(get_pool_prop autoexpand $TESTPOOL1)
 
@@ -84,9 +99,9 @@ for type in " " mirror raidz raidz2; do
 		log_must $ZFS set volsize=$exp_size $VFS/vol$i
 	done
 
-	for i in 1 2 3; do
-		log_must $ZPOOL online -e $TESTPOOL1 $ZVOL_DEVDIR/$VFS/vol$i
-	done
+	log_must $ZPOOL online -e $TESTPOOL1 $zvol1_dev
+	log_must $ZPOOL online -e $TESTPOOL1 $zvol2_dev
+	log_must $ZPOOL online -e $TESTPOOL1 $zvol3_dev
 
 	$SYNC
 	$SLEEP 10
