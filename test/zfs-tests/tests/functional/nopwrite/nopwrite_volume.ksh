@@ -32,7 +32,13 @@ verify_runnable "global"
 origin="$TESTPOOL/$TESTVOL"
 clone="$TESTPOOL/clone"
 vol="$ZVOL_RDEVDIR/$origin"
+
+if [[ -n "$OSX" ]]; then
+	vol=$(find_zvol $origin)
+fi
+
 volclone="$ZVOL_RDEVDIR/$clone"
+
 log_onexit cleanup
 
 function cleanup
@@ -49,6 +55,11 @@ $DD if=/dev/urandom of=$vol bs=8192 count=4096 conv=notrunc >/dev/null \
     2>&1 || log_fail "dd into $orgin failed."
 $ZFS snapshot $origin@a || log_fail "zfs snap failed"
 log_must $ZFS clone $origin@a $clone
+
+if [[ -n "$OSX" ]]; then
+	volclone=$(find_zvol $clone)
+fi
+
 log_must $ZFS set compress=on $clone
 log_must $ZFS set checksum=sha256 $clone
 $DD if=$vol of=$volclone bs=8192 count=4096 conv=notrunc >/dev/null 2>&1 || \

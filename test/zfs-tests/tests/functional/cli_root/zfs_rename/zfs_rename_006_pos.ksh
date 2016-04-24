@@ -52,7 +52,14 @@ log_assert "'zfs rename' can successfully rename a volume snapshot."
 vol=$TESTPOOL/$TESTVOL
 snap=$TESTSNAP
 
-log_must eval "$DD if=$DATA of=$VOL_R_PATH bs=$BS count=$CNT >/dev/null 2>&1"
+typeset vol_dev
+if [[ -n "$OSX" ]]; then
+	vol_dev=$(find_zvol $vol)
+else
+	vol_dev=${VOL_R_PATH}
+fi
+
+log_must eval "$DD if=$DATA of=$vol_dev bs=$BS count=$CNT >/dev/null 2>&1"
 if ! snapexists $vol@$snap; then
 	log_must $ZFS snapshot $vol@$snap
 fi
@@ -62,8 +69,14 @@ rename_dataset $vol ${vol}-new
 rename_dataset ${vol}-new@${snap}-new ${vol}-new@$snap
 rename_dataset ${vol}-new $vol
 
+if [[ -n "$OSX" ]]; then
+	vol_dev=$(find_zvol $vol)
+else
+	vol_dev=${VOL_R_PATH}
+fi
+
 #verify data integrity
-for input in $VOL_R_PATH ${VOL_R_PATH}@$snap; do
+for input in $vol_dev ${VOL_R_PATH}@$snap; do
 	log_must eval "$DD if=$input of=$VOLDATA bs=$BS count=$CNT >/dev/null 2>&1"
 	if ! cmp_data $VOLDATA $DATA ; then
 		log_fail "$input gets corrupted after rename operation."

@@ -57,7 +57,15 @@ function additional_setup
 
 	# Create data in zvol
 	if is_global_zone; then
-		log_must eval "$DD if=$DATA of=$VOL_R_PATH bs=$BS count=$CNT \
+
+	typeset vol_dev
+	if [[ -n "$OSX" ]]; then
+		vol_dev=$(find_zvol $TESTPOOL/$TESTVOL)
+	else
+		vol_dev=$(VOL_R_PATH)
+	fi
+
+	log_must eval "$DD if=$DATA of=$vol_dev bs=$BS count=$CNT \
 				>/dev/null 2>&1"
 	else
 		log_must $CP $DATA $(get_prop mountpoint $TESTPOOL/$TESTVOL)/$TESTFILE0

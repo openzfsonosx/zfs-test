@@ -66,19 +66,31 @@ log_mustnot $ZPOOL add $TESTPOOL cache $DEV_RDSKDIR/${dsk1}s0
 # Add nomal file
 log_mustnot $ZPOOL add $TESTPOOL cache $VDEV2
 
-# Add /dev/rlofi device
-lofidev=${VDEV2%% *}
-log_must $LOFIADM -a $lofidev
-lofidev=$($LOFIADM $lofidev)
-log_mustnot $ZPOOL add $TESTPOOL cache "/dev/rlofi/${lofidev#/dev/lofi/}"
-if [[ -n $lofidev ]]; then
-	log_must $LOFIADM -d $lofidev
-	lofidev=""
+# This portion of the test is not relevant to OSX
+if [[ -z "$OSX" ]]; then
+	# Add /dev/rlofi device
+	lofidev=${VDEV2%% *}
+	log_must $LOFIADM -a $lofidev
+	lofidev=$($LOFIADM $lofidev)
+	log_mustnot $ZPOOL add $TESTPOOL cache "/dev/rlofi/${lofidev#/dev/lofi/}"
+	if [[ -n $lofidev ]]; then
+		log_must $LOFIADM -d $lofidev
+		lofidev=""
+	fi
 fi
 
 # Add /dev/zvol/rdsk device
 log_must $ZPOOL create $TESTPOOL2 $VDEV2
 log_must $ZFS create -V $SIZE $TESTPOOL2/$TESTVOL
-log_mustnot $ZPOOL add $TESTPOOL cache $ZVOL_RDEVDIR/$TESTPOOL2/$TESTVOL
+
+typeset zvol_dev
+
+if [[ -n "$OSX" ]]; then
+	zvol_dev=$(find_zvol $TESTPOOL2/$TESTVOL)
+else
+	zvol_dev=$(find_zvol $ZVOL_RDEVDIR/$TESTPOOL2/$TESTVOL)
+fi
+
+log_mustnot $ZPOOL add $TESTPOOL cache $zvol_dev
 
 log_pass "Cache device can only be block devices."

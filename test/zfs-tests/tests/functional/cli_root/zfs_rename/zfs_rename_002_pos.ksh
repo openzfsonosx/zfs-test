@@ -71,7 +71,14 @@ while ((i < ${#dataset[*]} )); do
 	if [[ ${dataset[i]} == *@* ]]; then
 		data=$(snapshot_mountpoint ${dataset[i]})/$TESTFILE0
 	elif [[ ${dataset[i]} == "$TESTPOOL/$TESTVOL" ]] && is_global_zone; then
-		log_must eval "$DD if=$VOL_R_PATH of=$VOLDATA bs=$BS count=$CNT >/dev/null 2>&1"
+		typeset vol_dev
+		if [[ -n "$OSX" ]]; then
+			vol_dev=$(find_zvol $TESTPOOL/$TESTVOL)
+		else
+			vol_dev=${VOL_R_PATH}
+		fi
+
+		log_must eval "$DD if=$vol_dev of=$VOLDATA bs=$BS count=$CNT >/dev/null 2>&1"
 		data=$VOLDATA
 	else
 		data=$(get_prop mountpoint ${dataset[i]})/$TESTFILE0

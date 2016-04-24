@@ -86,7 +86,14 @@ done
 
 #verify the data integrity in zvol
 if is_global_zone; then
-	log_must eval "$DD if=${VOL_R_PATH}-new of=$VOLDATA bs=$BS count=$CNT >/dev/null 2>&1"
+	typeset vol_dev
+	if [[ -n "$OSX" ]]; then
+		vol_dev=$(find_zvol $TESTPOOL/${TESTVOL}-new)
+	else
+		vol_dev=${VOL_R_PATH}-new
+	fi
+
+	log_must eval "$DD if=$vol_dev of=$VOLDATA bs=$BS count=$CNT >/dev/null 2>&1"
 	if ! cmp_data $VOLDATA $DATA ; then
 		log_fail "$VOLDATA gets corrupted after rename operation."
 	fi
