@@ -2940,12 +2940,12 @@ function find_zvol # $1 dataset/zvol name
     typeset zvol_to_find=$1
     typeset the_dev=""
 
-    if [[ -n "$OSX" ]]; then
+	if [[ -n "$OSX" ]]; then
         typeset all_disks=`diskutil list | grep dev | awk '{print $1}'`
 
         for disk in $all_disks; do
-            typeset kind=`diskutil info $disk | grep $zvol_to_find | awk '{print $5}'`
-            typeset location=`diskutil info $disk | grep $zvol_to_find | awk '{print $6}'`
+            typeset kind=`diskutil info $disk | grep "Device / Media Name" | awk '{print $5}'`
+            typeset location=`diskutil info $disk | grep "Device / Media Name" | awk '{print $6}'`
 
             if [[ $kind == "ZVOL" && $location == $zvol_to_find ]]; then
                 the_dev=$disk
