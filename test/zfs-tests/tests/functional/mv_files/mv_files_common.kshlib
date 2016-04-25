@@ -130,7 +130,7 @@ function wait_pid
 function generate_files
 {
 	typeset -i count
-        typeset -i proc_num=0
+	typeset -i proc_num=0
 
 	if (( $2 == $MVNUMFILES )); then
 		count=1
@@ -138,22 +138,23 @@ function generate_files
 		count=$MVNUMFILES+1
 	fi
 
-        while (( count <= $2 ))
-        do
-                $CP /etc/passwd $1/file_$count \
-                         > /dev/null 2>&1 &
+	while (( count <= $2 ))
+	do
+		$CP /etc/passwd $1/file_$count
+#\
+#				 > /dev/null 2>&1
 
-                PIDS="$PIDS $!"
-
-                proc_num=`$ECHO $PIDS | $WC -w`
-                if (( proc_num >= GANGPIDS )); then
-                        wait_pid "$PIDS"
-                        proc_num=0
-                        PIDS=""
-                fi
-
-               (( count = count + 1 ))
-        done
+#                PIDS="$PIDS $!"
+#
+#                proc_num=`$ECHO $PIDS | $WC -w`
+#                if (( proc_num >= GANGPIDS )); then
+#                        wait_pid "$PIDS"
+#                        proc_num=0
+#                        PIDS=""
+#                fi
+#
+	   (( count = count + 1 ))
+	done
 
 }
 
@@ -165,9 +166,15 @@ function generate_files
 #
 function mv_files
 {
+	log_note move from $1 to $2
 
-        $FIND $1 -type f -print | xargs -i \
-                $MV {} $2 > /dev/null 2>&1
+if [[ -n "$OSX" ]]; then
+	$FIND $1 -type f -exec $MV {} $2 \;
+else
+	$FIND $1 -type f -print | xargs -i \
+			$MV {} $2 > /dev/null 2>&1
+fi
+log_note mv_files done
 }
 
 #
@@ -181,6 +188,8 @@ function count_files
         typeset -i file_num
         file_num=`$FIND $1  -type f -print | \
                 wc -l`
+
+log_note number of files $file_num
         (( file_num != $2 )) && \
                 log_fail "The file number of target directory"\
                         "$2 is not equal to that of the source "\

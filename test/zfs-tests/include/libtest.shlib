@@ -1534,7 +1534,13 @@ function verify_filesys # pool filesystem dir
 	log_note "Calling $ZDB to verify filesystem '$filesys'"
 	export __ZFS_POOL_RESTRICT="$pool"
 	$ZFS unmount -a
-	unset __ZFS_POOL_RESTRICT=
+
+	if [[ -n "$OSX" ]]; then
+		unset __ZFS_POOL_RESTRICT
+	else
+		unset __ZFS_POOL_RESTRICT=
+	fi
+
 	log_must $ZPOOL export $pool
 
 	if [[ -n $dirs ]] ; then
