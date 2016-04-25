@@ -59,6 +59,11 @@ mkmount_writable $QFS
 log_must user_run $QUSER1 $MKFILE $UQUOTA_SIZE $QFILE
 $SYNC
 
+# It takes a little while for the users quota usage to catch up
+if [[ -n "$OSX" ]]; then
+sleep 10
+fi
+
 log_must eval "$ZFS get -p userused@$QUSER1 $QFS >/dev/null 2>&1"
 log_must eval "$ZFS get -p groupused@$GROUPUSED $QFS >/dev/null 2>&1"
 

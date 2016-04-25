@@ -65,7 +65,12 @@ done
 
 set -A no_groups "aidsf@dfsd@" "123223-dsfds#sdfsd" "mss_#ss" "1234"
 for group in "${no_groups[@]}"; do
-	log_mustnot eval "$GROUPDEL $group > /dev/null 2>&1"
+
+	if [[ -n "$OSX" ]]; then
+		del_group $group
+	else
+		log_mustnot eval "$GROUPDEL $group > /dev/null 2>&1"
+	fi
 	log_must eval "$ZFS get groupquota@$group $QFS >/dev/null 2>&1"
 	log_must eval "$ZFS get groupquota@$group $snap_fs >/dev/null 2>&1"
 done

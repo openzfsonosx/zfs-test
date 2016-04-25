@@ -64,6 +64,9 @@ typeset snapfs=$QFS@snap
 
 log_must $ZFS snapshot $snapfs
 
+#sleep 15
+
+log_note $($ZFS groupspace $QFS)
 log_must eval "$ZFS groupspace $QFS >/dev/null 2>&1"
 log_must eval "$ZFS groupspace $snapfs >/dev/null 2>&1"
 

@@ -40,5 +40,14 @@ log_must add_group $QGROUP
 log_must add_user $QGROUP $QUSER1
 log_must add_user $QGROUP $QUSER2
 
+# O3X add_user adds users with primary group ID staff, this test requires primary
+# group to be $QGROUP, so override after the fact
+if [[ -n "$OSX" ]]; then
+	log_must set_primary_group $QUSER1 $QGROUP
+	log_must set_primary_group $QUSER2 $QGROUP
+fi
+
 DISK=${DISKS%% *}
 default_setup $DISK
+
+disable_spotlight $TESTPOOL/$TESTFS

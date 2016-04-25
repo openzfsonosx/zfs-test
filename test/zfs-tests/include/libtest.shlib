@@ -2064,6 +2064,21 @@ function add_user #<group_name> <user_name> <basedir>
 	return 0
 }
 
+function set_primary_group # uname group
+{
+	typeset uname=$1
+	typeset group=$2
+
+	gid=$(sudo dscl . -read /Groups/$group | grep PrimaryGroupID | awk '{print $2}')
+
+	if [[ -n "$gid" ]]; then
+		log_must dscl . -create /Users/$uname PrimaryGroupID $gid
+		return 0
+	fi
+
+	return 1
+}
+
 #
 # Delete the specified user.
 #

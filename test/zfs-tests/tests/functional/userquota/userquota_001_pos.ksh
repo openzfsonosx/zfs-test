@@ -59,6 +59,12 @@ log_note "Check the userquota@$QUSER1"
 log_must $ZFS set userquota@$QUSER1=$UQUOTA_SIZE $QFS
 log_must user_run $QUSER1 $MKFILE $UQUOTA_SIZE $QFILE
 $SYNC
+
+# It takes a little while for the users quota usage to catch up
+if [[ -n "$OSX" ]]; then
+	sleep 10
+fi
+
 log_mustnot user_run $QUSER1 $MKFILE 1 $OFILE
 cleanup_quota
 
@@ -67,6 +73,12 @@ log_must $ZFS set groupquota@$QGROUP=$GQUOTA_SIZE $QFS
 mkmount_writable $QFS
 log_must user_run $QUSER1 $MKFILE $GQUOTA_SIZE $QFILE
 $SYNC
+
+# It takes a little while for the users quota usage to catch up
+if [[ -n "$OSX" ]]; then
+sleep 10
+fi
+
 log_mustnot user_run $QUSER1 $MKFILE 1 $OFILE
 
 cleanup_quota
