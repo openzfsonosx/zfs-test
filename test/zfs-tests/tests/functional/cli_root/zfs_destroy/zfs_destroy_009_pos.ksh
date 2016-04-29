@@ -52,6 +52,12 @@ for dstype in FS VOL; do
     destroy_dataset -d $snap
     log_must datasetexists $snap
     log_must eval "[[ $(get_prop defer_destroy $snap) == 'on' ]]"
+
+	# O3X - we need to unmount the zvol in order to allow destruction
+	if [[ -n "$OSX" ]]; then
+		unmount_fs_vol destroy_testvol
+	fi
+
     destroy_dataset $clone
     log_mustnot datasetexists $snap
     log_mustnot datasetexists $clone
