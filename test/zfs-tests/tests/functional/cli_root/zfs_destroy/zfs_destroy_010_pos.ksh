@@ -49,7 +49,8 @@ log_assert "'zfs destroy -R' works on deferred destroyed snapshots"
 log_onexit cleanup_testenv
 
 setup_testenv clone
-log_must $UMOUNT -f $TESTDIR1
+unmount_fs_vol destroy_testvol
+#log_must $UMOUNT -f $TESTDIR1
 
 for dstype in FS VOL; do
     ds=$(eval echo \$${dstype})

@@ -2997,3 +2997,65 @@ function enable_spotlight #pool
 	mdutil -i on $mntpnt
 	mdutil -E $mntpnt
 }
+
+function format_zvol # volume_name blockdev mountpoint
+{
+	typeset volname=$1
+	typeset disk=$2
+	typeset mountpoint=$3
+
+	if [[ ! -d $mountpoint ]]; then
+		log_must $MKDIR $mountpoint
+	fi
+
+	if [[ -n "$OSX" ]]; then
+		log_must sudo diskutil eraseVolume hfs+ $volname $disk
+		log_must sudo diskutil unmount $disk
+		log_must sudo diskutil mount -mountpoint $mountpoint $disk
+	else
+		$ECHO "y" | $NEWFS $ZVOL_DEVDIR/$VOL > /dev/null 2>&1
+		if (( $? == 0 )); then
+			log_note "SUCCESS: $NEWFS $ZVOL_DEVDIR/$VOL>/dev/null"
+			log_must $MOUNT $ZVOL_DEVDIR/$VOL $TESTDIR1
+		else
+			log_fail "$NEWFS $ZVOL_DEVDIR/$VOL > /dev/null"
+		fi
+	fi
+}
+
+function unmount_fs_mountpoint # mountpoint
+{
+	typeset mountpoint=$1
+
+	if [[ -n "$OSX" ]]; then
+		blockdev=$(mount | grep "$mountpoint" | awk '{print $1}')
+		log_must sudo diskutil unmount $blockdev
+	else
+		if is_global_zone && ismounted "$mountpoint" "$NEWFS_DEFAULT_FS" ; then
+			log_must $UMOUNT -f $mountpoint
+		fi
+	fi
+
+	if [[ -d $mountpoint ]]; then
+		log_must $RM -rf $mountpoint
+	fi
+}
+
+
+#
+# This will unmount all volumes with a particular name
+#
+function unmount_fs_vol # vol
+{
+	typeset vol=$1
+
+	if [[ -n "$OSX" ]]; then
+	for blockdev in $(diskutil list | grep $vol | awk '{print $5}'); do
+			typeset mtpt=$(diskutil info $blockdev | grep "Mount Point" | awk '{print $3}')
+			sudo diskutil unmount $blockdev
+			if [[ -d $mtpt ]]; then
+				$RM -rf $mtpt
+			fi
+		done
+	fi
+}
