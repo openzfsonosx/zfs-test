@@ -83,10 +83,11 @@ fi
 log_must $ZPOOL create $TESTPOOL2 $VDEV2
 log_must $ZFS create -V $SIZE $TESTPOOL2/$TESTVOL
 
-typeset zvol_dev
+typeset zvol_rdev
 
 if [[ -n "$OSX" ]]; then
-	zvol_dev=$(find_zvol $TESTPOOL2/$TESTVOL)
+	zvol_rdev=$(find_zvol $TESTPOOL2/$TESTVOL)
+	zvol_rdev=$(zvol_rdev/disk/rdisk/)
 else
 	zvol_dev=$(find_zvol $ZVOL_RDEVDIR/$TESTPOOL2/$TESTVOL)
 fi
