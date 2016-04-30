@@ -67,10 +67,21 @@ typeset -l metadata=0
 typeset -l mb_block=0
 ((mb_block = 1024 * 1024))
 # approximate metadata on dataset when empty is 32KB
-((metadata = 32 * 1024))
 
-log_note "verify written property statistics for dataset"
+# O3X - we write writes an icon file which takes additional space
+if [[ -n "$OSX" ]]; then
+	((metadata = 285 * 1024))
+else
+	((metadata = 32 * 1024))
+fi
+
+log_note ""
 log_must $ZFS create -p $TESTPOOL/$TESTFS1/$TESTFS2/$TESTFS3
+
+disable_spotlight $TESTPOOL/$TESTFS1
+disable_spotlight $TESTPOOL/$TESTFS1/$TESTFS2
+disable_spotlight $TESTPOOL/$TESTFS1/$TESTFS2/$TESTFS3
+
 for i in 1 2 3; do
 	log_must $ZFS snapshot $TESTPOOL/$TESTFS1@snap$i
 
@@ -81,7 +92,12 @@ for i in 1 2 3; do
         log_must $DD if=/dev/urandom of=/$TESTPOOL/$TESTFS1/testfile.$i bs=1M \
         count=$blocks
     fi
-    log_must $SYNC
+
+	log_must $SYNC
+	if [[ -n "$OSX" ]]; then
+		sleep 15
+	fi
+
 	written=$(get_prop written $TESTPOOL/$TESTFS1)
 	((expected_written=blocks * mb_block))
 	within_percent $written $expected_written 99.5 || \
@@ -93,6 +109,7 @@ done
 log_note "verify written property statistics for snapshots"
 blocks=0
 for i in 1 2 3; do
+	log_note "**** snap written $(get_prop written $TESTPOOL/$TESTFS1@snap$i)"
 	written=$(get_prop written $TESTPOOL/$TESTFS1@snap$i)
 	if [[ $blocks -eq 0 ]]; then
 		expected_written=$metadata
@@ -123,6 +140,9 @@ before_written=$(get_prop written $TESTPOOL/$TESTFS1)
 log_must $RM /$TESTPOOL/$TESTFS1/testfile.3
 snap3_size=0
 log_must $SYNC
+if [[ -n "$OSX" ]]; then
+	sleep 15
+fi
 written=$(get_prop written $TESTPOOL/$TESTFS1)
 writtenat3=$(get_prop written@snap3 $TESTPOOL/$TESTFS1)
 [[ $written -eq $writtenat3 ]] || \
@@ -150,6 +170,9 @@ else
         count=$blocks
 fi
 log_must $SYNC
+if [[ -n "$OSX" ]]; then
+	sleep 15
+fi
 written=$(get_prop written $TESTPOOL/$TESTFS1)
 writtenat1=$(get_prop written@snap1 $TESTPOOL/$TESTFS1)
 writtenat2=$(get_prop written@snap2 $TESTPOOL/$TESTFS1)
@@ -193,6 +216,9 @@ typeset -l snap_before_written3=$(get_prop_mb written $TESTPOOL/$TESTFS1@snap3)
 destroy_dataset $TESTPOOL/$TESTFS1@snap2
 log_mustnot snapexists $TESTPOOL/$TESTFS1@snap2
 log_must $SYNC
+if [[ -n "$OSX" ]]; then
+	sleep 15
+fi
 written1=$(get_prop_mb written@snap1 $TESTPOOL/$TESTFS1)
 written3=$(get_prop_mb written@snap3 $TESTPOOL/$TESTFS1)
 [[ $before_written1 -eq $written1 && $before_written3 -eq $written3 ]] || \
@@ -225,6 +251,9 @@ for ds in $datasets; do
         log_must $DD if=/dev/urandom of=/$ds/testfile bs=1M count=$blocks
     fi
     log_must $SYNC
+	if [[ -n "$OSX" ]]; then
+		sleep 15
+	fi
 	writtenat=$(get_prop written@now $ds)
 	((expected_writtenat = blocks * mb_block))
 	within_percent $writtenat $expected_writtenat 0.1 || \
@@ -246,6 +275,9 @@ for ds in $datasets; do
     fi
     log_must $SYNC
 done
+if [[ -n "$OSX" ]]; then
+	sleep 15
+fi
 recursive_output=$($ZFS get -r written@current $TESTPOOL | \
     $GREP -v $TESTFS1@ | $GREP -v $TESTFS2@ | $GREP -v $TESTFS3@ | \
     $GREP -v "VALUE" | $GREP -v "-")
