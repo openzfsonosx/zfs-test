@@ -54,7 +54,7 @@ snap=$TESTSNAP
 
 typeset vol_dev
 if [[ -n "$OSX" ]]; then
-	vol_dev=$(find_zvol $vol)
+	vol_dev=$(find_zvol_rpath $vol)
 else
 	vol_dev=${VOL_R_PATH}
 fi
@@ -70,13 +70,13 @@ rename_dataset ${vol}-new@${snap}-new ${vol}-new@$snap
 rename_dataset ${vol}-new $vol
 
 if [[ -n "$OSX" ]]; then
-	vol_dev=$(find_zvol $vol)
+	vol_dev=$(find_zvol_rdev $vol)
 else
 	vol_dev=${VOL_R_PATH}
 fi
 
 #verify data integrity
-for input in $vol_dev ${VOL_R_PATH}@$snap; do
+for input in $vol_dev $zvol_dev@$snap; do
 	log_must eval "$DD if=$input of=$VOLDATA bs=$BS count=$CNT >/dev/null 2>&1"
 	if ! cmp_data $VOLDATA $DATA ; then
 		log_fail "$input gets corrupted after rename operation."
