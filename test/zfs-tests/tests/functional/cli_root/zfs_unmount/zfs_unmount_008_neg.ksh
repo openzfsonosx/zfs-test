@@ -123,17 +123,23 @@ for opt in "" "-f"; do
 	log_mustnot eval "$ZFS unmount /tmp/$dir >/dev/null 2>&1"
 done
 
-#Testing legacy mounted filesystem
-log_must zfs_set_mountpoint legacy $fs1
-#log_must $ZFS set mountpoint=legacy $fs1
-if [[ -n "$LINUX" ]]; then
-	log_must $MOUNT -t zfs $fs1 /tmp/$dir
-else
-	log_must $MOUNT -F zfs $fs1 /tmp/$dir
+#
+# This portion of the test is not relevant to OSX,
+# can only mount via zfs commands
+#
+if [[ -z "$OSX" ]]; then
+	#Testing legacy mounted filesystem
+	log_must zfs_set_mountpoint legacy $fs1
+	#log_must $ZFS set mountpoint=legacy $fs1
+	if [[ -n "$LINUX" ]]; then
+		log_must $MOUNT -t zfs $fs1 /tmp/$dir
+	else
+		log_must $MOUNT -F zfs $fs1 /tmp/$dir
+	fi
+	for opt in "" "-f"; do
+		log_mustnot eval "$ZFS unmount $opt $fs1 >/dev/null 2>&1"
+	done
+	$UMOUNT /tmp/$dir
 fi
-for opt in "" "-f"; do
-	log_mustnot eval "$ZFS unmount $opt $fs1 >/dev/null 2>&1"
-done
-$UMOUNT /tmp/$dir
 
 log_pass "zfs unmount fails with bad parameters or scenarios as expected."
