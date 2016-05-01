@@ -73,7 +73,7 @@ function test_n_check #opt num_snap_clone num_rollback
 		if [[ -n "$LINUX" ]]; then
 			$DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE}t $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
         elif [[ -n "$OSX" ]]; then
-            typeset zvol_dir=$(find_zvol $VOL)
+            typeset zvol_dir=$(find_zvol_bpath $VOL)
             $DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE} $NEWFS_DEFAULT_FS "$VOL" > /dev/null 2>&1
         else
 			$DF -${DF_LOCAL_FS_ONLY}h${DF_FS_TYPE} $NEWFS_DEFAULT_FS "$ZVOL_DEVDIR/$VOL" > /dev/null 2>&1
@@ -124,7 +124,7 @@ function test_n_check #opt num_snap_clone num_rollback
 			log_must $ZFS rollback $opt $dtst@$snap_point
 
             if [[ -n "$OSX" ]]; then
-                zvol_dir=$(find_zvol "$TESTPOOL/$TESTVOL")
+                zvol_dir=$(find_zvol_bpath "$TESTPOOL/$TESTVOL")
                 log_must diskutil mount -mountpoint $TESTDIR1 $zvol_dir
 			else
                 log_must $MOUNT \

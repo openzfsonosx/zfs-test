@@ -86,10 +86,9 @@ log_must $ZFS create -V $SIZE $TESTPOOL2/$TESTVOL
 typeset zvol_rdev
 
 if [[ -n "$OSX" ]]; then
-	zvol_rdev=$(find_zvol $TESTPOOL2/$TESTVOL)
-	zvol_rdev=$(zvol_rdev/disk/rdisk/)
+	zvol_rdev=$(find_zvol_rpath $TESTPOOL2/$TESTVOL)
 else
-	zvol_dev=$(find_zvol $ZVOL_RDEVDIR/$TESTPOOL2/$TESTVOL)
+	zvol_dev=$ZVOL_RDEVDIR/$TESTPOOL2/$TESTVOL
 fi
 
 log_mustnot $ZPOOL add $TESTPOOL cache $zvol_dev

@@ -88,7 +88,7 @@ done
 if is_global_zone; then
 	typeset vol_dev
 	if [[ -n "$OSX" ]]; then
-		vol_dev=$(find_zvol $TESTPOOL/${TESTVOL}-new)
+		vol_dev=$(find_zvol_rpath $TESTPOOL/${TESTVOL}-new)
 	else
 		vol_dev=${VOL_R_PATH}-new
 	fi

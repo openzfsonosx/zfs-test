@@ -109,7 +109,7 @@ function verify_readonly # $1 dataset, $2 on|off
 			;;
 		volume)
             if [[ -n "$OSX" ]]; then
-                typeset zvol_dev=$(find_zvol $dataset)
+                typeset zvol_dev=$(find_zvol_bpath $dataset)
                 $expect diskutil eraseVolume hfs+ "verify_readonly" $zvol_dev
                 diskutil unmount $zvol_dev
             else

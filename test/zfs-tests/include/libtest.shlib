@@ -2956,30 +2956,44 @@ function update_lo_mappings
 # which /dev/disk* entry was assigned is to
 # use "disktutil info" do identify the
 # from "Device / Media Name".
-function find_zvol # $1 dataset/zvol name
+#function find_zvol # $1 dataset/zvol name
+#{
+#    typeset zvol_to_find=$1
+#    typeset the_dev=""
+#
+#	if [[ -n "$OSX" ]]; then
+#        typeset all_disks=`diskutil list | grep dev | awk '{print $1}'`
+#
+#        for disk in $all_disks; do
+#            typeset kind=`diskutil info $disk | grep "Device / Media Name" | awk '{print $5}'`
+#            typeset location=`diskutil info $disk | grep "Device / Media Name" | awk '{print $6}'`
+#
+#            if [[ $kind == "ZVOL" && $location == $zvol_to_find ]]; then
+#                the_dev=$disk
+#                break
+#            fi
+#        done
+#    elif [[ -n "$LINUX" ]]; then
+#        the_dev="$ZVOL_DEVDIR/${zvol_to_find}"
+#    else
+#        the_dev="FIX_SOME_OTHER_OS"
+#    fi
+#
+#    echo $the_dev
+#}
+
+function find_zvol_rpath #vol
 {
-    typeset zvol_to_find=$1
-    typeset the_dev=""
+	typeset vol=$1
+	typeset rdev=`readlink $ZVOL_RDEVDIR/$vol`
+	echo $rdev
+}
 
-	if [[ -n "$OSX" ]]; then
-        typeset all_disks=`diskutil list | grep dev | awk '{print $1}'`
-
-        for disk in $all_disks; do
-            typeset kind=`diskutil info $disk | grep "Device / Media Name" | awk '{print $5}'`
-            typeset location=`diskutil info $disk | grep "Device / Media Name" | awk '{print $6}'`
-
-            if [[ $kind == "ZVOL" && $location == $zvol_to_find ]]; then
-                the_dev=$disk
-                break
-            fi
-        done
-    elif [[ -n "$LINUX" ]]; then
-        the_dev="$ZVOL_DEVDIR/${zvol_to_find}"
-    else
-        the_dev="FIX_SOME_OTHER_OS"
-    fi
-
-    echo $the_dev
+function find_zvol_bpath #vol
+{
+	typeset vol=$1
+	typeset bdev=`readlink $ZVOL_DEVDIR/$vol`
+	echo $bdev
 }
 
 function disable_spotlight # pool

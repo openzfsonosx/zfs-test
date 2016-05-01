@@ -34,7 +34,7 @@ clone="$TESTPOOL/clone"
 vol="$ZVOL_RDEVDIR/$origin"
 
 if [[ -n "$OSX" ]]; then
-	vol=$(find_zvol $origin)
+	vol=$(find_zvol_rpath $origin)
 fi
 
 volclone="$ZVOL_RDEVDIR/$clone"
@@ -57,7 +57,7 @@ $ZFS snapshot $origin@a || log_fail "zfs snap failed"
 log_must $ZFS clone $origin@a $clone
 
 if [[ -n "$OSX" ]]; then
-	volclone=$(find_zvol $clone)
+	volclone=$(find_zvol_rpath $clone)
 fi
 
 log_must $ZFS set compress=on $clone

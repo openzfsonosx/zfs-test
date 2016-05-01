@@ -73,9 +73,9 @@ for type in " " mirror raidz raidz2; do
 	typeset zvol3_dev
 
 	if [[ -n "$OSX" ]]; then
-		typeset zvol1_dev=$(find_zvol $VFS/vol1)
-		typeset zvol2_dev=$(find_zvol $VFS/vol2)
-		typeset zvol3_dev=$(find_zvol $VFS/vol3)
+		typeset zvol1_dev=$(find_zvol_bpath $VFS/vol1)
+		typeset zvol2_dev=$(find_zvol_bpath $VFS/vol2)
+		typeset zvol3_dev=$(find_zvol_bpath $VFS/vol3)
 	else
 		typeset zvol1_dev=$ZVOL_DEVDIR/$VFS/vol1
 		typeset zvol2_dev=$ZVOL_DEVDIR/$VFS/vol2

@@ -70,13 +70,15 @@ rename_dataset ${vol}-new@${snap}-new ${vol}-new@$snap
 rename_dataset ${vol}-new $vol
 
 if [[ -n "$OSX" ]]; then
-	vol_dev=$(find_zvol_rdev $vol)
+	vol_dev=$(find_zvol_rpath $vol)
+	vol_snap_dev=$(find_zvol_rpath $vol@$snap)
 else
 	vol_dev=${VOL_R_PATH}
+	vol_snap_dev=$vol_dev@$snap
 fi
 
 #verify data integrity
-for input in $vol_dev $zvol_dev@$snap; do
+for input in $vol_dev $vol_snap_dev; do
 	log_must eval "$DD if=$input of=$VOLDATA bs=$BS count=$CNT >/dev/null 2>&1"
 	if ! cmp_data $VOLDATA $DATA ; then
 		log_fail "$input gets corrupted after rename operation."

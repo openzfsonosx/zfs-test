@@ -81,7 +81,7 @@ function setup_snap_env
 		if [[ -n "$LINUX" ]]; then
 			log_must $NEWFS -q $ZVOL_DEVDIR/$VOL
         elif [[ -n "$OSX" ]]; then
-            zvol_dev=$(find_zvol $VOL)
+            zvol_dev=$(find_zvol_bpath $VOL)
             log_must diskutil eraseVolume hfs+ zfs_rollback_common $zvol_dev
             log_must diskutil unmount $zvol_dev
 		else

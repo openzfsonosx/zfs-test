@@ -169,8 +169,8 @@ elif [[ -n "$OSX" ]]; then
     unpack_preserve=" -xpf"
     pack_preserve=" -cpf"
 
-    ZVOL_DEVDIR="/dev"
-    ZVOL_RDEVDIR="/dev"
+    ZVOL_DEVDIR="/var/run/zfs/zvol/dsk"
+    ZVOL_RDEVDIR="/var/run/zfs/zvol/rdsk"
     DEV_DSKDIR="/dev"
     DEV_RDSKDIR="/dev"
 

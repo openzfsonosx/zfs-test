@@ -73,7 +73,7 @@ while ((i < ${#dataset[*]} )); do
 	elif [[ ${dataset[i]} == "$TESTPOOL/$TESTVOL" ]] && is_global_zone; then
 		typeset vol_dev
 		if [[ -n "$OSX" ]]; then
-			vol_dev=$(find_zvol $TESTPOOL/$TESTVOL)
+			vol_dev=$(find_zvol_rpath $TESTPOOL/$TESTVOL)
 		else
 			vol_dev=${VOL_R_PATH}
 		fi

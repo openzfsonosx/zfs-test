@@ -64,7 +64,7 @@ function setup_testenv #[dtst]
 		typeset zvol_dev
 
 		if [[ -n "$OSX" ]]; then
-			zvol_dev=$(find_zvol $VOL)
+			zvol_dev=$(find_zvol_bpath $VOL)
 		else
 			zvol_dev=$ZVOL_DEVDIR/$VOL
 		fi

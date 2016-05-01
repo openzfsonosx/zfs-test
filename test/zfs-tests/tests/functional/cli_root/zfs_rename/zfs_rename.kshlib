@@ -60,7 +60,7 @@ function additional_setup
 
 	typeset vol_dev
 	if [[ -n "$OSX" ]]; then
-		vol_dev=$(find_zvol $TESTPOOL/$TESTVOL)
+		vol_dev=$(find_zvol_rpath $TESTPOOL/$TESTVOL)
 	else
 		vol_dev=$(VOL_R_PATH)
 	fi
