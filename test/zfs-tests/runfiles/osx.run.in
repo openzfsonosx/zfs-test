@@ -231,13 +231,15 @@ tests = ['zpool_clear_001_pos', 'zpool_clear_002_neg', 'zpool_clear_003_neg']
 # DISABLED: zpool_create_011_neg - tries to access /etc/vfstab etc (?)
 # DISABLED: zpool_create_013_neg - no metadb command.
 # DISABLED: zpool_create_016_pos - no dumadm command.
+# O3X DISABLED: 'zpool_create_014_neg' - not ported, but dry run indicates o3x will overwrite swapfile, its fatal
+# O3X DISABLED: 'zpool_create_015_neg' - similar to above test, but requires ability to put swap in zvol which we cant do.
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zpool_create]
 tests = ['zpool_create_001_pos', 'zpool_create_002_pos',
     'zpool_create_003_pos', 'zpool_create_005_pos',
     'zpool_create_006_pos', 'zpool_create_007_neg', 
     'zpool_create_009_neg', 'zpool_create_010_neg',
-    'zpool_create_012_neg', 'zpool_create_014_neg',
-    'zpool_create_015_neg', 'zpool_create_017_neg',
+    'zpool_create_012_neg',
+     'zpool_create_017_neg',
     'zpool_create_018_pos', 'zpool_create_019_pos', 'zpool_create_020_pos',
     'zpool_create_021_pos', 'zpool_create_022_pos', 'zpool_create_023_neg',
     'zpool_create_features_001_pos', 'zpool_create_features_002_pos',

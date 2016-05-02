@@ -47,27 +47,27 @@ function cleanup
 log_onexit cleanup
 
 set -A args "QuOta=none" "quota=non" "quota=abcd" "quota=0" "quota=" \
-    "ResErVaTi0n=none" "reserV=none" "reservation=abcd" "reserv=" \
-    "recorDSize=64k" "recordsize=256K" "recordsize=256" \
-    "recsize=" "recsize=zero" "recordsize=0" \
-    "mountPoint=/tmp/tmpfile$$" "mountpoint=non0" "mountpoint=" \
-    "mountpoint=LEGACY" "mounpoint=none" \
-    "sharenfs=ON" "ShareNFS=off" "sharenfs=sss" \
-    "checkSUM=on" "checksum=SHA256" "chsum=off" "checksum=aaa" \
-    "compression=of" "ComPression=lzjb" "compress=ON" "compress=a" \
-    "atime=ON" "ATime=off" "atime=bbb" \
-    "deviCes=on" "devices=OFF" "devices=aaa" \
-    "exec=ON" "EXec=off" "exec=aaa" \
-    "readonly=ON" "reADOnly=off" "rdonly=OFF" "rdonly=aaa" \
-    "zoned=ON" "ZoNed=off" "zoned=aaa" \
-    "snapdIR=hidden" "snapdir=VISible" "snapdir=aaa" \
-    "aclmode=DIScard" "aclmODE=groupmask" "aclmode=aaa" \
-    "aclinherit=deny" "aclinHerit=secure" "aclinherit=aaa" \
-    "type=volume" "type=snapshot" "type=filesystem" \
-    "creation=aaa" "used=10K" "available=10K" \
-    "referenced=10K" "compressratio=1.00x" \
-    "version=0" "version=1.234" "version=10K" "version=-1" \
-    "version=aaa" "version=999"
+"ResErVaTi0n=none" "reserV=none" "reservation=abcd" "reserv=" \
+"recorDSize=64k" "recordsize=2M" "recordsize=2048K" \
+"recordsize=256" "recsize=" "recsize=zero" "recordsize=0" \
+"mountPoint=/tmp/tmpfile$$" "mountpoint=non0" "mountpoint=" \
+"mountpoint=LEGACY" "mounpoint=none" \
+"sharenfs=ON" "ShareNFS=off" "sharenfs=sss" \
+"checkSUM=on" "checksum=SHA256" "chsum=off" "checksum=aaa" \
+"compression=of" "ComPression=lzjb" "compress=ON" "compress=a" \
+"atime=ON" "ATime=off" "atime=bbb" \
+"deviCes=on" "devices=OFF" "devices=aaa" \
+"exec=ON" "EXec=off" "exec=aaa" \
+"readonly=ON" "reADOnly=off" "rdonly=OFF" "rdonly=aaa" \
+"zoned=ON" "ZoNed=off" "zoned=aaa" \
+"snapdIR=hidden" "snapdir=VISible" "snapdir=aaa" \
+"aclmode=DIScard" "aclmODE=groupmask" "aclmode=aaa" \
+"aclinherit=deny" "aclinHerit=secure" "aclinherit=aaa" \
+"type=volume" "type=snapshot" "type=filesystem" \
+"creation=aaa" "used=10K" "available=10K" \
+"referenced=10K" "compressratio=1.00x" \
+"version=0" "version=1.234" "version=10K" "version=-1" \
+"version=aaa" "version=999"
 
 log_assert "'zpool create -O' should return an error with badly formed parameters."
 
