@@ -85,12 +85,13 @@ typeset slice_part=s
 create_pool "$TESTPOOL" "${disk}${slice_part}${SLICE0}"
 
 if [[ -n "$OSX" ]]; then
-    typeset dev=$DEV_DSKDIR/${disk}${slice_part}${SLICE1}
+    typeset dev=${disk}${slice_part}${SLICE1}
     log_must diskutil eraseVolume hfs+ "zpool_create_002_pos" $dev
     log_must diskutil unmount $dev
 else
     log_must $ECHO "y" | $NEWFS $DEV_RDSKDIR/${disk}${slice_part}${SLICE1} >/dev/null 2>&1
 fi
+
 create_blockfile $FILESIZE $TESTDIR0/$FILEDISK0 ${disk}${slice_part}${SLICE4}
 create_blockfile $FILESIZE1 $TESTDIR1/$FILEDISK1 ${disk}${slice_part}${SLICE5}
 log_must $MKFILE $SIZE /var/tmp/$FILEDISK0
