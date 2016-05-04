@@ -40,16 +40,10 @@
 
 verify_runnable "both"
 
-function cleanup
-{
-	log_must $ZFS mount -o remount,atime $TESTPOOL/$TESTFS
-}
-
 log_assert "'zfs get' should get consistent report with different option."
 log_onexit cleanup
 
 log_must $ZFS set atime=on $TESTPOOL/$TESTFS
-log_must $ZFS mount -o remount,noatime $TESTPOOL/$TESTFS
 
 value1=$($ZFS get -H atime $TESTPOOL/$TESTFS | $AWK '{print $3}')
 value2=$($ZFS get -H all $TESTPOOL/$TESTFS | $AWK '{print $2 " " $3}' | \
