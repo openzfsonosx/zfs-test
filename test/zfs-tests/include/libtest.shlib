@@ -2998,19 +2998,38 @@ function find_zvol_bpath #vol
 
 function disable_spotlight # pool
 {
-	typeset pool=$1
-	typeset mntpnt=$(get_prop mountpoint $pool)
-	mdutil -i off $mntpnt
-	mdutil -E $mntpnt
+	if [[ -n "$OSX" ]]; then
+		typeset pool=$1
+		typeset mntpnt=$(get_prop mountpoint $pool)
+		mdutil -i off $mntpnt
+		mdutil -E $mntpnt
+	fi
 }
 
 function enable_spotlight #pool
 {
-	typeset pool=$1
-	typeset mntpnt=$(get_prop mountpoint $pool)
-	mdutil -i on $mntpnt
-	mdutil -E $mntpnt
+	if [[ -n "$OSX" ]]; then
+		typeset pool=$1
+		typeset mntpnt=$(get_prop mountpoint $pool)
+		mdutil -i on $mntpnt
+		mdutil -E $mntpnt
+	fi
 }
+
+function disable_mds
+{
+	if [[ -n "$OSX" ]]; then
+		launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
+	fi
+}
+
+function enable_mds
+{
+	if [[ -n "$OSX" ]]; then
+		launchctl load -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
+	fi
+}
+
 
 function format_zvol # volume_name blockdev mountpoint
 {

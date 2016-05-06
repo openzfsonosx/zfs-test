@@ -43,10 +43,18 @@ verify_runnable "global"
 function cleanup
 {
 	destroy_upgraded_pool $config
+
+	if [[ -n "$OSX" ]]; then
+		enable_mds
+	fi
 }
 
 log_assert "Import pools of all versions - zpool upgrade on each pools works"
 log_onexit cleanup
+
+if [[ -n "$OSX" ]]; then
+	disable_mds
+fi
 
 # $CONFIGS gets set in the .cfg script
 for config in $CONFIGS

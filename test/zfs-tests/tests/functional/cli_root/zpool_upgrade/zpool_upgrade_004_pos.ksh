@@ -48,10 +48,18 @@ function cleanup
 	for config in $CONFIGS ; do
 		destroy_upgraded_pool $config
 	done
+
+	if [[ -n "$OSX" ]]; then
+		enable_mds
+	fi
 }
 
 log_assert "zpool upgrade -a works"
 log_onexit cleanup
+
+if [[ -n "$OSX" ]]; then
+	disable_mds
+fi
 
 TEST_POOLS=
 # Now build all of our pools
