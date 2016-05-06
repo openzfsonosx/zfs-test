@@ -171,14 +171,14 @@ do_link(const char *pfile)
 	if (link(pfile, link_file) == -1) {
 		(void) fprintf(stderr, "link(%s, %s) failed with errno %d\n",
 		    pfile, link_file, errno);
-#ifndef _LINUX
+#if !defined(_LINUX) && !defined(__APPLE__)
 		free((void *)dirname);
 #endif
 		return (1);
 	}
 
 	(void) unlink(link_file);
-#ifndef _LINUX
+#if !defined(_LINUX) && !defined(__APPLE__)
 	free((void *)dirname);
 #endif
 	return (ret);
