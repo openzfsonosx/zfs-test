@@ -49,6 +49,9 @@ if [[ -n "$LINUX" ]]; then
 export DISK=$DISK
 export DISK_orig=$DISK_orig
 EOF
+elif [[ -n "$OSX" ]]; then
+cat <<EOF > $TMPFILE
+EOF
 fi
 
 log_pass
