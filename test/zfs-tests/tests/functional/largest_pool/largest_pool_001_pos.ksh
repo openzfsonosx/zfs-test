@@ -73,7 +73,13 @@ function parse_expected_output
 		$AWK '{print $2}' | $GREP $CHKUNIT"
 
 	log_note "Detect the file system in this test machine."
-	log_must eval "$DF ${DF_FS_TYPE} zfs -h > /tmp/j.$$"
+
+	if [[ -n "$OSX" ]]; then
+		log_must eval "$DF -h > /tmp/j.$$"
+	else
+		log_must eval "$DF ${DF_FS_TYPE} zfs -h > /tmp/j.$$"
+	fi
+
 	log_must eval "$GREP $TESTPOOL /tmp/j.$$ | \
 		$AWK '{print $2}' | $GREP $CHKUNIT"
 
