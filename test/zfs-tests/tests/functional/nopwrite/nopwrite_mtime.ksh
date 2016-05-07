@@ -47,14 +47,32 @@ $DD if=/dev/urandom of=$TESTDIR/file bs=1024k count=$MEGS conv=notrunc \
 $ZFS snapshot $origin@a || log_fail "zfs snap failed"
 log_must $ZFS clone $origin@a $origin/clone
 
-o_atime=$(stat -c %X $TESTDIR/clone/file)
-o_ctime=$(stat -c %Z $TESTDIR/clone/file)
-o_mtime=$(stat -c %Y $TESTDIR/clone/file)
+if [[ -n "$OSX" ]]; then
+	o_atime=$(stat -x $TESTDIR/clone/file | grep Access | cut -d: -f2-4)
+	o_ctime=$(stat -x $TESTDIR/clone/file | grep Change | cut -d: -f2-4)
+	o_mtime=$(stat -x $TESTDIR/clone/file | grep Modify | cut -d: -f2-4)
+
+# these times are in seconds resolution all some time to pass
+	sleep 2
+else
+	o_atime=$(stat -c %X $TESTDIR/clone/file)
+	o_ctime=$(stat -c %Z $TESTDIR/clone/file)
+	o_mtime=$(stat -c %Y $TESTDIR/clone/file)
+fi
+
+
 $DD if=/$TESTDIR/file of=/$TESTDIR/clone/file bs=1024k count=$MEGS \
     conv=notrunc >/dev/null 2>&1 || log_fail "dd failed."
-atime=$(stat -c %X $TESTDIR/clone/file)
-ctime=$(stat -c %Z $TESTDIR/clone/file)
-mtime=$(stat -c %Y $TESTDIR/clone/file)
+
+if [[ -n "$OSX" ]]; then
+	atime=$(stat -x $TESTDIR/clone/file | grep Access | cut -d: -f2-4)
+	ctime=$(stat -x $TESTDIR/clone/file | grep Change | cut -d: -f2-4)
+	mtime=$(stat -x $TESTDIR/clone/file | grep Modify | cut -d: -f2-4)
+else
+	atime=$(stat -c %X $TESTDIR/clone/file)
+	ctime=$(stat -c %Z $TESTDIR/clone/file)
+	mtime=$(stat -c %Y $TESTDIR/clone/file)
+fi
 
 [[ $o_atime = $atime ]] || log_fail "atime changed: $o_atime $atime"
 [[ $o_ctime = $ctime ]] && log_fail "ctime unchanged: $o_ctime $ctime"
