@@ -55,6 +55,7 @@ do
 	do
 		for logtype in "" "mirror"
 		do
+
 			#
 			# Create pool which devices resider in different
 			# directory
@@ -73,7 +74,7 @@ do
 			log_must display_status $TESTPOOL
 			ldev=$(random_get $LDEV $LDEV2)
 			log_must verify_slog_device \
-				$TESTPOOL $ldev 'ONLINE' $logtype
+				$TESTPOOL `realpath $ldev` 'ONLINE' $logtype
 
 			[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
 
@@ -85,7 +86,7 @@ do
 			log_must display_status $TESTPOOL
 			ldev=$(random_get $LDEV $LDEV2)
 			log_must verify_slog_device \
-				$TESTPOOL $ldev 'ONLINE' $logtype
+				$TESTPOOL `realpath $ldev` 'ONLINE' $logtype
 
 			[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
 			destroy_pool -f $TESTPOOL
