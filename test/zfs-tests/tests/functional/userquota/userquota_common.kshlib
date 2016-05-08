@@ -47,6 +47,10 @@ function cleanup_quota
 	[[ -f $OFILE ]] && log_must $RM -f $OFILE
 	$SYNC
 
+	if [[ -n "$OSX" ]]; then
+		sleep 10
+	fi
+
 	 return 0
 }
 
