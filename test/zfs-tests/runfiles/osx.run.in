@@ -381,8 +381,9 @@ tests = ['ctime_001_pos' ]
 [@PREFIX@/zfs-tests/tests/functional/devices]
 tests = ['devices_001_pos', 'devices_002_neg', 'devices_003_pos']
 
+# O3X: OSX itself does not support MMAP_EXEC semantics of illumos. 'exec_002_neg'
 [@PREFIX@/zfs-tests/tests/functional/exec]
-tests = ['exec_001_pos', 'exec_002_neg']
+tests = ['exec_001_pos']
 
 [@PREFIX@/zfs-tests/tests/functional/features/async_destroy]
 tests = ['async_destroy_001_pos']
