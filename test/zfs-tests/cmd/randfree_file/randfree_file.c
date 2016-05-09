@@ -34,7 +34,9 @@
 /* Defined in <spl_repo>/spl/include/sys/{vnode,fcntl}.h */
 #define F_FREESP        11	/* Free file space */
 #elif defined(_OSX)
-#define F_FREESP        11	/* Free file space */
+#include <sys/ioccom.h>
+#define F_FREESP_HIGH _IO('Z', 11)
+#define F_FREESP      _IO('Z', 12)
 #endif
 
 /*
@@ -100,6 +102,9 @@ main(int argc, char *argv[])
 	fl.l_whence = SEEK_SET;
 	fl.l_start = start_off;
 	fl.l_len = off_len;
+#if defined(_OSX)
+	fcntl(fd, F_FREESP_HIGH, (uint64_t)(&fl)>>32);
+#endif
 	if (fcntl(fd, F_FREESP, &fl) != 0) {
 		perror("fcntl");
 		return (1);
