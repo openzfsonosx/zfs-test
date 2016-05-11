@@ -49,10 +49,14 @@ function cleanup
 {
 	destroy_pool -f bpool
 	destroy_pool -f spool
+
+	enable_mds
 }
 
 log_assert "Verify zfs receive can handle out of space correctly."
 log_onexit cleanup
+
+disable_mds
 
 log_must $MKFILE 100M $TESTDIR/bfile
 log_must $MKFILE 64M  $TESTDIR/sfile
@@ -77,8 +81,18 @@ log_must ismounted spool
 # Test out of space on top filesystem
 #
 mntpnt2=$(get_prop mountpoint bpool)
-log_must $MV $mntpnt/file $mntpnt2
-destroy_dataset -rf bpool/fs
+
+# O3X - even on illumos, moving this file does not seem to work
+# just do the equivalent by a different method, after all the
+# point of the test is to check out of space in a root dataset
+# when processing a larger than plausible send/receive.
+if [[ -n "$OSX" ]]; then
+	destroy_dataset -r bpool/fs
+	mkfile 30M $mntpnt2/file
+else
+	log_must $MV $mntpnt/file $mntpnt2
+	destroy_dataset -rf bpool/fs
+fi
 
 log_must $ZFS snapshot bpool@snap
 log_must eval "$ZFS send -R bpool@snap > $BACKDIR/bpool-R"
