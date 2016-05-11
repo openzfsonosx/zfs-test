@@ -116,12 +116,14 @@ function cleanup_pool
 	log_must $RM -rf $BACKDIR/*
 
 	if is_global_zone ; then
-		destroy_dataset -Rf $pool
+                log_must $ZFS destroy -Rf $pool	
 	else
 		typeset list=$($ZFS list -H -r -t filesystem,snapshot,volume -o name $pool)
 		for ds in $list ; do
 			if [[ $ds != $pool ]] ; then
-				destroy_dataset -Rf $ds
+                                if datasetexists $ds ; then
+                                        log_must $ZFS destroy -Rf $ds
+                                fi
 			fi
 		done
 	fi

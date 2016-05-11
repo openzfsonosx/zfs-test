@@ -41,6 +41,8 @@ if (($? != 0)); then
 	log_unsupported
 fi
 
+sysctl -w kstat.zfs.darwin.tunable.zvol_inhibit_dev=0
+
 if is_global_zone ; then
 	destroy_pool -f $POOL
 	destroy_pool -f $POOL2

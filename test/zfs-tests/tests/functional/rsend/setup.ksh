@@ -42,6 +42,10 @@ if (($? != 0)); then
 	log_unsupported
 fi
 
+# Due to diskarbitrationd opening the disk to have a peek inside, we
+# can fail, so lets disable ZVOL devnodes during this test.
+sysctl -w kstat.zfs.darwin.tunable.zvol_inhibit_dev=1
+
 if is_global_zone ; then
 	log_must $ZPOOL create $POOL $DISK1
 	log_must $ZPOOL create $POOL2 $DISK2
