@@ -72,8 +72,8 @@ function cleanup
 #
 function test_unshare # <mntp> <filesystem>
 {
-        typeset mntp=$1
-        typeset filesystem=$2
+	typeset mntp=`realpath $1`
+	typeset filesystem=$2
 	typeset prop_value
 
 	prop_value=$(get_prop "sharenfs" $filesystem)
@@ -82,6 +82,8 @@ function test_unshare # <mntp> <filesystem>
 		if not_shared $mntp; then
 			if [[ -n "$LINUX" ]]; then
 				log_must $UNSHARE "*:$mntp"
+			elif [[ -n "$OSX" ]]; then
+				osx_unshare_nfs $mntp
 			else
 				log_must $UNSHARE -F nfs $mntp
 			fi
@@ -105,8 +107,8 @@ function test_unshare # <mntp> <filesystem>
 	log_must $ZFS unshare $mntp
 	not_shared $mntp || log_fail "'zfs unshare <mountpoint>' fails"
 
-        log_note "Unsharing an unshared file system fails."
-        log_mustnot $ZFS unshare $filesystem
+	log_note "Unsharing an unshared file system fails."
+	log_mustnot $ZFS unshare $filesystem
 	log_mustnot $ZFS unshare $mntp
 }
 

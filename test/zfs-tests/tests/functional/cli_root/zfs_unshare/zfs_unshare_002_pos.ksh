@@ -75,8 +75,8 @@ function cleanup
 #
 function test_legacy_unshare # <mntp> <filesystem>
 {
-        typeset mntp=$1
-        typeset filesystem=$2
+	typeset mntp=`realpath $1`
+	typeset filesystem=$2
 
 	log_must $ZFS set sharenfs=off $filesystem
 	not_shared $mntp || \
@@ -85,6 +85,8 @@ function test_legacy_unshare # <mntp> <filesystem>
 
 	if [[ -n "$LINUX" ]]; then
 		log_must $SHARE -i "*:$mntp"
+	elif [[ -n "$OSX" ]]; then
+		osx_share_nfs $mntp
 	else
 		log_must $SHARE -F nfs $mntp
 	fi
@@ -154,14 +156,17 @@ done
 i=0
 while (( i < ${#mntp_fs[*]} )); do
 	if [[ -n "$LINUX" ]]; then
-	        $SHARE -i "*:${mntp_fs[i]}"
+		$SHARE -i "*:${mntp_fs[i]}"
+	elif [[ -n "$OSX" ]]; then
+		osx_share_nfs $mntp
 	else
-	        $SHARE -F nfs ${mntp_fs[i]}
+		$SHARE -F nfs ${mntp_fs[i]}
 	fi
-        is_shared ${mntp_fs[i]} || \
-                log_fail "'$SHARE' shares ZFS filesystem failed."
 
-        ((i = i + 2))
+	is_shared `realpath ${mntp_fs[i]}` || \
+		log_fail "'$SHARE' shares ZFS filesystem failed."
+
+	((i = i + 2))
 done
 
 #
@@ -174,7 +179,7 @@ log_must $ZFS unshare -a
 #
 i=0
 while (( i < ${#mntp_fs[*]} )); do
-        is_shared ${mntp_fs[i]} || \
+        is_shared `realpath ${mntp_fs[i]}` || \
             log_fail "'$ZFS  unshare -a' fails to be aware of legacy share."
 
         ((i = i + 2))

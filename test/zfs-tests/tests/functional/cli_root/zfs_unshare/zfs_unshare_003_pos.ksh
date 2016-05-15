@@ -58,8 +58,8 @@ function cleanup
 #
 function test_snap_unshare # <mntp> <filesystem>
 {
-        typeset mntp=$1
-        typeset filesystem=$2
+	typeset mntp=`realpath $1`
+	typeset filesystem=$2
 	typeset prop_value
 
 	prop_value=$(get_prop "sharenfs" $filesystem)
@@ -68,6 +68,8 @@ function test_snap_unshare # <mntp> <filesystem>
 		if ! is_shared $mntp; then
 			if [[ -n "$LINUX" ]]; then
 				$UNSHARE -u "*:$mntp"
+			elif [[ -n "$OSX" ]]; then
+				osx_unshare_nfs $mntp
 			else
 				$UNSHARE -F nfs $mntp
 			fi

@@ -1088,6 +1088,37 @@ function unshare_fs #fs
 }
 
 #
+# OSX unshare a NFS share
+#
+function osx_unshare_nfs #mtpt
+{
+	typeset mtpt=$1
+
+	$SED '/$mtpt/d' /etc/exports > /private/var/tmp/exports
+	$CP /private/var/tmp/exports /etc/exports
+
+	/sbin/nfsd update
+	if [[ $? != 0 ]]; then
+		/sbin/nfsd start
+	fi
+}
+
+#
+# OSX share a mountpoint via NFS
+#
+function osx_share_nfs #mtpt
+{
+	typeset mtpt=$1
+
+	$ECHO "\"$mtpt\" *" >> /etc/exports
+
+	/sbin/nfsd update
+	if [[ $? != 0 ]]; then
+		/sbin/nfsd start
+	fi
+}
+
+#
 # Check NFS server status and trigger it online.
 #
 function setup_nfs_server
