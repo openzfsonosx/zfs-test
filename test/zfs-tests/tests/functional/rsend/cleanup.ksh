@@ -52,4 +52,8 @@ else
 fi
 log_must $RM -rf $BACKDIR $TESTDIR
 
+if [[ -n "$OSX" ]]; then
+	enable_mds
+fi
+
 log_pass

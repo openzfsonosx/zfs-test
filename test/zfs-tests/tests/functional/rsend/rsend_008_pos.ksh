@@ -71,6 +71,7 @@ function cleanup
 		log_must $ZFS promote $POOL2
 	fi
 	log_must cleanup_pool $POOL2
+
 }
 
 log_assert "Changes made by 'zfs promote' can be properly received."
@@ -106,6 +107,7 @@ if is_global_zone ; then
 	pair[((n+2))]="$POOL/$FS/vol"	pair[((n+3))]="$dstds/$FS/vol"
 fi
 
+log_note "***** a"
 #
 # Verify all the sub-datasets can be properly received.
 #
@@ -118,8 +120,11 @@ while ((i < ${#pair[@]})); do
 	((i += 2))
 done
 
+log_note "***** b"
+
 # Verify the original filesystem can be promoted
 log_must $ZFS promote $dstds
+log_note "***** c"
 if is_global_zone ; then
 	log_must $ZFS promote $dstds/$FS/vol
 fi

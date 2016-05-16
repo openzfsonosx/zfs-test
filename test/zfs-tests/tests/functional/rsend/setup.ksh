@@ -54,4 +54,8 @@ log_must $MKDIR -p $BACKDIR $TESTDIR
 
 log_must setup_test_model $POOL
 
+if [[ -n "$OSX" ]]; then
+	disable_mds
+fi
+
 log_pass
