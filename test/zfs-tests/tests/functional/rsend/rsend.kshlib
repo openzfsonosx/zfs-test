@@ -389,19 +389,19 @@ function get_dst_ds
 #
 function mk_files
 {
-nfiles=$1
-maxsize=$2
-file_id_offset=$3
-fs=$4
+	nfiles=$1
+	maxsize=$2
+	file_id_offset=$3
+	fs=$4
 
-for ((i=0; i<$nfiles; i=i+1)); do
-$DD if=/dev/urandom \
-of=/$fs/file-$maxsize-$((i+$file_id_offset)) \
-bs=$(($RANDOM * $RANDOM % $maxsize)) \
-count=1 >/dev/null 2>&1 || log_fail \
-"Failed to create /$fs/file-$maxsize-$((i+$file_id_offset))"
-done
-$ECHO Created $nfiles files of random sizes up to $maxsize bytes
+	for ((i=0; i<$nfiles; i=i+1)); do
+		$DD if=/dev/urandom \
+		of=/$fs/file-$maxsize-$((i+$file_id_offset)) \
+		bs=$(($RANDOM * $RANDOM % $maxsize)) \
+		count=1 >/dev/null 2>&1 || log_fail \
+			"Failed to create /$fs/file-$maxsize-$((i+$file_id_offset))"
+	done
+	$ECHO Created $nfiles files of random sizes up to $maxsize bytes
 }
 
 #
@@ -414,15 +414,15 @@ $ECHO Created $nfiles files of random sizes up to $maxsize bytes
 #
 function rm_files
 {
-nfiles=$1
-maxsize=$2
-file_id_offset=$3
-fs=$4
+	nfiles=$1
+	maxsize=$2
+	file_id_offset=$3
+	fs=$4
 
-for ((i=0; i<$nfiles; i=i+1)); do
-$RM -f /$fs/file-$maxsize-$((i+$file_id_offset))
-done
-$ECHO Removed $nfiles files of random sizes up to $maxsize bytes
+	for ((i=0; i<$nfiles; i=i+1)); do
+		$RM -f /$fs/file-$maxsize-$((i+$file_id_offset))
+	done
+	$ECHO Removed $nfiles files of random sizes up to $maxsize bytes
 }
 
 #
@@ -436,7 +436,6 @@ function mess_file
 	typeset -i filesize
 
 	if [[ -n "$OSX" ]]; then
-log_note "**** $STAT -f "%z" $file"
 		filesize=$(stat -f "%z" $file)
 	else
 		filesize=$($STAT -c '%s' $file)
