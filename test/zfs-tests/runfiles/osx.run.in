@@ -132,7 +132,7 @@ tests = ['zfs_get_001_pos', 'zfs_get_002_pos', 'zfs_get_003_pos',
 [@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_inherit]
 tests = ['zfs_inherit_001_neg', 'zfs_inherit_002_neg', 'zfs_inherit_003_pos']
 
-[@PREFIX@/functional/cli_root/zfs_key]
+[@PREFIX@/zfs-tests/tests/functional/cli_root/zfs_key]
 tests = ['zfs_key_001_pos', 'zfs_key_002_neg', 'zfs_key_003_pos',
 	'zfs_key_004_neg', 'zfs_key_005_pos', 'zfs_key_006_neg',
 	'zfs_key_007_pos', 'zfs_key_008_neg']
