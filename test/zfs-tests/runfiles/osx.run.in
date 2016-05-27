@@ -26,6 +26,10 @@ outputdir = /var/tmp/test_results
 [@PREFIX@/zfs-tests/tests/functional/osx/version]
 tests = ['version_001_pos']
 
+[@PREFIX@/zfs-tests/tests/functional/osx/kextload]
+tests = ['kextload_001_pos', 'kextload_002_neg']
+
+
 # DISABLED: because Linux don't have acls
 # cp -@, tar @, chmod [AS]+..., zfs set aclmode=..., etc
 # Some of these (by chance?) works though, but what's the point!?
