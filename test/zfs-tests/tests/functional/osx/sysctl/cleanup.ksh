@@ -1,4 +1,4 @@
-#!/bin/ksh -p
+#!/usr/bin/env ksh -p
 #
 # CDDL HEADER START
 #
@@ -21,39 +21,14 @@
 #
 
 #
-# Copyright (C) 2016 Brendon Humphrey (brendon.humphrey@mac.com). All rights reserved.
-#
+# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
 
 . $STF_SUITE/tests/functional/osx/kextload/kexts.kshlib
 
 #
-# DESCRIPTION:
-# Verify that the kexts can NOT be unloaded when ZFS pools are in use.
+# Copyright (c) 2016 by Brendon Humphrey (brendon.humphrey@mac.com). All rights reserved.
 #
-# STRATEGY:
-# 1. Initial state will be kexts loaded, prove it
-# 2. Create a pool.
-# 3. Attempt to unload kexts.
-#
-
-
-verify_runnable "both"
-
-DISK=${DISKS%% *}
-default_setup $DISK
-
-log_onexit cleanup
-
-#
-# Attempt to unload the kexts
-#
-unload_kexts
-
-#
-# Prove that they didnt unload
-#
-log_must verify_kexts_loaded
 
 log_pass

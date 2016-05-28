@@ -29,6 +29,8 @@ tests = ['version_001_pos']
 [@PREFIX@/zfs-tests/tests/functional/osx/kextload]
 tests = ['kextload_001_pos', 'kextload_002_neg']
 
+[@PREFIX@/zfs-tests/tests/functional/osx/sysctl]
+tests = ['sysctl_001_pos', 'sysctl_002_pos']
 
 # DISABLED: because Linux don't have acls
 # cp -@, tar @, chmod [AS]+..., zfs set aclmode=..., etc

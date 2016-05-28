@@ -26,34 +26,45 @@
 # Use is subject to license terms.
 #
 
-. $STF_SUITE/tests/functional/osx/kextload/kexts.kshlib
+. $STF_SUITE/tests/functional/osx/sysctl/sysctl.kshlib
 
 #
 # DESCRIPTION:
-# Verify that the kexts can NOT be unloaded when ZFS pools are in use.
+# Check that all "base" kstats are published via OSX sysctl.
 #
 # STRATEGY:
-# 1. Initial state will be kexts loaded, prove it
-# 2. Create a pool.
-# 3. Attempt to unload kexts.
+#
 #
 
-
-verify_runnable "both"
-
-DISK=${DISKS%% *}
-default_setup $DISK
-
+log_assert "kstats are published as sysctls."
 log_onexit cleanup
 
-#
-# Attempt to unload the kexts
-#
-unload_kexts
+typeset -i i=0
 
 #
-# Prove that they didnt unload
+# Check the SPL sysctls
 #
-log_must verify_kexts_loaded
+while (( i < ${#SPL_SYSCTLS[@]} )); do
+	log_must sysctl_exists ${SPL_SYSCTLS[i]}
+	(( i += 1 ))
+done
+
+#
+# Check the ZFS sysctls
+#
+while (( i < ${#ZFS_SYSCTLS[@]} )); do
+	log_must sysctl_exists ${ZFS_SYSCTLS[i]}
+	(( i += 1 ))
+done
+
+#
+# Check the ZFS sysctls
+#
+while (( i < ${#ZFS_TUNEABLE_SYSCTLS[@]} )); do
+	log_must sysctl_exists ${ZFS_TUNEABLE_SYSCTLS[i]}
+	(( i += 1 ))
+done
+
+
 
 log_pass
