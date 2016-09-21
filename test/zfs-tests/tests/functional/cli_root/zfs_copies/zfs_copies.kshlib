@@ -132,9 +132,9 @@ function do_vol_test
 	((target_size = pre_used + nfilesize))
 
 	if [[ $type == "ufs" || $type == "ext2" || $type == "hfs" || $type == "hfs+" ]]; then
-		log_must $MKFILE $FILESIZE $mntp/$FILE
+		log_must $MKFILE $MKFILE_SPARSE $FILESIZE $mntp/$FILE
 	else
-		log_must $MKFILE $FILESIZE /$TESTPOOL1/$TESTFS1/$FILE
+		log_must $MKFILE $MKFILE_SPARSE $FILESIZE /$TESTPOOL1/$TESTFS1/$FILE
 	fi
 
 	post_used=$(get_used_prop $vol)

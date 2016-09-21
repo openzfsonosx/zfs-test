@@ -63,7 +63,7 @@ log_must $ZFS create $fs/subfs
 mntpnt=$(get_prop mountpoint $fs/subfs)
 typeset -i i=0
 while ((i < 3)); do
-	log_must $MKFILE 7M $mntpnt/$TESTFILE.$i
+	log_must $MKFILE $MKFILE_SPARSE 7M $mntpnt/$TESTFILE.$i
 	log_must $ZFS snapshot $fs/subfs@snap.$i
 	log_must $RM $mntpnt/$TESTFILE.$i
 
@@ -73,6 +73,6 @@ done
 #
 # Verify out of the limitation of 'quota'
 #
-log_mustnot $MKFILE 7M $mntpnt/$TESTFILE
+log_mustnot $MKFILE $MKFILE_SPARSE 7M $mntpnt/$TESTFILE
 
 log_pass "refquotas are not limited by sub-filesystem snapshots"

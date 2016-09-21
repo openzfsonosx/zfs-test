@@ -60,7 +60,7 @@ log_onexit cleanup
 #make raw files to create various configuration pools
 typeset -i i=0
 while (( i < 3 )); do
-	log_must $MKFILE $FILESIZE $TESTDIR/file.$i
+	log_must $MKFILE $MKFILE_SPARSE $FILESIZE $TESTDIR/file.$i
 
 	(( i = i + 1 ))
 done

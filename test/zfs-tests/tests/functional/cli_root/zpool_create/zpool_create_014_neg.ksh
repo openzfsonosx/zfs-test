@@ -92,7 +92,7 @@ log_must $ZFS create -V 100m $vol_name
 log_must $ECHO "y" | $NEWFS $ZVOL_DEVDIR/$vol_name > /dev/null 2>&1
 log_must $MOUNT $ZVOL_DEVDIR/$vol_name $mntp
 
-log_must $MKFILE 50m $TMP_FILE
+log_must $MKFILE $MKFILE_SPARSE 50m $TMP_FILE
 if [[ -n "$LINUX" ]]; then
 	log_must mkswap $TMP_FILE
 	log_must $SWAP $TMP_FILE

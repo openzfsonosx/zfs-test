@@ -83,12 +83,12 @@ for ds in $datasets; do
 
 	typeset mntpnt=$(get_prop mountpoint $subfs)
 
-	log_must $MKFILE $avail $mntpnt/$TESTFILE
+	log_must $MKFILE $MKFILE_SPARSE $avail $mntpnt/$TESTFILE
 
 	typeset -i exceed
 	((exceed = avail + 1))
 	log_mustnot $ZFS set refreservation=$exceed $subfs
-	log_mustnot $MKFILE $avail $mntpnt/$TESTFILE
+	log_mustnot $MKFILE $MKFILE_SPARSE $avail $mntpnt/$TESTFILE
 
 	log_must $ZFS set quota=none $ds
 	log_must $ZFS set reservation=15M $ds

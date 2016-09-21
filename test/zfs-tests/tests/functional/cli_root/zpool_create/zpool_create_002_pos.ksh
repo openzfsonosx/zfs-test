@@ -94,9 +94,9 @@ fi
 
 create_blockfile $FILESIZE $TESTDIR0/$FILEDISK0 ${disk}${slice_part}${SLICE4}
 create_blockfile $FILESIZE1 $TESTDIR1/$FILEDISK1 ${disk}${slice_part}${SLICE5}
-log_must $MKFILE $SIZE /var/tmp/$FILEDISK0
-log_must $MKFILE $SIZE /var/tmp/$FILEDISK1
-log_must $MKFILE $SIZE /var/tmp/$FILEDISK2
+log_must $MKFILE $MKFILE_SPARSE $SIZE /var/tmp/$FILEDISK0
+log_must $MKFILE $MKFILE_SPARSE $SIZE /var/tmp/$FILEDISK1
+log_must $MKFILE $MKFILE_SPARSE $SIZE /var/tmp/$FILEDISK2
 
 log_must $ZPOOL export $TESTPOOL
 log_note "'zpool create' without '-f' will fail " \

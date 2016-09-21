@@ -87,7 +87,7 @@ function cleanup_all
 	while (( i < $MAX_NUM )); do
 		typeset dev_file=${DEVICE_DIR}/${DEVICE_FILE}$i
 		if [[ ! -e ${dev_file} ]]; then
-			log_must $MKFILE $FILE_SIZE ${dev_file}
+			log_must $MKFILE $MKFILE_SPARSE $FILE_SIZE ${dev_file}
 		fi
 		((i += 1))
 	done

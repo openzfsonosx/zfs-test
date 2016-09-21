@@ -62,13 +62,13 @@ log_assert "Verify creating/destroying snapshots do things clean"
 log_onexit cleanup
 
 log_must $ZFS set quota=$FSQUOTA $TESTPOOL/$TESTCTR/$TESTFS1
-log_must $MKFILE $FILESIZE $TESTDIR1/$TESTFILE
+log_must $MKFILE $MKFILE_SPARSE $FILESIZE $TESTDIR1/$TESTFILE
 
 log_must $ZFS snapshot $SNAPCTR
 destroy_dataset $SNAPCTR
 
 log_note "Make the quota of filesystem is reached"
-log_mustnot $MKFILE $FILESIZE1 $TESTDIR1/$TESTFILE1
+log_mustnot $MKFILE $MKFILE_SPARSE $FILESIZE1 $TESTDIR1/$TESTFILE1
 
 log_note "Verify removing the first file should succeed after the snapshot is \
 	removed"

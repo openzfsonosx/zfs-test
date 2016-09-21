@@ -58,8 +58,8 @@ log_onexit cleanup
 
 disable_mds
 
-log_must $MKFILE 100M $TESTDIR/bfile
-log_must $MKFILE 64M  $TESTDIR/sfile
+log_must $MKFILE $MKFILE_SPARSE 100M $TESTDIR/bfile
+log_must $MKFILE $MKFILE_SPARSE 64M  $TESTDIR/sfile
 log_must $ZPOOL create bpool $TESTDIR/bfile
 log_must $ZPOOL create spool $TESTDIR/sfile
 
@@ -68,7 +68,7 @@ log_must $ZPOOL create spool $TESTDIR/sfile
 #
 log_must $ZFS create bpool/fs
 mntpnt=$(get_prop mountpoint bpool/fs)
-log_must $MKFILE 30M $mntpnt/file
+log_must $MKFILE $MKFILE_SPARSE 30M $mntpnt/file
 
 log_must $ZFS snapshot bpool/fs@snap
 log_must eval "$ZFS send -R bpool/fs@snap > $BACKDIR/fs-R"
@@ -88,7 +88,7 @@ mntpnt2=$(get_prop mountpoint bpool)
 # when processing a larger than plausible send/receive.
 if [[ -n "$OSX" ]]; then
 	destroy_dataset -r bpool/fs
-	mkfile 30M $mntpnt2/file
+	mkfile $MKFILE_SPARSE 30M $mntpnt2/file
 else
 	log_must $MV $mntpnt/file $mntpnt2
 	destroy_dataset -rf bpool/fs

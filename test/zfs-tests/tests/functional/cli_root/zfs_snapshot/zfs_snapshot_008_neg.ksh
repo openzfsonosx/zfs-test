@@ -55,8 +55,8 @@ function cleanup
 log_assert "'zfs snapshot pool1@snap1 pool2@snap2' should fail since snapshots are in different pools."
 log_onexit cleanup
 
-log_must $MKFILE 64m $SNAPDEV1
-log_must $MKFILE 64m $SNAPDEV2
+log_must $MKFILE $MKFILE_SPARSE 64m $SNAPDEV1
+log_must $MKFILE $MKFILE_SPARSE 64m $SNAPDEV2
 
 log_must $ZPOOL create $SNAPPOOL1 $SNAPDEV1
 log_must $ZPOOL create $SNAPPOOL2 $SNAPDEV2

@@ -103,7 +103,7 @@ fi
 log_note "***** max_num" $MAX_NUM
 i=0
 while (( i < $MAX_NUM )); do
-	log_must $MKFILE $FILE_SIZE ${DEVICE_DIR}/${DEVICE_FILE}$i
+	log_must $MKFILE $MKFILE_SPARSE $FILE_SIZE ${DEVICE_DIR}/${DEVICE_FILE}$i
 	(( i = i + 1 ))
 done
 

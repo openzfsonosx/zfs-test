@@ -56,7 +56,7 @@ log_onexit cleanup
 for val in 1 2 3; do
 	log_must $ZFS create -o copies=$val $TESTPOOL/fs_$val
 	disable_spotlight $TESTPOOL/fs_$val
-	log_must $MKFILE $FILESIZE /$TESTPOOL/fs_$val/$FILE
+	log_must $MKFILE $MKFILE_SPARSE $FILESIZE /$TESTPOOL/fs_$val/$FILE
 done
 
 #

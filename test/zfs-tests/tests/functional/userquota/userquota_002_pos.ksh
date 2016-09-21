@@ -58,7 +58,7 @@ log_assert \
 
 typeset pool_vdev=/var/tmp/pool_dev.$$
 
-log_must $MKFILE 500m $pool_vdev
+log_must $MKFILE $MKFILE_SPARSE 500m $pool_vdev
 
 destroy_pool $TESTPOOL1
 

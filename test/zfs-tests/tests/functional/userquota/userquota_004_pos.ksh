@@ -61,7 +61,7 @@ if [[ $group_used != 0 ]]; then
 fi
 
 mkmount_writable $QFS
-log_must user_run $QUSER1 $MKFILE 100m $QFILE
+log_must user_run $QUSER1 $MKFILE $MKFILE_SPARSE 100m $QFILE
 $SYNC
 
 # It takes a little while for the users quota usage to catch up

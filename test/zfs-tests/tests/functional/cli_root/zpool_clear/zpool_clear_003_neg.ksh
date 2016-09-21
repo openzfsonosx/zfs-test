@@ -59,7 +59,7 @@ log_onexit cleanup
 #make raw files to create a spare pool
 typeset -i i=0
 while (( i < 5 )); do
-	log_must $MKFILE $FILESIZE $TESTDIR/file.$i
+	log_must $MKFILE $MKFILE_SPARSE $FILESIZE $TESTDIR/file.$i
 
 	(( i = i + 1 ))
 done

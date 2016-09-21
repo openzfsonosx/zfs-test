@@ -84,7 +84,7 @@ log_pass "Verify slog device can be disk, file, lofi device or any device " \
 # Temp disable fore bug 6569095
 # Add file which reside in the itself
 mntpnt=$(get_prop mountpoint $TESTPOOL)
-log_must $MKFILE 100M $mntpnt/vdev
+log_must $MKFILE $MKFILE_SPARSE 100M $mntpnt/vdev
 log_must $ZPOOL add $TESTPOOL $mntpnt/vdev
 
 # Temp disable fore bug 6569072
