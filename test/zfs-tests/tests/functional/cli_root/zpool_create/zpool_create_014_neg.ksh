@@ -43,65 +43,85 @@
 # 2. Try to create a new pool with regular file in swap
 # 3. Verify the creation is failed.
 #
+# OSX STRATEGY:
+# 1. Create a file in the current OSX swap file directory
+# 2. Try to create a pool in that file
+# 3. Verify the creation failed
 
 verify_runnable "global"
 
 function cleanup
 {
-	if datasetexists $vol_name; then
-		if [[ -n "$LINUX" ]]; then
-			$SWAP -s | $GREP $TMP_FILE > /dev/null 2>&1
-		else
-			$SWAP -l | $GREP $TMP_FILE > /dev/null 2>&1
-		fi
-		if [[ $? -eq 0 ]]; then
+	if [[ -n "$OSX" ]]; then
+		destroy_pool -f $TESTPOOL
+		typeset swap_sysctl=`sysctl vm.swapfileprefix | cut -d" " -f2`
+		typeset swap_dir=`dirname $swap_sysctl`
+		rm -f $swap_dir/testfile
+	else
+		if datasetexists $vol_name; then
 			if [[ -n "$LINUX" ]]; then
-				log_must swapoff $TMP_FILE
+				$SWAP -s | $GREP $TMP_FILE > /dev/null 2>&1
 			else
-				log_must $SWAP -d $TMP_FILE
+				$SWAP -l | $GREP $TMP_FILE > /dev/null 2>&1
 			fi
+			if [[ $? -eq 0 ]]; then
+				if [[ -n "$LINUX" ]]; then
+					log_must swapoff $TMP_FILE
+				else
+					log_must $SWAP -d $TMP_FILE
+				fi
+			fi
+			$RM -f $TMP_FILE
+			log_must $UMOUNT $mntp
+			destroy_dataset $vol_name
+			destroy_pool -f $TESTPOOL
 		fi
-		$RM -f $TMP_FILE
-		log_must $UMOUNT $mntp
-		destroy_dataset $vol_name
 	fi
-
-	destroy_pool -f $TESTPOOL
 }
 
 log_assert "'zpool create' should fail with regular file in swap."
 log_onexit cleanup
 
-if [[ -n $DISK ]]; then
-        disk=$DISK
+if [[ -n "$OSX" ]]; then
+	typeset swap_sysctl=`sysctl vm.swapfileprefix | cut -d" " -f2`
+	typeset swap_dir=`dirname $swap_sysctl`
+	log_must mkfile -n 128M $swap_dir/testfile
+
+	for opt in "-n" "" "-f"; do
+		log_mustnot $ZPOOL create $opt $TESTPOOL $swap_dir/testfile
+	done
 else
-        disk=$DISK0
+	if [[ -n $DISK ]]; then
+			disk=$DISK
+	else
+			disk=$DISK0
+	fi
+
+	typeset slice_part=s
+	[[ -n "$LINUX" ]] && slice_part=p
+
+	typeset pool_dev=${disk}${slice_part}${SLICE0}
+	typeset vol_name=$TESTPOOL/$TESTVOL
+	typeset mntp=/mnt
+	typeset TMP_FILE=$mntp/tmpfile.$$
+
+	create_pool $TESTPOOL $pool_dev
+	log_must $ZFS create -V 100m $vol_name
+	[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+	log_must $ECHO "y" | $NEWFS $ZVOL_DEVDIR/$vol_name > /dev/null 2>&1
+	log_must $MOUNT $ZVOL_DEVDIR/$vol_name $mntp
+
+	log_must $MKFILE 50m $TMP_FILE
+	if [[ -n "$LINUX" ]]; then
+		log_must mkswap $TMP_FILE
+		log_must $SWAP $TMP_FILE
+	else
+		log_must $SWAP -a $TMP_FILE
+	fi
+
+	for opt in "-n" "" "-f"; do
+		log_mustnot $ZPOOL create $opt $TESTPOOL $TMP_FILE
+	done
 fi
-
-typeset slice_part=s
-[[ -n "$LINUX" ]] && slice_part=p
-
-typeset pool_dev=${disk}${slice_part}${SLICE0}
-typeset vol_name=$TESTPOOL/$TESTVOL
-typeset mntp=/mnt
-typeset TMP_FILE=$mntp/tmpfile.$$
-
-create_pool $TESTPOOL $pool_dev
-log_must $ZFS create -V 100m $vol_name
-[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
-log_must $ECHO "y" | $NEWFS $ZVOL_DEVDIR/$vol_name > /dev/null 2>&1
-log_must $MOUNT $ZVOL_DEVDIR/$vol_name $mntp
-
-log_must $MKFILE 50m $TMP_FILE
-if [[ -n "$LINUX" ]]; then
-	log_must mkswap $TMP_FILE
-	log_must $SWAP $TMP_FILE
-else
-	log_must $SWAP -a $TMP_FILE
-fi
-
-for opt in "-n" "" "-f"; do
-	log_mustnot $ZPOOL create $opt $TESTPOOL $TMP_FILE
-done
 
 log_pass "'zpool create' passed as expected with inapplicable scenario."
