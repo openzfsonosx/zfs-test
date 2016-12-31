@@ -143,7 +143,7 @@ for volsize in $VOLSIZES; do
 		fi
 	fi
 
-	[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+	[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 
 	log_note "Create the largest pool allowed using the volume vdev"
 	create_pool $TESTPOOL "$VOL_PATH"

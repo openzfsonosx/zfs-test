@@ -66,7 +66,7 @@ $SYNC
 
 # Give us some time to catch up the accounting
 if [[ -n "$OSX" ]]; then
-	sleep 10
+	$SLEEP 10
 fi
 
 #

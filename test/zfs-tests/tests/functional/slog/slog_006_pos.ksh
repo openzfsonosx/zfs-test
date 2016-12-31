@@ -59,12 +59,12 @@ do
 			tdev=$(random_get $LDEV2)
 			log_must $ZPOOL replace $TESTPOOL $sdev $tdev
 			log_must display_status $TESTPOOL
-			# sleep 15 to make sure replacement completely.
+			# $SLEEP 15 to make sure replacement completely.
 			log_must $SLEEP 15
 			log_must verify_slog_device \
 				$TESTPOOL $tdev 'ONLINE' $logtype
 
-			[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+			[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 			destroy_pool -f $TESTPOOL
 		done
 	done

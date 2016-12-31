@@ -117,7 +117,7 @@ log_must $DIFF $SRC_FILE $obj
 if is_global_zone; then
 	vol=$TESTPOOL/$TESTFS/vol.$$ ;	volclone=$TESTPOOL/$TESTFS/volclone.$$
 	log_must $ZFS create -V 100M $vol
-	[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+	[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 
 	obj=$(target_obj $vol)
 	log_must $DD if=$SRC_FILE of=$obj bs=$BS count=$CNT

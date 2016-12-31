@@ -65,7 +65,7 @@ do
 			log_must verify_slog_device \
 				$TESTPOOL $ldev2 'ONLINE' 'mirror'
 
-			[[ -n "$LINUX" ]] && sleep 1
+			[[ -n "$LINUX" ]] && $SLEEP 1
 			destroy_pool -f $TESTPOOL
 		done
 	done

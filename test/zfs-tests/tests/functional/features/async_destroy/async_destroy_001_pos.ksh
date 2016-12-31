@@ -66,7 +66,7 @@ destroy_dataset $TEST_FS
 count=0
 while [[ "0" != "$($ZPOOL list -Ho freeing $TESTPOOL)" ]]; do
 	count=$((count + 1))
-	sleep 1
+	$SLEEP 1
 done
 
 #

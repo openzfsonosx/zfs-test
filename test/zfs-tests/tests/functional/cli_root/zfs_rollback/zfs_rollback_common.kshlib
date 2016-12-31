@@ -66,7 +66,7 @@ function setup_snap_env
 	# Volume can't be created in Local Zone.
 	if datasetnonexists $VOL && is_global_zone; then
 		log_must $ZFS create -V $VOLSIZE $VOL
-		[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+		[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 	fi
 
 	# Make sure $VOL is volume
@@ -210,7 +210,7 @@ function cleanup_env
 	if datasetnonexists $VOL ; then
 		if is_global_zone ; then
 			log_must $ZFS create -V $VOLSIZE $VOL
-			[[ -n "$LINUX" || -n "$OSX"  ]] && sleep 1
+			[[ -n "$LINUX" || -n "$OSX"  ]] && $SLEEP 1
 		else
 			log_must $ZFS create $VOL
 		fi

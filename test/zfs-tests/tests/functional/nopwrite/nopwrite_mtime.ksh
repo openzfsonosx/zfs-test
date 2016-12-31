@@ -53,7 +53,7 @@ if [[ -n "$OSX" ]]; then
 	o_mtime=$(stat -x $TESTDIR/clone/file | grep Modify | cut -d: -f2-4)
 
 # these times are in seconds resolution all some time to pass
-	sleep 2
+	$SLEEP 2
 else
 	o_atime=$(stat -c %X $TESTDIR/clone/file)
 	o_ctime=$(stat -c %Z $TESTDIR/clone/file)

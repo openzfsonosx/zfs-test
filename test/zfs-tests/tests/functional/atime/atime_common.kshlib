@@ -42,7 +42,7 @@ function check_atime_updated
 
 	#typeset before=$(stat -c %X $filename)
 	typeset before=$(stat -f %Sa -t %Y%m%d%H%M%S $filename)
-	sleep 2
+	$SLEEP 2
 	log_must $CAT $filename
 	#typeset after=$(stat -c %X $filename)
 	typeset after=$(stat -f %Sa -t %Y%m%d%H%M%S $filename)

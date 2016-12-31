@@ -62,7 +62,7 @@ function cleanup
 	# pool, otherwise next test will fail trying to set a
 	# quota which is less than the space used.
 	#
-	sleep 5
+	$SLEEP 5
 }
 
 log_onexit cleanup

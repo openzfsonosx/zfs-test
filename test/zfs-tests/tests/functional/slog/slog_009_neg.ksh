@@ -61,7 +61,7 @@ do
 			log_mustnot verify_slog_device \
 				$TESTPOOL $ldev 'ONLINE' $logtype
 
-			[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+			[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 			destroy_pool -f $TESTPOOL
 		done
 	done

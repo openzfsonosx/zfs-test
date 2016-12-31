@@ -61,7 +61,7 @@ if ! is_global_zone ; then
 fi
 
 $ZPOOL iostat $TESTPOOL 1 4 > $tmpfile 2>&1 &
-sleep 4
+$SLEEP 4
 stat_count=$($GREP $TESTPOOL $tmpfile | $WC -l)
 
 if [[ $stat_count -ne 4 ]]; then

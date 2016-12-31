@@ -95,7 +95,7 @@ for i in 1 2 3; do
 
 	log_must $SYNC
 	if [[ -n "$OSX" ]]; then
-		sleep 15
+		$SLEEP 15
 	fi
 
 	written=$(get_prop written $TESTPOOL/$TESTFS1)
@@ -141,7 +141,7 @@ log_must $RM /$TESTPOOL/$TESTFS1/testfile.3
 snap3_size=0
 log_must $SYNC
 if [[ -n "$OSX" ]]; then
-	sleep 15
+	$SLEEP 15
 fi
 written=$(get_prop written $TESTPOOL/$TESTFS1)
 writtenat3=$(get_prop written@snap3 $TESTPOOL/$TESTFS1)
@@ -171,7 +171,7 @@ else
 fi
 log_must $SYNC
 if [[ -n "$OSX" ]]; then
-	sleep 15
+	$SLEEP 15
 fi
 written=$(get_prop written $TESTPOOL/$TESTFS1)
 writtenat1=$(get_prop written@snap1 $TESTPOOL/$TESTFS1)
@@ -217,7 +217,7 @@ destroy_dataset $TESTPOOL/$TESTFS1@snap2
 log_mustnot snapexists $TESTPOOL/$TESTFS1@snap2
 log_must $SYNC
 if [[ -n "$OSX" ]]; then
-	sleep 15
+	$SLEEP 15
 fi
 written1=$(get_prop_mb written@snap1 $TESTPOOL/$TESTFS1)
 written3=$(get_prop_mb written@snap3 $TESTPOOL/$TESTFS1)
@@ -252,7 +252,7 @@ for ds in $datasets; do
     fi
     log_must $SYNC
 	if [[ -n "$OSX" ]]; then
-		sleep 15
+		$SLEEP 15
 	fi
 	writtenat=$(get_prop written@now $ds)
 	((expected_writtenat = blocks * mb_block))
@@ -276,7 +276,7 @@ for ds in $datasets; do
     log_must $SYNC
 done
 if [[ -n "$OSX" ]]; then
-	sleep 15
+	$SLEEP 15
 fi
 recursive_output=$($ZFS get -r written@current $TESTPOOL | \
     $GREP -v $TESTFS1@ | $GREP -v $TESTFS2@ | $GREP -v $TESTFS3@ | \

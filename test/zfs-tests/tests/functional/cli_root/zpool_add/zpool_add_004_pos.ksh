@@ -66,7 +66,7 @@ log_must poolexists "$TESTPOOL"
 create_pool "$TESTPOOL1" "${disk}${slice_part}${SLICE1}"
 log_must poolexists "$TESTPOOL1"
 log_must $ZFS create -V $VOLSIZE $TESTPOOL1/$TESTVOL
-[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 
 typeset zvol_dev=$(find_zvol_bpath "$TESTPOOL1/$TESTVOL")
 

@@ -62,7 +62,7 @@ $SYNC
 
 # It takes a little while for the users quota usage to catch up
 if [[ -n "$OSX" ]]; then
-	sleep 10
+	$SLEEP 10
 fi
 
 log_mustnot user_run $QUSER1 $MKFILE 1 $OFILE
@@ -76,7 +76,7 @@ $SYNC
 
 # It takes a little while for the users quota usage to catch up
 if [[ -n "$OSX" ]]; then
-sleep 10
+$SLEEP 10
 fi
 
 log_mustnot user_run $QUSER1 $MKFILE 1 $OFILE

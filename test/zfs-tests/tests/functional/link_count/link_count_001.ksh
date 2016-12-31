@@ -60,7 +60,7 @@ while [ $i -lt $NUMFILES ]; do
         $TOUCH ${TESTDIR}/tmp/x$i > /dev/null 2>&1
 done
 
-sleep 3
+$SLEEP 3
 
 $RM -f ${TESTDIR}/tmp/x* >/dev/null 2>&1
 

@@ -66,10 +66,10 @@ while (( $i < ${#RW_VOL_PROP[*]} )); do
 		log_fail "zfs create -V size $TESTPOOL/$TESTVOL1 fail."
 	propertycheck $TESTPOOL/$TESTVOL1 ${RW_VOL_PROP[i]} || \
 		log_fail "${RW_VOL_PROP[i]} is failed to set."
-	[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+	[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 	destroy_dataset -f $TESTPOOL/$TESTVOL1
 
-	[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+	[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 
 	log_must $ZFS create -s -o ${RW_VOL_PROP[$i]} -V $VOLSIZE \
 		$TESTPOOL/$TESTVOL1
@@ -77,7 +77,7 @@ while (( $i < ${#RW_VOL_PROP[*]} )); do
 		log_fail "zfs create -s -V $TESTPOOL/$TESTVOL1 fail."
 	propertycheck $TESTPOOL/$TESTVOL1 ${RW_VOL_PROP[i]} || \
 		log_fail "${RW_VOL_PROP[i]} is failed to set."
-	[[ -n "$LINUX" || -n "$OSX"  ]] && sleep 1
+	[[ -n "$LINUX" || -n "$OSX"  ]] && $SLEEP 1
 	destroy_dataset -f $TESTPOOL/$TESTVOL1
 
 	(( i = i + 1 ))

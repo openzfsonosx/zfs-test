@@ -48,7 +48,7 @@ function cleanup_quota
 	$SYNC
 
 	if [[ -n "$OSX" ]]; then
-		sleep 10
+		$SLEEP 10
 	fi
 
 	 return 0

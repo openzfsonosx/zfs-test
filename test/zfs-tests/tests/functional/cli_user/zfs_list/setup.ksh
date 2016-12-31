@@ -53,7 +53,7 @@ do
 		log_must $ZFS snapshot $TESTPOOL/$TESTFS/${dataset}-vol@snap
 	fi
 
-	# sleep to ensure that the datasets have different creation dates
+	# $SLEEP to ensure that the datasets have different creation dates
 	$SLEEP 1
 	log_must $ZFS set checksum=${cksumarray[$index]} \
 		$TESTPOOL/$TESTFS/$dataset

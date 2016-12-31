@@ -68,7 +68,7 @@ while (( $i < ${#RW_VOL_CLONE_PROP[*]} )); do
 		log_fail "zfs clone $TESTPOOL/$TESTCLONE fail."
 	propertycheck $TESTPOOL/$TESTCLONE ${RW_VOL_CLONE_PROP[i]} || \
 		log_fail "${RW_VOL_CLONE_PROP[i]} is failed to set."
-	[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+	[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 	destroy_dataset -f $TESTPOOL/$TESTCLONE
 
 	(( i = i + 1 ))

@@ -58,7 +58,7 @@ do
 		log_must display_status $TESTPOOL
 		log_mustnot verify_slog_device $TESTPOOL $ldev 'ONLINE' 'mirror'
 
-		[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+		[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 		destroy_pool -f $TESTPOOL
 	done
 done

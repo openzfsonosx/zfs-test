@@ -83,7 +83,7 @@ fi
 create_pool "$TESTPOOL" "${DISK}${slice_part}${SLICE0}"
 create_pool "$TESTPOOL1" "${DISK}${slice_part}${SLICE1}"
 log_must $ZFS create -s -V $VOLSIZE $TESTPOOL1/$TESTVOL
-[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 create_pool "$TESTPOOL2" "$ZVOL_DEVDIR/$TESTPOOL1/$TESTVOL"
 
 typeset -i i=0

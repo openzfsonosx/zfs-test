@@ -61,7 +61,7 @@ $SYNC
 
 # It takes a little while for the users quota usage to catch up
 if [[ -n "$OSX" ]]; then
-sleep 10
+$SLEEP 10
 fi
 
 log_must eval "$ZFS get -p userused@$QUSER1 $QFS >/dev/null 2>&1"

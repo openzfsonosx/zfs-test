@@ -139,7 +139,7 @@ function do_vol_test
 
 	post_used=$(get_used_prop $vol)
 	while ((post_used < target_size)) ; do
-		sleep 1
+		$SLEEP 1
 		post_used=$(get_used_prop $vol)
 	done
 

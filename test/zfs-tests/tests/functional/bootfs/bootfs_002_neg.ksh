@@ -64,7 +64,7 @@ log_must $ZPOOL create $TESTPOOL $DISK
 log_must $ZFS create $TESTPOOL/$TESTFS
 log_must $ZFS snapshot $TESTPOOL/$TESTFS@snap
 log_must $ZFS create -V 10m $TESTPOOL/vol
-[[ -n "$LINUX" ]] && sleep 1
+[[ -n "$LINUX" ]] && $SLEEP 1
 
 if [[ -n "$LINUX" ]]; then
 	log_must $ZPOOL set bootfs=$TESTPOOL/$TESTFS@snap $TESTPOOL

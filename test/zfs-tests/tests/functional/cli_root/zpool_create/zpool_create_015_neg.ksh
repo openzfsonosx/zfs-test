@@ -98,7 +98,7 @@ log_onexit cleanup
 create_pool $TESTPOOL $pool_dev
 log_must $ZFS create -V 100m $vol_name
 if [[ -n "$LINUX" ]]; then
-	sleep 1
+	$SLEEP 1
 	log_must mkswap $ZVOL_DEVDIR/$vol_name
 	log_must $SWAP $ZVOL_DEVDIR/$vol_name
 else

@@ -62,7 +62,7 @@ log_onexit cleanup
 
 # Create a UFS|EXT2 file system that we can work in
 log_must $ZFS create -V128m $TESTPOOL/$TESTFS/zvol
-[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 log_must eval "$ECHO y | $NEWFS $ZVOL_DEVDIR/$TESTPOOL/$TESTFS/zvol > /dev/null 2>&1"
 
 log_must $MKDIR /tmp/$NEWFS_DEFAULT_FS.$$

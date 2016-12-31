@@ -66,7 +66,7 @@ $SYNC
 
 # It takes a little while for the users quota usage to catch up
 if [[ -n "$OSX" ]]; then
-sleep 10
+$SLEEP 10
 fi
 
 user_used=$(get_value "userused@$QUSER1" $QFS)

@@ -76,7 +76,7 @@ do
 			log_must verify_slog_device \
 				$TESTPOOL `realpath $ldev` 'ONLINE' $logtype
 
-			[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+			[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 
 			#
 			# Destroy the pool and import again
@@ -88,7 +88,7 @@ do
 			log_must verify_slog_device \
 				$TESTPOOL `realpath $ldev` 'ONLINE' $logtype
 
-			[[ -n "$LINUX" || -n "$OSX" ]] && sleep 1
+			[[ -n "$LINUX" || -n "$OSX" ]] && $SLEEP 1
 			destroy_pool -f $TESTPOOL
 		done
 	done
