@@ -334,7 +334,7 @@ main(int argc, char *argv[])
 		/*
 		 * Sleep 2 seconds, then invoke command on given file
 		 */
-		(void) $SLEEP(2);
+		(void) sleep(2);
 		timetest_table[i].func(tfile);
 
 		/*
