@@ -666,9 +666,6 @@ function set_partition #<slice_num> <slice_start> <size_plus_units>  <whole_disk
         if [[ $slicenum == 0 ]]; then
             log_must gpt destroy $disk
             log_must gpt create $disk
-
-            typeset -i efi_part_sectors=$(( 200 * 1024 * 1024 / $sector_size ))
-            log_must gpt add -s $efi_part_sectors -t "C12A7328-F81F-11D2-BA4B-00A0C93EC93B" $disk
         fi
 
         # Parse out the size indicator
@@ -742,6 +739,22 @@ function set_partition #<slice_num> <slice_start> <size_plus_units>  <whole_disk
 	$RM -f $format_file
 	[[ $ret_val -ne 0 ]] && \
 	    log_fail "Unable to format $disk slice $slicenum to $size"
+	return 0
+}
+
+function add_efi_partition #disk
+{
+	typeset disk=$1
+
+    	log_note diskutil info $disk | grep "Block Size:"
+    	typeset -i sector_size=$(diskutil info $disk | grep "Block Size:" | awk '{print $4}')
+
+    	typeset -i efi_part_sectors=$(( 200 * 1024 * 1024 / $sector_size ))
+	log_note `diskutil list $disk`
+
+    	log_note gpt add -s $efi_part_sectors -t "efi" $disk
+    	log_must gpt add -s $efi_part_sectors -t "efi" $disk
+
 	return 0
 }
 

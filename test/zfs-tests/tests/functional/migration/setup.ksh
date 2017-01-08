@@ -90,6 +90,7 @@ elif [[ -n "$OSX" ]]; then
     typeset volname="zpool_migration_vol1"
     typeset disk=$NONZFSSIDE_DISK
 
+    log_must add_efi_partition $NONZFS_DISK
     log_must sudo diskutil eraseVolume hfs+ $volname $disk
     log_must sudo diskutil unmount $disk
 else

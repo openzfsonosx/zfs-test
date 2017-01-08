@@ -89,6 +89,7 @@ if [[ -n "$OSX" ]]; then
     typeset volname="zpool_import_vol1"
     typeset disk=$ZFSSIDE_DISK2
 
+    log_must add_efi_partition $ZFS_DISK2
     log_must sudo diskutil eraseVolume hfs+ $volname $disk
     log_must sudo diskutil unmount $disk
     log_must sudo diskutil mount -mountpoint $DEVICE_DIR $disk

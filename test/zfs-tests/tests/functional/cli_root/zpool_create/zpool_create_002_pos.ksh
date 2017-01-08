@@ -86,6 +86,7 @@ create_pool "$TESTPOOL" "${disk}${slice_part}${SLICE0}"
 
 if [[ -n "$OSX" ]]; then
     typeset dev=${disk}${slice_part}${SLICE1}
+    log_must add_efi_partition $disk
     log_must diskutil eraseVolume hfs+ "zpool_create_002_pos" $dev
     log_must diskutil unmount $dev
 else
