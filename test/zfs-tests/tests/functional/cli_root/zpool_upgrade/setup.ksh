@@ -31,6 +31,8 @@
 
 . $STF_SUITE/include/libtest.shlib
 
+$SLEEP 30
+
 verify_runnable "global"
 verify_disk_count "$DISKS" 2
 

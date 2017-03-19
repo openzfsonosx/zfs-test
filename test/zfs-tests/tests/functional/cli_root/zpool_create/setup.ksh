@@ -34,6 +34,8 @@
 
 verify_runnable "global"
 
+$SLEEP 30
+
 log_note $TMPFILE $DISK $DISKSARRAY
 
 if [[ -z "$LINUX" ]] && ! $(is_physical_device $DISKS) ; then

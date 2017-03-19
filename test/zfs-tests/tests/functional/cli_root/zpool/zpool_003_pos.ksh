@@ -53,6 +53,7 @@ function cleanup
 		echo "$def_cor_suid" > /proc/sys/fs/suid_dumpable
 		ulimit -c $ulimit
 	fi
+	$SLEEP 20
 }
 
 log_assert "Debugging features of zpool should succeed."
