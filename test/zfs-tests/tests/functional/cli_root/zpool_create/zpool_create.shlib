@@ -136,6 +136,9 @@ function clean_blockfile
 
                 if [[ -n "$OSX" ]]; then
                     sudo diskutil unmount $dir
+                    sudo diskutil unmountdisk disk1
+                    sudo diskutil unmountdisk disk2
+                    sudo diskutil unmountdisk disk3
                 else
                     log_must $UMOUNT -f $dir
 				fi

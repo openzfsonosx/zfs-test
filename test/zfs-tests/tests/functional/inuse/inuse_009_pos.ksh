@@ -62,6 +62,10 @@ function cleanup
 			[[ -n "$dsk" ]] && $KPARTX -d $dsk
 		done
 	fi
+
+	diskutil unmountdisk disk1
+	diskutil unmountdisk disk2
+	diskutil unmountdisk disk3
 }
 
 function verify_assertion #disks

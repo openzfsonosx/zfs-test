@@ -428,6 +428,11 @@ function default_cleanup
 {
 	default_cleanup_noexit
 
+	diskutil unmountdisk disk1
+	diskutil unmountdisk disk2
+	diskutil unmountdisk disk3
+	$SLEEP 2
+
 	log_pass
 }
 
@@ -1323,10 +1328,13 @@ function destroy_pool #pool
 			mtpt=$(get_prop mountpoint "$pool")
 			log_note Destroying pool $pool
 			$ZPOOL destroy $opts $pool
-			if [[ $? -ne 0 ]]; then
+			while [[ $? -ne 0 ]]; do
+			      	$SLEEP 10
 				log_note Had to followup with destroy -f for $pool
-				log_must $ZPOOL destroy -f ${opts} $pool
-			fi 
+				/sbin/umount /private/var/tmp/testdir*
+				$ZFS umount -af
+				$ZPOOL destroy -f ${opts} $pool
+			done
 			
 
 			[[ -d $mtpt ]] && \
