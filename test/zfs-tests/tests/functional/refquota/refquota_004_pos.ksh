@@ -62,7 +62,7 @@ log_must $ZFS set refquota=15M $fs
 mntpnt=$(get_prop mountpoint $fs)
 typeset -i i=0
 while ((i < 3)); do
-	log_must $MKFILE 7M $mntpnt/$TESTFILE.$i
+	log_must $MKFILE -n 7M $mntpnt/$TESTFILE.$i
 	log_must $ZFS snapshot $fs@snap.$i
 	log_must $RM $mntpnt/$TESTFILE.$i
 
@@ -72,6 +72,6 @@ done
 #
 # Verify out of the limitation of 'quota'
 #
-log_mustnot $MKFILE 7M $mntpnt/$TESTFILE
+log_mustnot $MKFILE -n 7M $mntpnt/$TESTFILE
 
 log_pass "refquotas are not limited by snapshots."

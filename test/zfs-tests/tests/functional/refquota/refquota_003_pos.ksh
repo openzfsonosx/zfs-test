@@ -61,7 +61,8 @@ log_must $ZFS set refquota=10M $fs
 log_must $ZFS create $fs/subfs
 
 mntpnt=$(get_prop mountpoint $fs/subfs)
-log_must $MKFILE 20M $mntpnt/$TESTFILE
+#log_must $MKFILE 20M $mntpnt/$TESTFILE
+log_must $DD if=/dev/zero bs=1048576 count=20 of=$mntpnt/$TESTFILE
 
 typeset -i used quota refquota
 used=$(get_prop used $fs)
